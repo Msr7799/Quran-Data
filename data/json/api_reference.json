@@ -478,7 +478,6 @@
               },
               "endpoints": "جميع endpoints مع التفاصيل الكاملة"
             }
-            }
           },
           "use_cases": [
             "توثيق تلقائي للتطبيقات",
@@ -489,6 +488,11 @@
         }
       ]
     }
+  },
+  "authentication": {
+    "type": "API Key",
+    "description": "استخدم مفتاح API للوصول إلى جميع endpoints",
+    "example": "Authorization: Bearer YOUR_API_KEY"
   },
   "rate_limiting": {
     "default_limit": "300 requests per minute per IP",

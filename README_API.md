@@ -1,27 +1,23 @@
-# 📚 Qu## 📊 API Statistics
-- **9** Main Endpoints (including API Reference)
-- **114** Surahs
-- **6,236** Verses
-- **158** Audio Reciters
-- **4** Timing Reciters
-- **20,675** Verse Timings
-- **604** Quran Page ImagesDocumentation
+# 📚 Quran Data API Documentation
 
-## 🌐 Base URL
+## 🌐 Base URLs
 ```
-https://quran-api-qklj.onrender.com/api
+Production:  https://quran-api-qklj.onrender.com/api
+Local:       http://localhost:5000/api
 ```
 
-## � API Statistics
-- **8** Main Endpoints
+## 📊 API Statistics
+- **16** Main Endpoints (including all routes)
 - **114** Surahs
 - **6,236** Verses
-- **158** Audio Reciters
-- **4** Timing Reciters
+- **133** Audio Reciters (from audio table)
+- **4** Timing Reciters (with timing data)
 - **20,675** Verse Timings
 - **604** Quran Page Images
+- **30** Juz (Parts)
+- **15** Sajda Verses
 
-## �📋 Available Endpoints
+## 📋 Complete Available Endpoints
 
 ### 📘 Surahs (السور)
 - `GET /surahs` - Get all surahs
@@ -35,7 +31,11 @@ https://quran-api-qklj.onrender.com/api
 - `GET /sajda` - Get all sajda verses
 
 ### 🔊 Audio (الصوتيات)
-- `GET /audio/:surah_id` - Get audio files for surah
+- `GET /audio/:surah_id` - Get all audio files for a surah
+- `GET /audio/:surah_id/:reciter` - Get audio files for specific reciter and surah
+
+### 🎙️ Reciters (القراء)
+- `GET /reciters` - Get all audio reciters (133 reciters from audio table)
 
 ### 📘 Juz (الأجزاء)
 - `GET /juz/:juz_id` - Get all verses in a juz
@@ -44,16 +44,17 @@ https://quran-api-qklj.onrender.com/api
 - `GET /pages/:surah_id/:verse_id` - Get page number for verse
 
 ### ⏱️ Timing (التوقيت)
-- `GET /timing/reciters` - Get all available reciters with timing data
-- `GET /timing/:reciter/surahs` - Get available surahs for a reciter
+- `GET /timing/reciters` - Get all timing reciters (4 reciters with timing data)
+- `GET /timing/:reciter/surahs` - Get available surahs for a timing reciter
 - `GET /timing/:reciter/:surah_id` - Get verse timings for a surah
 - `GET /timing/:reciter/:surah_id/:verse_id` - Get timing for specific verse
+- `GET /timing/search` - Search timings by reciter, surah, verse (with query params)
 
 **Available Timing Reciters:**
 - `sudais` - الشيخ عبد الرحمن السديس
 - `Shuraym` - الشيخ سعود الشريم  
+- `Al-Juhaynee` - الشيخ عبد الله الجهني
 - `Hudhaify` - الشيخ علي الحذيفي
-- `alafasy` - الشيخ مشاري العفاسي
 
 ### 🖼️ Images (الصور)
 - `GET /data/quran_image/:page.png` - Get Quran page image (1-604)
@@ -74,9 +75,17 @@ const surahs = await response.json();
 const verses = await fetch('https://quran-api-qklj.onrender.com/api/verses/1');
 const fatihahVerses = await verses.json();
 
-// Fetch available reciters for timing
-const reciters = await fetch('https://quran-api-qklj.onrender.com/api/timing/reciters');
-const allReciters = await reciters.json();
+// Fetch all audio reciters (133 reciters)
+const allReciters = await fetch('https://quran-api-qklj.onrender.com/api/reciters');
+const audioReciters = await allReciters.json();
+
+// Fetch timing reciters only (4 reciters)
+const timingReciters = await fetch('https://quran-api-qklj.onrender.com/api/timing/reciters');
+const timingData = await timingReciters.json();
+
+// Fetch audio for specific reciter and surah
+const specificAudio = await fetch('https://quran-api-qklj.onrender.com/api/audio/1/sudais');
+const sudaisAudio = await specificAudio.json();
 
 // Fetch verse timings for Al-Fatihah by Sudais
 const timings = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1');
@@ -154,15 +163,27 @@ console.log(availableSurahs);
 }
 ```
 
-## 📊 Statistics
+## 📊 Final Statistics
 
 - **114** Surahs
 - **6,236** Verses  
-- **158** Audio Reciters
+- **133** Audio Reciters (complete audio library)
 - **4** Timing Reciters (Sudais, Shuraym, Al-Juhaynee, Hudhaify)
 - **20,675** Verse Timings
 - **604** Pages
 - **30** Juz
+- **15** Sajda Verses
+
+## 🎯 Key Features
+
+✅ **Complete Quran Data** - All 114 surahs with 6,236 verses  
+✅ **Extensive Audio Library** - 133 different reciters  
+✅ **Precise Timing Data** - 20,675 verse timings for 4 reciters  
+✅ **Page-by-Page Navigation** - 604 Quran page images  
+✅ **Search Capabilities** - Search timing data by multiple criteria  
+✅ **API Reference** - Complete documentation stored in database  
+✅ **Rate Limiting** - 300 requests/minute protection  
+✅ **CORS Enabled** - Ready for web applications
 
 ## 🛡️ Rate Limiting
 - **Default:** 300 requests per minute per IP
@@ -244,10 +265,52 @@ https://quran-api-qklj.onrender.com/docs
 # Test API Reference endpoint
 curl https://quran-api-qklj.onrender.com/api/api-reference
 
-# Test timing endpoints
-curl https://quran-api-qklj.onrender.com/api/timing/reciters
-curl https://quran-api-qklj.onrender.com/api/timing/sudais/1
+# Test timing search endpoint
+curl "https://quran-api-qklj.onrender.com/api/timing/search?reciter=sudais&surah=1"
+
+# Test all audio reciters
+curl https://quran-api-qklj.onrender.com/api/reciters
+
+# Test audio by specific reciter
+curl https://quran-api-qklj.onrender.com/api/audio/1/sudais
 ```
+
+---
+
+## 📝 Quick Reference للمطور
+
+### 🔗 URLs الأساسية:
+- **Production:** `https://quran-api-qklj.onrender.com/api`
+- **Local Development:** `http://localhost:5000/api`
+- **Documentation:** `https://quran-api-qklj.onrender.com/docs`
+
+### 📊 إحصائيات سريعة:
+- **16 Endpoints** كاملة
+- **133 قارئ صوتي** (جدول audio)
+- **4 قراء توقيت** (جدول ayat_timing)
+- **20,675 توقيت آية** دقيق
+
+### 🛠️ الملفات الرئيسية:
+- `server/routes/apiRoutes.mjs` - جميع الراوتات
+- `server/controllers/surahController.mjs` - كنترولر السور والآيات
+- `server/controllers/timingController.mjs` - كنترولر التوقيتات
+- `docs/api-definition.yaml` - التوثيق الكامل
+
+### ⚡ أهم الراوتات:
+```
+GET /reciters                    → 133 قارئ صوتي
+GET /timing/reciters             → 4 قراء توقيت  
+GET /audio/:surah_id/:reciter    → صوتيات بالقارئ
+GET /timing/search               → البحث في التوقيتات
+GET /api-reference               → مرجع API شامل
+```
+
+### 🎯 ملاحظات للمطور:
+- Rate Limit: 300 طلب/دقيقة
+- جميع الاستجابات JSON
+- CORS مفعل للويب أبس
+- معالجة أخطاء شاملة
+- التوثيق محفوظ في SQLite
 
 ---
 

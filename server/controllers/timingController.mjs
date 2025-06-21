@@ -241,3 +241,27 @@ export const searchTimings = async (req, res) => {
         handleError(res, 500, 'خطأ في البحث عن التوقيتات', { error: error.message });
     }
 };
+
+/**
+ * جلب جميع القراء الصوتيين من جدول audio
+ * GET /api/reciters
+ */
+export const getAllAudioReciters = async (req, res) => {
+    try {
+        const db = await openDatabase();
+        const reciters = await db.all(`
+            SELECT DISTINCT reciter_ar AS reciter_name_ar, reciter_en AS reciter_name_en
+            FROM audio
+            ORDER BY reciter_name_ar
+        `);
+        await db.close();
+        res.json({
+            success: true,
+            data: reciters,
+            count: reciters.length
+        });
+    } catch (error) {
+        console.error('Error fetching audio reciters:', error);
+        handleError(res, 500, 'خطأ في جلب جميع القراء الصوتيين', { error: error.message });
+    }
+};

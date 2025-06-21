@@ -1,4 +1,4 @@
-  * {
+* {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -122,11 +122,16 @@
         }
 
         .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.5rem;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: 1rem;
             margin-top: 3rem;
-            max-width: 1000px;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+            min-height: 120px;
+            align-items: center;
         }
 
         .stat-card {
@@ -140,19 +145,24 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        
+            min-width: 120px;
+            max-width: 140px;
+            height: 100px;
+            flex: 0 0 auto;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             display: block;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.8;
+            text-align: center;
         }
 
         /* Main Content */
@@ -391,9 +401,23 @@
             }
 
             .hero-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
+                flex-wrap: wrap;
+                gap: 0.3rem;
                 max-width: 100%;
+                justify-content: center;
+            }
+
+            .stat-card {
+                min-width: 70px;
+                padding: 0.6rem;
+            }
+
+            .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
             }
 
             .container {
@@ -405,6 +429,31 @@
             nav ul {
                 flex-direction: column;
                 gap: 0.5rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .hero-stats {
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+
+            .stat-card {
+                min-width: 60px;
+                padding: 0.5rem;
+            }
+
+            .stat-number {
+                font-size: 1rem;
+            }
+
+            .stat-label {
+                font-size: 0.6rem;
+            }
+
+            .api-examples {
+                grid-template-columns: 1fr;
             }
         }
 

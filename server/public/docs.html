@@ -73,15 +73,31 @@
                     <span class="stat-label">آية</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">158</span>
+                    <span class="stat-number">133</span>
                     <span class="stat-label">قارئ صوتي</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-number">4</span>
-                    <span class="stat-label">قراء مع توقيت القراءة</span>
+                    <span class="stat-label">قراء مع توقيت</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">8</span>
+                    <span class="stat-number">20,675</span>
+                    <span class="stat-label">توقيت آية</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">604</span>
+                    <span class="stat-label">صفحة</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">30</span>
+                    <span class="stat-label">جزء</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">سجدة</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">16</span>
                     <span class="stat-label">API Endpoints</span>
                 </div>
             </div>
@@ -98,39 +114,75 @@
                 
                 <div class="api-examples">
                     <div class="api-card">
-                        <h4>📖 جلب سورة الفاتحة</h4>
+                        <h4>📖 جلب جميع السور</h4>
+                        <div class="api-endpoint">GET /api/surahs</div>
+                        <p>احصل على قائمة جميع السور مع معلوماتها الأساسية</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>📜 سورة محددة</h4>
                         <div class="api-endpoint">GET /api/surah/1</div>
-                        <p>احصل على بيانات كاملة لسورة الفاتحة مع جميع الآيات</p>
-                    </div>
-                    
-                    <div class="api-card">
-                        <h4>🎵 توقيت الفاتحة للسديس</h4>
-                        <div class="api-endpoint">GET /api/timing/sudais/1</div>
-                        <p>احصل على توقيت تلاوة آيات سورة الفاتحة للشيخ السديس</p>
-                    </div>
-                    
-                    <div class="api-card">
-                        <h4>👥 جميع القراء</h4>
-                        <div class="api-endpoint">GET /api/timing/reciters</div>
-                        <p>قائمة بجميع القراء المتاحين مع إحصائيات التوقيت</p>
+                        <p>احصل على بيانات كاملة لسورة محددة مع جميع آياتها</p>
                     </div>
                     
                     <div class="api-card">
                         <h4>🔍 آية محددة</h4>
                         <div class="api-endpoint">GET /api/verse/1/1</div>
-                        <p>جلب بيانات آية محددة (السورة/الآية)</p>
+                        <p>جلب بيانات آية محددة (رقم السورة/رقم الآية)</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🎵 توقيت التلاوة</h4>
+                        <div class="api-endpoint">GET /api/timing/sudais/1</div>
+                        <p>احصل على توقيت تلاوة آيات سورة للشيخ السديس</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>👥 جميع قراء التوقيت</h4>
+                        <div class="api-endpoint">GET /api/timing/reciters</div>
+                        <p>قائمة بجميع قراء التوقيت المتاحين (4 قراء)</p>
                     </div>
                     
                     <div class="api-card">
                         <h4>🎧 ملفات صوتية</h4>
                         <div class="api-endpoint">GET /api/audio/1</div>
-                        <p>روابط التسجيلات الصوتية للسور</p>
+                        <p>روابط التسجيلات الصوتية للسور (133 قارئ)</p>
                     </div>
                     
                     <div class="api-card">
-                        <h4>🕋 آيات السجدة</h4>
+                        <h4>� آيات السجدة</h4>
                         <div class="api-endpoint">GET /api/sajda</div>
-                        <p>جميع آيات السجدة في القرآن الكريم</p>
+                        <p>جميع آيات السجدة في القرآن الكريم (15 سجدة)</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>📄 صفحة القرآن</h4>
+                        <div class="api-endpoint">GET /api/pages/2/1</div>
+                        <p>معلومات صفحة القرآن لآية محددة (604 صفحة)</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>📚 جزء من القرآن</h4>
+                        <div class="api-endpoint">GET /api/juz/1</div>
+                        <p>معلومات جزء محدد من القرآن (30 جزء)</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🖼️ صور صفحات القرآن</h4>
+                        <div class="api-endpoint">GET /data/quran_image/1.png</div>
+                        <p>صور عالية الجودة لصفحات المصحف الشريف</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>� مرجع API</h4>
+                        <div class="api-endpoint">GET /api/api-reference</div>
+                        <p>مرجع شامل لجميع endpoints والإحصائيات</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🔍 البحث في التوقيتات</h4>
+                        <div class="api-endpoint">GET /api/timing/sudais/surahs</div>
+                        <p>البحث في السور المتوفرة لقارئ توقيت محدد</p>
                     </div>
                 </div>
             </section>
@@ -177,8 +229,17 @@
                 <li>الحذيفي</li>
                 <li>الجهني</li>
                 <li>آيات السجدة</li>
+                <li>صفحات المصحف</li>
+                <li>أجزاء القرآن</li>
+                <li>133 قارئ صوتي</li>
+                <li>20675 توقيت</li>
+                <li>604 صفحة</li>
+                <li>30 جزء</li>
+                <li>15 سجدة</li>
+                <li>16 راوت API</li>
                 <li>JSON Database</li>
                 <li>SQLite Database</li>
+                <li>CSV Database</li>
                 <li>Quran API</li>
                 <li>Quran Data</li>
                 <li>Quran Timing</li>
@@ -187,6 +248,12 @@
                 <li>Quran Verses</li>
                 <li>Quran Audio</li>
                 <li>Quran Recitation</li>
+                <li>Quran Pages</li>
+                <li>Quran Chapters</li>
+                <li>Sajda Verses</li>
+                <li>Quran Parts</li>
+                <li>MCP Integration</li>
+                <li>AI Assistant</li>
             </ul>
         </section>
     </div>
@@ -286,6 +353,79 @@
         `;
     </script>
     </div>
+
+    <script>
+        // حركة البطاقات كالجنزير من اليمين إلى اليسار
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroStats = document.querySelector('.hero-stats');
+            const statCards = document.querySelectorAll('.stat-card');
+            
+            if (statCards.length === 0) return;
+            
+            // إنشاء container للحركة
+            const cardsContainer = document.createElement('div');
+            cardsContainer.style.display = 'flex';
+            cardsContainer.style.gap = '1rem';
+            cardsContainer.style.animation = 'scrollCards 60s linear infinite';
+            cardsContainer.style.width = 'max-content';
+            
+            // نقل البطاقات للـ container الجديد عدة مرات للحصول على تدفق مستمر
+            for(let i = 0; i < 6; i++) {
+                statCards.forEach(card => {
+                    cardsContainer.appendChild(card.cloneNode(true));
+                });
+            }
+            
+            // مسح البطاقات الأصلية وإضافة الـ container الجديد
+            heroStats.innerHTML = '';
+            heroStats.appendChild(cardsContainer);
+            
+            // إضافة CSS للحركة
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes scrollCards {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-50%);
+                    }
+                }
+                
+                .hero-stats:hover .stat-card {
+                    animation-play-state: paused;
+                }
+                
+                .stat-card:hover {
+                    transform: scale(1.08) !important;
+                    box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5) !important;
+                    background: rgba(255, 255, 255, 0.35) !important;
+                    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+                }
+                
+                .stat-card {
+                    transition: all 0.4s ease !important;
+                }
+                
+                /* تأثير التوقف عند المرور بالماوس */
+                .hero-stats:hover div {
+                    animation-play-state: paused;
+                }
+                
+                /* حركة خطية مستمرة */
+                .hero-stats div {
+                    animation-timing-function: linear;
+                    animation-iteration-count: infinite;
+                }
+                
+                /* بداية فورية */
+                .hero-stats div {
+                    animation-delay: 0s;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </body>
 
 </html>
