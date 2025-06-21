@@ -37,6 +37,47 @@ router.get('/timing/:reciter/:surah_id/:verse_id', getSingleVerseTiming);
 // البحث في التوقيتات
 router.get('/timing/search', searchTimings);
 
+// ============= API Reference =============
+// جلب مرجع API من قاعدة البيانات
+router.get('/api-reference', async (req, res) => {
+    try {
+        const db = await import('../config.mjs').then(m => m.getDatabase());
+        const apiRef = await db.get('SELECT * FROM api_reference ORDER BY created_at DESC LIMIT 1');
+        
+        if (!apiRef) {
+            return res.status(404).json({
+                success: false,
+                message: 'API reference not found',
+                error: 'No API reference data available'
+            });
+        }
+
+        const jsonContent = JSON.parse(apiRef.json_content);
+        
+        res.json({
+            success: true,
+            data: {
+                ...jsonContent,
+                database_info: {
+                    id: apiRef.id,
+                    title: apiRef.title,
+                    version: apiRef.version,
+                    last_updated: apiRef.last_updated,
+                    created_at: apiRef.created_at
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error fetching API reference:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch API reference',
+            error: error.message
+        });
+    }
+});
+
 router.use((req, res) => {
     handleError(res, 404, '404 - The requested resource was not found in /api/', {
         message: 'The requested URL was not found on this server.',

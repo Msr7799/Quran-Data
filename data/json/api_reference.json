@@ -453,6 +453,40 @@
           ]
         }
       ]
+    },
+    "api_reference": {
+      "description": "مرجع API شامل - الحصول على توثيق كامل من قاعدة البيانات",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/api-reference",
+          "description": "جلب مرجع API الكامل من قاعدة البيانات",
+          "parameters": "لا يوجد",
+          "response_example": {
+            "success": true,
+            "data": {
+              "api_info": {
+                "title": "Quran Data API - مرجع شامل",
+                "version": "2.1.0",
+                "base_url": "https://quran-api-qklj.onrender.com/api"
+              },
+              "statistics": {
+                "total_surahs": 114,
+                "total_verses": 6236,
+                "total_audio_reciters": 158,
+                "timing_reciters": 4
+              },
+              "endpoints": "جميع endpoints مع التفاصيل الكاملة"
+            }
+          },
+          "use_cases": [
+            "توثيق تلقائي للتطبيقات",
+            "إنشاء واجهات المستخدم الديناميكية",
+            "مراجع للمطورين",
+            "تكامل مع أدوات التوثيق"
+          ]
+        }
+      ]
     }
   },
   "rate_limiting": {
