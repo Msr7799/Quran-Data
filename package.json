@@ -11,7 +11,8 @@
     "dev": "nodemon",
     "splitData": "node scripts/splitData.js",
     "jsonToSqlite": "node scripts/jsonToSqlite.mjs",
-    "jsonToCsv": "node scripts/jsonToCsv.mjs"
+    "jsonToCsv": "node scripts/jsonToCsv.mjs",
+    "addTimingToSqlite": "node scripts/addTimingToSqlite.mjs"
   },
   "keywords": [],
   "author": {
@@ -26,7 +27,9 @@
     "express": "^4.19.2",
     "express-rate-limit": "^7.4.0",
     "fs-extra": "^11.2.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "engines": {
     "node": ">=18.0.0",

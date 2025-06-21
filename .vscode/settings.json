@@ -1,0 +1,19 @@
+{
+    "dbMcp.provider": "sqlite",
+    "dbMcp.connectionString": "C:\\Users\\alrom\\Desktop\\hamadArif\\quran_websit_cont\\Quran-Data\\data\\sqlite\\database.sqlite",
+    "dbcode.connections": [
+        {
+            "connectionId": "gXUuykmuhoqiGe4SpNM3q",
+            "name": "quran_data",
+            "driver": "sqlite",
+            "color": "#BD0014",
+            "socket": "Quran-Data/data/sqlite/database.sqlite",
+            "readOnly": false,
+            "role": "development",
+            "driverOptions": {
+                "extensions": []
+            },
+            "connectionType": "socket"
+        }
+    ]
+}
