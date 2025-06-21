@@ -7,269 +7,645 @@
     <meta name="description"
         content="واجهة برمجة تطبيقات للقرآن الكريم - استكشف بيانات السور والآيات والتسجيلات الصوتية، وحمل قواعد البيانات بصيغ مختلفة مثل JSON وSQLite وCSV.">
     <meta name="keywords"
-        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites">
+        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, توقيت التلاوة, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, السديس, الشريم, الحذيفي, الجهني, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran timing, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites, Islamic API, Render deployment">
     <meta name="author" content="mohamed alromaihi">
     <meta property="og:title" content="واجهة برمجة تطبيقات القرآن الكريم">
     <meta property="og:description"
         content="استعرض وثائق واجهة برمجة تطبيقات للقرآن الكريم، بما في ذلك تفاصيل السور والآيات والتسجيلات الصوتية، وحمل قواعد البيانات بصيغ مختلفة.">
-    <meta property="og:image" content="رابط_صورة_للواجهة_البينية_أو_الشعار">
-    <meta property="og:url" content="رابط_الموقع_الخاص_بك">
-    <meta name="twitter:card" content="/Quran-Data.png">
+    <meta property="og:image" content="https://quran-api-qklj.onrender.com/Quran-Data.png">
+    <meta property="og:url" content="https://quran-api-qklj.onrender.com">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="واجهة برمجة تطبيقات القرآن الكريم">
     <meta name="twitter:description"
         content="استعرض وثائق واجهة برمجة تطبيقات للقرآن الكريم، بما في ذلك تفاصيل السور والآيات والتسجيلات الصوتية، وحمل قواعد البيانات بصيغ مختلفة.">
-    <meta name="twitter:image" content="رابط_صورة_للواجهة_البينية_أو_الشعار">
+    <meta name="twitter:image" content="https://quran-api-qklj.onrender.com/Quran-Data.png">
     <title>واجهة برمجة تطبيقات القرآن الكريم - quran api - quran json</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body,
         html {
             width: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #333;
-            margin: 0px 0px 0px 0px;
+            line-height: 1.6;
+            scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-
-        footer {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        #menufo a {
-            text-decoration: none;
-            background-color: #a7a7a7;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-        }
-
+        /* Header Styles */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-content: center;
-            align-items: center;
-            flex-wrap: nowrap;
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000000;
-            background-color: #007bff80;
-            backdrop-filter: blur(10px);
-            direction: rtl;
-            margin: 0px auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
         }
 
-        header a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0px auto;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            direction: rtl;
         }
 
         header h1 {
-            font-size: 1rem;
-            margin-right: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
+        header h1 a {
+            text-decoration: none;
+            color: inherit;
+        }
 
         nav ul {
             display: flex;
-            list-style-type: none;
-            padding: 0;
-            gap: 5px;
-            margin-left: 10px;
-
+            list-style: none;
+            gap: 1rem;
         }
 
         nav ul li a {
-            color: #fff;
-            font-size: 12px;
-            border-radius: 10px;
-            background-color: #00000053;
-            padding: 5px;
-            white-space: nowrap;
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
-        #imgQuran {
+        nav ul li a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 600px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
             display: block;
-            width: 90%;
-            max-width: 700px;
-            margin: 10px auto;
-            border-radius: 10px;
-            margin-top: 120px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: #f8f9fa;
+            min-height: 100vh;
         }
 
         .container {
-            width: 80%;
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: -4rem;
+            position: relative;
+            z-index: 10;
         }
 
-        h2 {
-            color: #007bff;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+        /* Quick Start Section */
+        .quick-start {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            direction: rtl;
+        }
+
+        .quick-start h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .api-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .api-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .api-card h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .api-endpoint {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #667eea;
+            margin: 0.5rem 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Download Section */
+        #download {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0fff0 100%);
+            border-radius: 15px;
+            direction: rtl;
+        }
+
+        #download h2 {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
         #download a {
-            display: block;
-            background-color: #eeeeee;
-            color: #007bff;
-            border-radius: 7px;
-            padding: 10px;
-            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: white;
+            color: #28a745;
             text-decoration: none;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 2px solid #28a745;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
         }
 
         #download a:hover {
-            display: block;
-            background-color: #007bff;
-            color: #eeeeee;
+            background: #28a745;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
         }
 
-        footer nav a {
-            margin: 0 10px;
+        /* Keywords Section */
+        .keywords-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+            border-radius: 15px;
+            direction: rtl;
+        }
+
+        .keywords-section h3 {
+            color: #f57c00;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
         }
 
         #Keywords {
-            width: 90%;
-            list-style: none;
-            padding: 5px;
-            line-height: 1.8;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 20px auto;
             display: flex;
-            justify-content: space-around;
-            align-content: center;
-            align-items: center;
             flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: center;
+            list-style: none;
         }
 
         #Keywords li {
-            margin: 5px 0;
-            padding: 5px;
-            background-color: #e0e0e0;
-
+            background: white;
+            color: #f57c00;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid #f57c00;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
+        #Keywords li:hover {
+            background: #f57c00;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-prayer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            font-style: italic;
+            direction: rtl;
+        }
+
+        #menufo {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        #menufo a {
+            background: #667eea;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        #menufo a:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+                margin-top: -2rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Hide Redoc elements */
         .sc-gfoqjT {
             display: none;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 
 <body>
     <header>
-        <h1><a href="/">واجهة برمجة تطبيقات القرآن الكريم</a></h1>
-        <nav>
-            <ul>
-                <li><a href="https://github.com/Msr7799/Quran-Data" target="_blank">الكود</a></li>
-                <li><a href="#download">تحميل قواعد البيانات</a></li>
-            </ul>
-        </nav>
+        <div class="header-content">
+            <h1><a href="/">واجهة برمجة تطبيقات القرآن الكريم</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="https://github.com/Msr7799/Quran-Data" target="_blank">📖 الكود المصدري</a></li>
+                    <li><a href="#download">⬇️ تحميل البيانات</a></li>
+                    <li><a href="#api-examples">🔗 أمثلة API</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <img src="/Quran-Data.png" alt="Quran-Data" aria-label="Quran-Data" id="imgQuran">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">🕌 Quran Data API</h1>
+            <p class="hero-subtitle">
+                واجهة برمجة تطبيقات شاملة للوصول إلى بيانات القرآن الكريم
+                <br>
+                مع دعم توقيتات التلاوة وبيانات مفصلة للسور والآيات
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <span class="stat-number">114</span>
+                    <span class="stat-label">سورة</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6,236</span>
+                    <span class="stat-label">آية</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">قراء</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20K+</span>
+                    <span class="stat-label">توقيت</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div id="redoc-container" class="container"></div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Quick Start Section -->
+            <section class="quick-start" id="api-examples">
+                <h3>🚀 أمثلة سريعة لاستخدام API</h3>
+                <p>جرب هذه الأمثلة لبدء استخدام API القرآن الكريم:</p>
+                
+                <div class="api-examples">
+                    <div class="api-card">
+                        <h4>📖 جلب سورة الفاتحة</h4>
+                        <div class="api-endpoint">GET /api/surah/1</div>
+                        <p>احصل على بيانات كاملة لسورة الفاتحة مع جميع الآيات</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🎵 توقيت الفاتحة للسديس</h4>
+                        <div class="api-endpoint">GET /api/timing/sudais/1</div>
+                        <p>احصل على توقيت تلاوة آيات سورة الفاتحة للشيخ السديس</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>👥 جميع القراء</h4>
+                        <div class="api-endpoint">GET /api/timing/reciters</div>
+                        <p>قائمة بجميع القراء المتاحين مع إحصائيات التوقيت</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🔍 آية محددة</h4>
+                        <div class="api-endpoint">GET /api/verse/1/1</div>
+                        <p>جلب بيانات آية محددة (السورة/الآية)</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🎧 ملفات صوتية</h4>
+                        <div class="api-endpoint">GET /api/audio/1</div>
+                        <p>روابط التسجيلات الصوتية للسور</p>
+                    </div>
+                    
+                    <div class="api-card">
+                        <h4>🕋 آيات السجدة</h4>
+                        <div class="api-endpoint">GET /api/sajda</div>
+                        <p>جميع آيات السجدة في القرآن الكريم</p>
+                    </div>
+                </div>
+            </section>
 
+            <!-- API Documentation -->
+            <div id="redoc-container"></div>
+        </div>
 
-    <div class="container" id="download" style="direction: rtl;">
-        <img src="https://img.shields.io/github/downloads/rn0x/Quran-Data/total?color=blue&label=Total%20Downloads"
-            alt="Total Downloads" title="Total Downloads" aria-label="Total-Downloads">
-        <h2>تحميل قواعد البيانات</h2>
-        <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.json" target="_blank">تحميل
-            قاعدة
-            بيانات JSON</a>
-        <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.sqlite" target="_blank">تحميل
-            قاعدة بيانات SQLite</a>
-        <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.csv" target="_blank">تحميل قاعدة
-            بيانات CSV</a>
+        <!-- Download Section -->
+        <section class="container" id="download">
+            <h2>📦 تحميل قواعد البيانات</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: #666;">
+                حمل قواعد البيانات بصيغ مختلفة لاستخدامها في مشاريعك
+            </p>
+            
+            <div class="download-grid">
+                <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.json" target="_blank">
+                    📄 قاعدة بيانات JSON
+                </a>
+                <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.sqlite" target="_blank">
+                    🗄️ قاعدة بيانات SQLite
+                </a>
+                <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.csv" target="_blank">
+                    📊 قاعدة بيانات CSV
+                </a>
+            </div>
+        </section>
+
+        <!-- Keywords Section -->
+        <section class="container keywords-section">
+            <h3>🏷️ الكلمات المفتاحية</h3>
+            <ul id="Keywords">
+                <li>API القرآن</li>
+                <li>بيانات القرآن</li>
+                <li>آيات القرآن</li>
+                <li>سور القرآن</li>
+                <li>القرآن الكريم</li>
+                <li>توقيت التلاوة</li>
+                <li>صوت القرآن</li>
+                <li>تجويد القرآن</li>
+                <li>قراءة القرآن</li>
+                <li>السديس</li>
+                <li>الشريم</li>
+                <li>الحذيفي</li>
+                <li>الجهني</li>
+                <li>آيات السجدة</li>
+                <li>JSON Database</li>
+                <li>SQLite Database</li>
+                <li>Quran API</li>
+                <li>Quran Data</li>
+                <li>Quran Timing</li>
+                <li>Islamic API</li>
+                <li>Holy Quran</li>
+                <li>Quran Verses</li>
+                <li>Quran Audio</li>
+                <li>Quran Recitation</li>
+            </ul>
+        </section>
     </div>
 
-    <ul id="Keywords">
-        <li>API القرآن</li>
-        <li>بيانات القرآن</li>
-        <li>آيات القرآن</li>
-        <li>سور القرآن</li>
-        <li>القرآن الكريم</li>
-        <li>استرجاع الآيات</li>
-        <li>صوت القرآن</li>
-        <li>تجويد القرآن</li>
-        <li>تفسير القرآن</li>
-        <li>نصوص القرآن</li>
-        <li>تعليم القرآن</li>
-        <li>قراءة القرآن</li>
-        <li>ترجمة القرآن</li>
-        <li>حفظ القرآن</li>
-        <li>علوم القرآن</li>
-        <li>سور وآيات</li>
-        <li>آيات السجدة</li>
-        <li>تفسير الآيات</li>
-        <li>التطبيقات القرآنية</li>
-        <li>دروس القرآن</li>
-        <li>فقه القرآن</li>
-        <li>أمثلة القرآن</li>
-        <li>قراءة عصرية</li>
-        <li>نسخ القرآن</li>
-        <li>مواقع القرآن</li>
-        <li>Quran API</li>
-        <li>Quran data</li>
-        <li>Quran verses</li>
-        <li>Quran chapters</li>
-        <li>Holy Quran</li>
-        <li>Retrieve verses</li>
-        <li>Quran audio</li>
-        <li>Quran recitation</li>
-        <li>Quran interpretation</li>
-        <li>Quran texts</li>
-        <li>Quran education</li>
-        <li>Quran reading</li>
-        <li>Quran translation</li>
-        <li>Quran memorization</li>
-        <li>Quran sciences</li>
-        <li>Surahs and verses</li>
-        <li>Verses of prostration</li>
-        <li>Verse interpretation</li>
-        <li>Quranic applications</li>
-        <li>Quran lessons</li>
-        <li>Fiqh of the Quran</li>
-        <li>Quran examples</li>
-        <li>Modern recitation</li>
-        <li>Quran copies</li>
-        <li>Quran websites</li>
-    </ul>
-
-    <small style="text-align: center; display: block; direction: rtl;">
-        للهم أجعل هذا العمل صدقه جاريه لي ولوالدي ولأهل بيتي ولكل من ساهم او دعم او نشر هذه المشروع 🤲🏻
-    </small>
-
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2024 <a href="http://github.com/msr7799/Quran-Data" target="_blank"
-                rel="noopener noreferrer">Quran-Data</a>.</p>
-        <div id="menufo">
-            <a href="http://github.com/msr7799" target="_blank" rel="noopener noreferrer">Github</a>
-            <a href="http://t.me/tqw24h" target="_blank" rel="noopener noreferrer">@tqw24h</a>
-            <a href="https://t.me/KanzislamNet" target="_blank" rel="noopener noreferrer">@KanzislamNet</a>
-            <a href="https://i8x.net" target="_blank" rel="noopener noreferrer">i8x.net</a>
-
+        <div class="footer-content">
+            <div class="footer-prayer">
+                اللهم اجعل هذا العمل صدقة جارية لي ولوالدي ولأهل بيتي ولكل من ساهم أو دعم أو نشر هذا المشروع 🤲🏻
+            </div>
+            
+            <p>&copy; 2024 
+                <a href="https://github.com/Msr7799/Quran-Data" target="_blank" rel="noopener noreferrer" style="color: #667eea;">
+                    Quran-Data API
+                </a>
+            </p>
+            
+            <div id="menufo">
+                <a href="https://github.com/Msr7799" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://t.me/tqw24h" target="_blank" rel="noopener noreferrer">Telegram</a>
+                <a href="https://t.me/KanzislamNet" target="_blank" rel="noopener noreferrer">قناة كنز الإسلام</a>
+                <a href="https://i8x.net" target="_blank" rel="noopener noreferrer">i8x.net</a>
+            </div>
         </div>
     </footer>
 
     <script src="/redoc.standalone.js"></script>
     <script>
-        Redoc.init('/docs/api-definition.yaml', {}, document.getElementById('redoc-container'));
+        // Initialize Redoc
+        Redoc.init('/docs/api-definition.yaml', {
+            theme: {
+                colors: {
+                    primary: {
+                        main: '#667eea'
+                    }
+                },
+                typography: {
+                    fontFamily: 'Inter, Segoe UI, sans-serif',
+                    fontSize: '14px'
+                }
+            },
+            scrollYOffset: 80,
+            hideHostname: true,
+            hideDownloadButton: false,
+            disableSearch: false,
+            expandResponses: '200,201',
+            jsonSampleExpandLevel: 2,
+            hideLoading: false,
+            nativeScrollbars: false,
+            pathInMiddlePanel: true,
+            requiredPropsFirst: true,
+            sortPropsAlphabetically: false,
+            showExtensions: true,
+            hideSchemaPattern: false
+        }, document.getElementById('redoc-container'));
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation
+        const redocContainer = document.getElementById('redoc-container');
+        redocContainer.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div class="loading"></div>
+                <p style="margin-top: 1rem; color: #667eea;">جاري تحميل وثائق API...</p>
+            </div>
+        `;
     </script>
 </body>
 

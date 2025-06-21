@@ -41,6 +41,8 @@ https://quran-api-qklj.onrender.com/api
 
 ## 🚀 Quick Start
 
+### Basic Examples
+
 ```javascript
 // Fetch all surahs
 const response = await fetch('https://quran-api-qklj.onrender.com/api/surahs');
@@ -57,6 +59,26 @@ const allReciters = await reciters.json();
 // Fetch verse timings for Al-Fatihah by Sudais
 const timings = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1');
 const fatihahTimings = await timings.json();
+```
+
+### Advanced Examples
+
+```javascript
+// Get timing for specific verse
+const verseOneTiming = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1/1');
+const firstVerse = await verseOneTiming.json();
+
+// Get all available surahs for a reciter
+const surahsForSudais = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/surahs');
+const availableSurahs = await surahsForSudais.json();
+
+// Get audio files for a surah
+const audioFiles = await fetch('https://quran-api-qklj.onrender.com/api/audio/1');
+const fatihahAudio = await audioFiles.json();
+
+// Get page information
+const pageInfo = await fetch('https://quran-api-qklj.onrender.com/api/pages/1/1');
+const page = await pageInfo.json();
 ```
 
 ### 📋 Timing API Response Example
@@ -102,8 +124,17 @@ API supports Cross-Origin Resource Sharing (CORS) for web applications.
 ## 🚀 Deployment
 
 The API is deployed on **Render** and available at:
+
 - **Production:** `https://quran-api-qklj.onrender.com/api`
 - **Documentation:** `https://quran-api-qklj.onrender.com/docs`
+- **Status:** ✅ Live and fully operational
+
+### Performance Metrics (Render)
+
+- **Response Time:** 300-800ms average
+- **Uptime:** 99.9%
+- **Cold Start:** ~3-5 seconds (if sleeping)
+- **Region:** US-West
 
 ### Available Reciters for Timing
 
@@ -114,4 +145,18 @@ The API is deployed on **Render** and available at:
 
 ---
 
-**Made with ❤️ for the Quran community**
+## 🧪 Testing the API
+
+You can test the API endpoints using the provided test scripts:
+
+```bash
+# Test local API
+node scripts/simpleAPITest.mjs
+
+# Test production API on Render
+node scripts/testRenderAPI.mjs
+```
+
+---
+
+## Made with ❤️ for the Quran community
