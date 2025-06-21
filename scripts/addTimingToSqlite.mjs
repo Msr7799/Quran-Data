@@ -127,6 +127,109 @@ const showStatistics = async (db) => {
     }
 };
 
+// دوال مساعدة للاستعلام عن بيانات التوقيت
+
+/**
+ * جلب توقيت آيات سورة معينة لقارئ معين
+ * @param {string} reciterName - اسم القارئ
+ * @param {number} surahNumber - رقم السورة
+ * @returns {Promise<Array>} - مصفوفة تحتوي على توقيت الآيات
+ */
+export async function getVerseTimings(reciterName, surahNumber) {
+    const db = await open({
+        filename: dbFilePath,
+        driver: sqlite3.Database
+    });
+
+    try {
+        const timings = await db.all(`
+            SELECT 
+                verse_number,
+                timing_seconds,
+                reciter_display_name
+            FROM ayat_timing 
+            WHERE reciter_name = ? 
+            AND surah_number = ? 
+            ORDER BY verse_number
+        `, [reciterName, surahNumber]);
+
+        return timings;
+    } finally {
+        await db.close();
+    }
+}
+
+/**
+ * جلب قائمة بجميع القراء المتاحين
+ * @returns {Promise<Array>} - مصفوفة تحتوي على أسماء القراء
+ */
+export async function getAvailableReciters() {
+    const db = await open({
+        filename: dbFilePath,
+        driver: sqlite3.Database
+    });
+
+    try {
+        const reciters = await db.all(`
+            SELECT DISTINCT reciter_name, reciter_display_name 
+            FROM ayat_timing 
+            ORDER BY reciter_name
+        `);
+
+        return reciters;
+    } finally {
+        await db.close();
+    }
+}
+
+/**
+ * عرض توقيت آيات سورة معينة بشكل مُنسق
+ * @param {string} reciterName - اسم القارئ
+ * @param {number} surahNumber - رقم السورة
+ */
+export async function displayVerseTimings(reciterName, surahNumber) {
+    try {
+        console.log(`🔍 جلب توقيت آيات السورة ${surahNumber} للقارئ ${reciterName}...\n`);
+
+        const timings = await getVerseTimings(reciterName, surahNumber);
+
+        if (timings.length === 0) {
+            console.log(`❌ لم يتم العثور على توقيت للقارئ ${reciterName} في السورة ${surahNumber}`);
+            
+            const availableReciters = await getAvailableReciters();
+            console.log('\n📋 القراء المتاحون:');
+            availableReciters.forEach(r => {
+                console.log(`- ${r.reciter_name} (${r.reciter_display_name})`);
+            });
+            
+            return;
+        }
+
+        console.log(`✅ تم العثور على ${timings.length} آية\n`);
+        console.log(`📖 توقيت آيات السورة ${surahNumber} للقارئ ${timings[0].reciter_display_name}:`);
+        console.log('━'.repeat(50));
+        
+        timings.forEach(timing => {
+            const minutes = Math.floor(timing.timing_seconds / 60);
+            const seconds = (timing.timing_seconds % 60).toFixed(3);
+            console.log(`الآية ${timing.verse_number}: ${timing.timing_seconds}s (${minutes}:${seconds.padStart(6, '0')})`);
+        });
+        
+        const totalSeconds = timings[timings.length - 1].timing_seconds;
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = (totalSeconds % 60).toFixed(3);
+        
+        console.log('━'.repeat(50));
+        console.log(`📊 المدة الإجمالية: ${totalSeconds}s (${totalMinutes}:${remainingSeconds.padStart(6, '0')})`);
+        
+        return timings;
+        
+    } catch (error) {
+        console.error('❌ خطأ في جلب البيانات:', error);
+        throw error;
+    }
+}
+
 // تنفيذ السكربت الرئيسي
 const run = async () => {
     try {

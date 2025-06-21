@@ -1,0 +1,551 @@
+{
+  "api_info": {
+    "title": "Quran Data API - مرجع شامل",
+    "description": "واجهة برمجة تطبيقات شاملة للقرآن الكريم مع دعم التوقيتات والبيانات المفصلة",
+    "version": "2.1.0",
+    "base_url": "https://quran-api-qklj.onrender.com/api",
+    "documentation_url": "https://quran-api-qklj.onrender.com/docs",
+    "github_url": "https://github.com/Msr7799/Quran-Data",
+    "deployment": {
+      "platform": "Render",
+      "status": "Active",
+      "uptime": "99.9%",
+      "average_response_time": "300-800ms"
+    }
+  },
+  "statistics": {
+    "total_surahs": 114,
+    "total_verses": 6236,
+    "total_audio_reciters": 158,
+    "timing_reciters": 4,
+    "total_verse_timings": 20675,
+    "total_pages": 604,
+    "total_juz": 30,
+    "total_sajda_verses": 15
+  },
+  "endpoints": {
+    "surahs": {
+      "description": "إدارة السور - الحصول على معلومات السور",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/surahs",
+          "description": "جلب جميع السور مع معلوماتها الأساسية",
+          "parameters": "لا يوجد",
+          "response_example": {
+            "success": true,
+            "data": [
+              {
+                "number": 1,
+                "name": {
+                  "ar": "الفاتحة",
+                  "en": "Al-Fatihah",
+                  "transliteration": "Al-Fatihah"
+                },
+                "revelation_place": {
+                  "ar": "مكية",
+                  "en": "meccan"
+                },
+                "verses_count": 7,
+                "words_count": 29,
+                "letters_count": 139
+              }
+            ]
+          },
+          "use_cases": [
+            "عرض قائمة بجميع السور",
+            "الحصول على إحصائيات أساسية للسور",
+            "بناء فهرس للتطبيق"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/surah/:surah_id",
+          "description": "جلب معلومات سورة محددة مع جميع آياتها",
+          "parameters": {
+            "surah_id": "رقم السورة (1-114)"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "number": 1,
+              "name": {
+                "ar": "الفاتحة",
+                "en": "Al-Fatihah",
+                "transliteration": "Al-Fatihah"
+              },
+              "verses": [
+                {
+                  "number": 1,
+                  "text": {
+                    "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    "en": "In the name of Allah, the Entirely Merciful, the Especially Merciful."
+                  },
+                  "juz": 1,
+                  "page": 1,
+                  "sajda": false
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "عرض سورة كاملة للقراءة",
+            "تطبيقات المصحف الرقمي",
+            "البحث في آيات سورة معينة"
+          ]
+        }
+      ]
+    },
+    "verses": {
+      "description": "إدارة الآيات - الحصول على آيات محددة أو مجموعة آيات",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/verses/:surah_id",
+          "description": "جلب جميع آيات سورة معينة",
+          "parameters": {
+            "surah_id": "رقم السورة (1-114)"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "surah_info": {
+                "number": 1,
+                "name": "الفاتحة",
+                "verses_count": 7
+              },
+              "verses": [
+                {
+                  "number": 1,
+                  "text": {
+                    "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    "en": "In the name of Allah..."
+                  },
+                  "juz": 1,
+                  "page": 1
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "تطبيقات تلاوة القرآن",
+            "حفظ القرآن",
+            "التفسير التفاعلي"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/verse/:surah_id/:verse_id",
+          "description": "جلب آية محددة",
+          "parameters": {
+            "surah_id": "رقم السورة (1-114)",
+            "verse_id": "رقم الآية"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "verse": {
+                "surah_number": 1,
+                "verse_number": 1,
+                "text": {
+                  "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                  "en": "In the name of Allah..."
+                },
+                "juz": 1,
+                "page": 1,
+                "sajda": false
+              }
+            }
+          },
+          "use_cases": [
+            "عرض آية اليوم",
+            "الاقتباس من القرآن",
+            "التأمل في آية محددة"
+          ]
+        }
+      ]
+    },
+    "timing": {
+      "description": "توقيتات التلاوة - بيانات توقيت الآيات للقراء المختلفين",
+      "available_reciters": [
+        {
+          "key": "sudais",
+          "display_name": "الشيخ عبد الرحمن السديس",
+          "total_timings": 6349
+        },
+        {
+          "key": "Shuraym",
+          "display_name": "الشيخ سعود الشريم",
+          "total_timings": 6354
+        },
+        {
+          "key": "Al-Juhaynee",
+          "display_name": "الشيخ عبد الله الجهني",
+          "total_timings": 6339
+        },
+        {
+          "key": "Hudhaify",
+          "display_name": "الشيخ علي الحذيفي",
+          "total_timings": 1633
+        }
+      ],
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/timing/reciters",
+          "description": "جلب قائمة بجميع القراء المتاحين مع إحصائياتهم",
+          "parameters": "لا يوجد",
+          "response_example": {
+            "success": true,
+            "data": [
+              {
+                "reciter_name": "sudais",
+                "reciter_display_name": "Sudais",
+                "total_verses": 6349,
+                "available_surahs": 114
+              }
+            ]
+          },
+          "use_cases": [
+            "اختيار القارئ المفضل",
+            "عرض إحصائيات القراء",
+            "بناء واجهة اختيار القارئ"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/timing/:reciter/:surah_id",
+          "description": "جلب توقيت جميع آيات سورة لقارئ محدد",
+          "parameters": {
+            "reciter": "اسم القارئ (sudais, Shuraym, Al-Juhaynee, Hudhaify)",
+            "surah_id": "رقم السورة (1-114)"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "reciter": "Sudais",
+              "reciter_key": "sudais",
+              "surah_number": 1,
+              "verses_count": 8,
+              "total_duration_seconds": 38.126,
+              "verses": [
+                {
+                  "verse_number": 1,
+                  "timing_seconds": 3.371,
+                  "reciter_display_name": "Sudais"
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "تشغيل التلاوة المتزامنة",
+            "تطبيقات التعلم التفاعلي",
+            "مشغل القرآن مع التوقيت",
+            "تحليل سرعة التلاوة"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/timing/:reciter/:surah_id/:verse_id",
+          "description": "جلب توقيت آية واحدة محددة",
+          "parameters": {
+            "reciter": "اسم القارئ",
+            "surah_id": "رقم السورة",
+            "verse_id": "رقم الآية"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "reciter": "Sudais",
+              "surah_number": 1,
+              "verse_number": 1,
+              "timing_seconds": 3.371,
+              "verse_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+            }
+          },
+          "use_cases": [
+            "تكرار آية محددة",
+            "التدريب على التجويد",
+            "قياس سرعة الحفظ"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/timing/:reciter/surahs",
+          "description": "جلب السور المتاحة لقارئ محدد",
+          "parameters": {
+            "reciter": "اسم القارئ"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "reciter": "Sudais",
+              "available_surahs": [1, 2, 3, "..."],
+              "total_surahs": 114
+            }
+          },
+          "use_cases": [
+            "فلترة السور حسب القارئ",
+            "عرض المحتوى المتاح",
+            "بناء قوائم التشغيل"
+          ]
+        }
+      ]
+    },
+    "audio": {
+      "description": "الملفات الصوتية - روابط التسجيلات الصوتية للسور",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/audio/:surah_id",
+          "description": "جلب روابط الملفات الصوتية لسورة محددة",
+          "parameters": {
+            "surah_id": "رقم السورة (1-114)"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "surah_number": 1,
+              "surah_name": "الفاتحة",
+              "audio_files": [
+                {
+                  "id": 1,
+                  "reciter": {
+                    "ar": "عبد الباسط عبد الصمد",
+                    "en": "Abdul Basit Abdul Samad"
+                  },
+                  "rewaya": {
+                    "ar": "حفص عن عاصم",
+                    "en": "Hafs"
+                  },
+                  "server": "https://server.example.com",
+                  "link": "https://server.example.com/audio/001.mp3"
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "تشغيل التلاوة الصوتية",
+            "مقارنة أصوات القراء",
+            "التحميل للاستماع دون اتصال"
+          ]
+        }
+      ]
+    },
+    "sajda": {
+      "description": "آيات السجدة - الآيات التي تحتوي على سجدة تلاوة",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/sajda",
+          "description": "جلب جميع آيات السجدة في القرآن",
+          "parameters": "لا يوجد",
+          "response_example": {
+            "success": true,
+            "data": [
+              {
+                "surah_number": 7,
+                "surah_name": "الأعراف",
+                "verse_number": 206,
+                "verse_text": "إِنَّ الَّذِينَ عِندَ رَبِّكَ لَا يَسْتَكْبِرُونَ عَنْ عِبَادَتِهِ وَيُسَبِّحُونَهُ وَلَهُ يَسْجُدُونَ",
+                "juz": 9,
+                "page": 176,
+                "sajda_type": "recommended"
+              }
+            ]
+          },
+          "use_cases": [
+            "تطبيقات السجدة التلقائية",
+            "تذكير بمواضع السجود",
+            "دراسة آيات السجدة"
+          ]
+        }
+      ]
+    },
+    "juz": {
+      "description": "الأجزاء - تقسيم القرآن إلى 30 جزء",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/juz/:juz_id",
+          "description": "جلب جميع آيات جزء محدد",
+          "parameters": {
+            "juz_id": "رقم الجزء (1-30)"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "juz_number": 1,
+              "total_verses": 148,
+              "surahs_included": [
+                {
+                  "surah_number": 1,
+                  "surah_name": "الفاتحة",
+                  "verses_in_juz": 7
+                }
+              ],
+              "verses": [
+                {
+                  "surah_number": 1,
+                  "verse_number": 1,
+                  "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                  "page": 1
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "ختم القرآن في شهر",
+            "تقسيم الحفظ بالأجزاء",
+            "تطبيقات الورد اليومي"
+          ]
+        }
+      ]
+    },
+    "pages": {
+      "description": "الصفحات - معلومات صفحات المصحف",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/pages/:surah_id/:verse_id",
+          "description": "جلب رقم الصفحة لآية محددة",
+          "parameters": {
+            "surah_id": "رقم السورة",
+            "verse_id": "رقم الآية"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "surah_number": 1,
+              "verse_number": 1,
+              "page_number": 1,
+              "verses_on_page": [
+                {
+                  "surah": 1,
+                  "verse": 1
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "المصحف الرقمي بالصفحات",
+            "التنقل بالصفحات",
+            "طباعة صفحات محددة"
+          ]
+        }
+      ]
+    },
+    "images": {
+      "description": "صور المصحف - صور صفحات القرآن",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/data/quran_image/:page.png",
+          "description": "جلب صورة صفحة من المصحف",
+          "parameters": {
+            "page": "رقم الصفحة (1-604)"
+          },
+          "response_type": "image/png",
+          "use_cases": [
+            "عرض المصحف بالرسم العثماني",
+            "طباعة الصفحات",
+            "تطبيقات المصحف التقليدية"
+          ]
+        }
+      ]
+    }
+  },
+  "rate_limiting": {
+    "default_limit": "300 requests per minute per IP",
+    "configurable": true,
+    "environment_variable": "API_RATE_LIMIT"
+  },
+  "cors": {
+    "enabled": true,
+    "description": "يدعم Cross-Origin Resource Sharing للتطبيقات الويب"
+  },
+  "error_handling": {
+    "format": {
+      "success": false,
+      "error": {
+        "code": 404,
+        "message": "Resource not found",
+        "details": "Additional error information"
+      }
+    },
+    "common_errors": [
+      {
+        "code": 400,
+        "message": "Bad Request - Invalid parameters"
+      },
+      {
+        "code": 404,
+        "message": "Not Found - Resource does not exist"
+      },
+      {
+        "code": 429,
+        "message": "Too Many Requests - Rate limit exceeded"
+      },
+      {
+        "code": 500,
+        "message": "Internal Server Error"
+      }
+    ]
+  },
+  "integration_examples": {
+    "mcp_integration": {
+      "description": "أمثلة للتكامل مع Model Context Protocol (MCP)",
+      "examples": [
+        {
+          "task": "جلب آية عشوائية",
+          "query": "أعطني آية عشوائية من القرآن",
+          "api_calls": [
+            "GET /surahs - للحصول على قائمة السور",
+            "GET /verses/{random_surah} - لجلب آيات السورة المختارة"
+          ]
+        },
+        {
+          "task": "مقارنة توقيت القراء",
+          "query": "قارن بين سرعة تلاوة السديس والشريم للفاتحة",
+          "api_calls": [
+            "GET /timing/sudais/1 - توقيت السديس",
+            "GET /timing/Shuraym/1 - توقيت الشريم"
+          ]
+        },
+        {
+          "task": "بناء جدول حفظ",
+          "query": "ساعدني في إنشاء جدول حفظ للجزء الأول",
+          "api_calls": [
+            "GET /juz/1 - جلب آيات الجزء الأول",
+            "GET /timing/sudais/* - جلب توقيتات للمراجعة"
+          ]
+        }
+      ]
+    },
+    "ai_assistant_prompts": [
+      "استخدم API القرآن لمساعدة المستخدم في فهم وتعلم القرآن الكريم",
+      "عند السؤال عن آية، اجلب النص العربي والترجمة الإنجليزية",
+      "للأسئلة حول التوقيت، استخدم بيانات القراء المتاحين",
+      "ساعد في إنشاء جداول الحفظ باستخدام تقسيم الأجزاء",
+      "وفر معلومات عن مواضع السجود عند الحاجة"
+    ]
+  },
+  "best_practices": {
+    "caching": "احفظ البيانات محلياً لتقليل الطلبات المتكررة",
+    "error_handling": "تعامل مع الأخطاء بلطف وأعطِ رسائل واضحة للمستخدم",
+    "rate_limiting": "احترم حدود معدل الطلبات لضمان الخدمة للجميع",
+    "pagination": "استخدم التصفح للبيانات الكبيرة عند الإمكان",
+    "offline_support": "فكر في تحميل البيانات للاستخدام دون اتصال"
+  },
+  "version_info": {
+    "current_version": "2.1.0",
+    "release_date": "2025-06-21",
+    "changelog": [
+      "إضافة دعم توقيتات التلاوة لـ 4 قراء",
+      "تحسين أداء الاستعلامات",
+      "إضافة endpoints جديدة للتوقيت",
+      "تحديث التوثيق والأمثلة",
+      "نشر على Render مع أداء محسن"
+    ]
+  }
+}

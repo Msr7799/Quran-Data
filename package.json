@@ -9,13 +9,14 @@
   "scripts": {
     "start": "node server/server.mjs",
     "dev": "nodemon",
-    "splitData": "node scripts/splitData.js",
+    "splitData": "node scripts/splitData.mjs",
     "jsonToSqlite": "node scripts/jsonToSqlite.mjs",
     "jsonToCsv": "node scripts/jsonToCsv.mjs",
     "addTimingToSqlite": "node scripts/addTimingToSqlite.mjs",
-    "timing-examples": "node scripts/timingExamples.mjs",
-    "get-timing": "node scripts/getTimingSudais.mjs",
-    "test-render": "node scripts/testRenderAPI.mjs"
+    "addApiReferenceToSqlite": "node scripts/addApiReferenceToSqlite.mjs",
+    "addJsonToSqlite": "node scripts/addJsonToSqlite.mjs",
+    "setup:db": "npm run jsonToSqlite && npm run addTimingToSqlite && npm run addApiReferenceToSqlite",
+    "export:data": "npm run splitData && npm run jsonToCsv"
   },
   "keywords": [],
   "author": {
