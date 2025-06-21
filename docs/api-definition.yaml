@@ -4,6 +4,8 @@ info:
   description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد.
   version: 2.1.0
 servers:
+  - url: https://quran-api-qklj.onrender.com/api
+    description: الخادم المُنشر على Render
   - url: http://localhost:5000/api
     description: الخادم المحلي
 
@@ -478,6 +480,192 @@ paths:
                                 transliteration:
                                   type: string
                                   example: "Al-Fatihah"
+
+  /timing/reciters:
+    get:
+      summary: استرجاع جميع القراء المتاحين للتوقيت
+      responses:
+        "200":
+          description: قائمة بجميع القراء المتاحين
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reciter_name:
+                          type: string
+                          example: sudais
+                        reciter_display_name:
+                          type: string
+                          example: Sudais
+                        total_verses:
+                          type: integer
+                          example: 6349
+
+  /timing/{reciter}/{surah_id}:
+    get:
+      summary: استرجاع توقيت آيات سورة معينة لقارئ معين
+      parameters:
+        - name: reciter
+          in: path
+          required: true
+          schema:
+            type: string
+            example: sudais
+          description: اسم القارئ
+        - name: surah_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: رقم السورة
+      responses:
+        "200":
+          description: توقيت آيات السورة للقارئ المحدد
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      reciter:
+                        type: string
+                        example: Sudais
+                      reciter_key:
+                        type: string
+                        example: sudais
+                      surah_number:
+                        type: integer
+                        example: 1
+                      verses_count:
+                        type: integer
+                        example: 8
+                      total_duration_seconds:
+                        type: number
+                        example: 38.126
+                      verses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            verse_number:
+                              type: integer
+                              example: 1
+                            timing_seconds:
+                              type: number
+                              example: 3.371
+                            reciter_display_name:
+                              type: string
+                              example: Sudais
+
+  /timing/{reciter}/{surah_id}/{verse_id}:
+    get:
+      summary: استرجاع توقيت آية واحدة محددة
+      parameters:
+        - name: reciter
+          in: path
+          required: true
+          schema:
+            type: string
+            example: sudais
+          description: اسم القارئ
+        - name: surah_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: رقم السورة
+        - name: verse_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: رقم الآية
+      responses:
+        "200":
+          description: توقيت الآية المحددة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      reciter:
+                        type: string
+                        example: Sudais
+                      reciter_key:
+                        type: string
+                        example: sudais
+                      surah_number:
+                        type: integer
+                        example: 1
+                      verse_number:
+                        type: integer
+                        example: 1
+                      timing_seconds:
+                        type: number
+                        example: 3.371
+
+  /timing/{reciter}/surahs:
+    get:
+      summary: استرجاع السور المتاحة لقارئ معين
+      parameters:
+        - name: reciter
+          in: path
+          required: true
+          schema:
+            type: string
+            example: sudais
+          description: اسم القارئ
+      responses:
+        "200":
+          description: قائمة بالسور المتاحة للقارئ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      reciter:
+                        type: string
+                        example: Sudais
+                      reciter_key:
+                        type: string
+                        example: sudais
+                      total_surahs:
+                        type: integer
+                        example: 114
+                      surahs:
+                        type: array
+                        items:
+                          type: integer
+                          example: 1
 
 components:
   schemas:

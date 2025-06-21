@@ -12,7 +12,10 @@
     "splitData": "node scripts/splitData.js",
     "jsonToSqlite": "node scripts/jsonToSqlite.mjs",
     "jsonToCsv": "node scripts/jsonToCsv.mjs",
-    "addTimingToSqlite": "node scripts/addTimingToSqlite.mjs"
+    "addTimingToSqlite": "node scripts/addTimingToSqlite.mjs",
+    "timing-examples": "node scripts/timingExamples.mjs",
+    "get-timing": "node scripts/getTimingSudais.mjs",
+    "test-render": "node scripts/testRenderAPI.mjs"
   },
   "keywords": [],
   "author": {
