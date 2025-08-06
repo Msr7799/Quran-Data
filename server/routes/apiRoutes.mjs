@@ -26,11 +26,11 @@ router.get('/sajda', getSajdaVerses);
 router.get('/audio/:surah_id?', getAudio); // جميع الملفات الصوتية لسورة
 router.get('/audio/:surah_id/:reciter', getAudioByReciter); // ملفات صوتية لقارئ معيّن وسورة
 
-// القراء الصوتيين (من جدول audio)
+// جميع القراء الصوتيين (من جدول audio) - 133 قارئ
 router.get('/reciters', getAllAudioReciters);
 
 // ============= Timing Routes =============
-// القراء الذين لديهم توقيتات فقط
+// القراء الذين لديهم توقيتات فقط - 4 قراء
 router.get('/timing/reciters', getAllReciters);
 // السور المتاحة لقارئ توقيت
 router.get('/timing/:reciter/surahs', getAvailableSurahs);

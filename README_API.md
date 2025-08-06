@@ -44,7 +44,7 @@ Local:       http://localhost:5000/api
 - `GET /pages/:surah_id/:verse_id` - Get page number for verse
 
 ### ⏱️ Timing (التوقيت)
-- `GET /timing/reciters` - Get all timing reciters (4 reciters with timing data)
+- `GET /timing/reciters` - Get timing reciters only (4 reciters with timing data)
 - `GET /timing/:reciter/surahs` - Get available surahs for a timing reciter
 - `GET /timing/:reciter/:surah_id` - Get verse timings for a surah
 - `GET /timing/:reciter/:surah_id/:verse_id` - Get timing for specific verse

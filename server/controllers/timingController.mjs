@@ -17,7 +17,7 @@ async function openDatabase() {
 }
 
 /**
- * جلب جميع القراء المتاحين
+ * جلب قراء التوقيت المتاحين (4 قراء فقط)
  * GET /api/timing/reciters
  */
 export const getAllReciters = async (req, res) => {
@@ -243,7 +243,7 @@ export const searchTimings = async (req, res) => {
 };
 
 /**
- * جلب جميع القراء الصوتيين من جدول audio
+ * جلب جميع القراء الصوتيين من جدول audio (133 قارئ)
  * GET /api/reciters
  */
 export const getAllAudioReciters = async (req, res) => {
