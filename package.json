@@ -7,6 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "build": "echo 'Build completed successfully'",
     "start": "node server/server.mjs",
     "dev": "nodemon",
     "splitData": "node scripts/splitData.mjs",

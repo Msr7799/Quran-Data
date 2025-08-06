@@ -36,6 +36,12 @@ app.use('/api', apiRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(config.port, () => {
-    console.log(`[QURAN-DATA]-[${new Date().toISOString()}] 🚀 Server is running on http://localhost:${config.port}`);
-});
+// تصدير التطبيق للاستخدام مع Vercel
+export default app;
+
+// تشغيل الخادم محلياً فقط
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(config.port, () => {
+        console.log(`[QURAN-DATA]-[${new Date().toISOString()}] 🚀 Server is running on http://localhost:${config.port}`);
+    });
+}
