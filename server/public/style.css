@@ -1,4 +1,36 @@
-* {
+:root {
+            /* الوضع النهاري - Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-primary: rgba(255, 255, 255, 0.2);
+            --border-secondary: #e9ecef;
+            --accent-color: #FF7F00;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.235);
+            --footer-bg: #333;
+            --selection-bg: rgba(102, 126, 234, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* الوضع الليلي - Dark Mode */
+            --bg-primary: #212121;
+            --bg-secondary: #181818;
+            --bg-gradient: linear-gradient(135deg, #212121 0%, #181818 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-primary: rgba(255, 127, 0, 0.3);
+            --border-secondary: #FF7F00;
+            --accent-color: #FF7F00;
+            --header-bg: rgba(33, 33, 33, 0.95);
+            --card-bg: rgba(24, 24, 24, 0.8);
+            --footer-bg: #181818;
+            --selection-bg: rgba(255, 127, 0, 0.2);
+        }
+
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -8,12 +40,13 @@
         html {
             width: 100%;
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
             line-height: 1.6;
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Header Styles */
@@ -22,12 +55,71 @@
             top: 0;
             width: 100%;
             z-index: 1000000;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--header-bg);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--border-primary);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 1rem 2rem;
             transition: all 0.3s ease;
+        }
+
+        /* زر التبديل بين الوضعين على شكل Switch - في الهيدر */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 2px solid var(--border-primary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 127, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        /* Switch Container */
+        .switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-secondary);
+            border-radius: 30px;
+            border: 2px solid var(--border-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .switch-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .switch {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        [data-theme="dark"] .switch-slider {
+            transform: translateX(30px);
+            background: var(--bg-primary);
+            color: var(--accent-color);
         }
 
         .header-content {
@@ -60,21 +152,21 @@
         }
 
         nav ul li a {
-            color: #333;
+            color: var(--text-primary);
             text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 25px;
-            background: rgba(102, 126, 234, 0.1);
+            background: var(--selection-bg);
             transition: all 0.3s ease;
             font-weight: 500;
             font-size: 0.9rem;
         }
 
         nav ul li a:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: var(--accent-color);
+            color: var(--bg-primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
         }
 
         /* Hero Section */
@@ -167,7 +259,7 @@
 
         /* Main Content */
         .main-content {
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             min-height: 100vh;
         }
 
@@ -175,7 +267,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
-            background: white;
+            background: var(--bg-primary);
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             margin-top: 2rem;
@@ -187,14 +279,14 @@
         .quick-start {
             margin: 3rem 0;
             padding: 2rem;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            background: var(--card-bg);
             border-radius: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            border: 1px solid var(--border-primary);
             direction: rtl;
         }
 
         .quick-start h3 {
-            color: #667eea;
+            color: var(--accent-color);
             font-size: 1.5rem;
             margin-bottom: 1rem;
             display: flex;
@@ -210,31 +302,32 @@
         }
 
         .api-card {
-            background: white;
+            background: var(--bg-primary);
             padding: 1.5rem;
             border-radius: 10px;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--border-secondary);
             transition: all 0.3s ease;
         }
 
         .api-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 10px 30px rgba(255, 127, 0, 0.2);
+            border-color: var(--accent-color);
         }
 
         .api-card h4 {
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
 
         .api-endpoint {
-            background: #f8f9fa;
+            background: var(--bg-secondary);
             padding: 0.8rem;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
-            color: #667eea;
+            color: var(--accent-color);
             margin: 0.5rem 0;
             direction: ltr;
             text-align: left;
@@ -333,13 +426,17 @@
             box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
         }
 
-        /* Footer */
+        /* Footer - تحسين وضوح النصوص */
         footer {
-            background: #333;
-            color: white;
+            background: var(--footer-bg);
+            color: #ffffff;
             text-align: center;
             padding: 3rem 2rem;
             margin-top: 3rem;
+        }
+
+        [data-theme="dark"] footer {
+            color: #ffffff;
         }
 
         .footer-content {
@@ -347,13 +444,30 @@
             margin: 0 auto;
         }
 
+        .footer-content p {
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: 500;
+            line-height: 1.8;
+        }
+
+        .footer-content strong {
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            font-weight: 700;
+        }
+
         .footer-prayer {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             padding: 1.5rem;
             border-radius: 10px;
             margin-bottom: 2rem;
             font-style: italic;
             direction: rtl;
+            color: #ffffff !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
 
@@ -375,8 +489,8 @@
 
         #menufo a {
             padding:9px;
-            background: #667eea;
-            color: white;
+            background: var(--accent-color);
+            color: var(--bg-primary);
             padding: 0.7rem 1.2rem;
             border-radius: 25px;
             text-decoration: none;
@@ -385,13 +499,41 @@
         }
 
         #menufo a:hover {
-            background: #764ba2;
+            background: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
+            opacity: 0.9;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .theme-toggle {
+                top: 15px;
+                left: 15px;
+                padding: 0.4rem 0.8rem;
+                gap: 0.4rem;
+            }
+
+            .switch {
+                width: 40px;
+                height: 20px;
+            }
+
+            .switch-slider {
+                width: 16px;
+                height: 16px;
+                font-size: 10px;
+            }
+
+            [data-theme="dark"] .switch-slider {
+                transform: translateX(20px);
+            }
+
+            .theme-text {
+                font-size: 0.8rem;
+                min-width: 40px;
+            }
+
             .header-content {
                 flex-direction: column;
                 gap: 1rem;

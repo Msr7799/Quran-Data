@@ -45,6 +45,13 @@
                     <li><a href="https://github.com/Msr7799/Quran-Data" target="_blank">📖 الكود المصدري</a></li>
                     <li><a href="#download">⬇️ تحميل البيانات</a></li>
                     <li><a href="#api-examples">🔗 أمثلة API</a></li>
+                    <li>
+                        <div class="theme-toggle" onclick="toggleTheme()">
+                            <div class="switch">
+                                <div class="switch-slider" id="theme-icon">🌙</div>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -393,6 +400,35 @@
     </div>
 
     <script>
+        // وظائف الوضع الليلي والنهاري
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (body.hasAttribute('data-theme')) {
+                // التبديل إلى الوضع النهاري
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                // التبديل إلى الوضع الليلي
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // تحميل الثيم المحفوظ عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            }
+        });
+
         // حركة البطاقات كالجنزير من اليمين إلى اليسار
         document.addEventListener('DOMContentLoaded', function() {
             const heroStats = document.querySelector('.hero-stats');
