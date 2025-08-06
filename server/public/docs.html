@@ -313,26 +313,58 @@
                 colors: {
                     primary: {
                         main: '#667eea'
+                    },
+                    success: {
+                        main: '#28a745'
+                    },
+                    warning: {
+                        main: '#ffc107'
+                    },
+                    error: {
+                        main: '#dc3545'
                     }
                 },
                 typography: {
-                    fontFamily: 'Inter, Segoe UI, sans-serif',
-                    fontSize: '14px'
+                    fontFamily: 'Inter, Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+                    fontSize: '15px',
+                    lineHeight: '1.6',
+                    code: {
+                        fontFamily: 'Courier New, Monaco, monospace',
+                        fontSize: '14px'
+                    },
+                    headings: {
+                        fontFamily: 'Inter, Segoe UI, sans-serif',
+                        fontWeight: '700'
+                    }
+                },
+                sidebar: {
+                    backgroundColor: '#f8f9ff',
+                    textColor: '#333',
+                    activeTextColor: '#667eea'
+                },
+                rightPanel: {
+                    backgroundColor: '#f5f5f5',
+                    textColor: '#333'
                 }
             },
             scrollYOffset: 80,
             hideHostname: true,
             hideDownloadButton: false,
             disableSearch: false,
-            expandResponses: '200,201',
-            jsonSampleExpandLevel: 2,
+            expandResponses: '200,201,400,404,500',
+            jsonSampleExpandLevel: 3,
             hideLoading: false,
-            nativeScrollbars: false,
+            nativeScrollbars: true,
             pathInMiddlePanel: true,
             requiredPropsFirst: true,
-            sortPropsAlphabetically: false,
+            sortPropsAlphabetically: true,
             showExtensions: true,
-            hideSchemaPattern: false
+            hideSchemaPattern: false,
+            expandDefaultServerVariables: true,
+            maxDisplayedEnumValues: 10,
+            payloadSampleIdx: 0,
+            showObjectSchemaExamples: true,
+            unstable_ignoreMimeTypeForSamples: false
         }, document.getElementById('redoc-container'));
 
         // Smooth scrolling for anchor links

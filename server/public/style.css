@@ -178,7 +178,7 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin-top: -4rem;
+            margin-top: 2rem;
             position: relative;
             z-index: 10;
         }
@@ -240,13 +240,16 @@
             text-align: left;
         }
 
-        /* Download Section */
+        /* Download Section - محاذاة لليمين */
         #download {
             margin: 3rem 0;
             padding: 2rem;
             background: linear-gradient(135deg, #e8f5e8 0%, #f0fff0 100%);
             border-radius: 15px;
             direction: rtl;
+            margin-left: auto;
+            margin-right: 0;
+            max-width: 100%;
         }
 
         #download h2 {
@@ -285,13 +288,16 @@
             box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
         }
 
-        /* Keywords Section */
+        /* Keywords Section - محاذاة لليمين */
         .keywords-section {
             margin: 3rem 0;
             padding: 2rem;
             background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
             border-radius: 15px;
             direction: rtl;
+            margin-left: auto;
+            margin-right: 0;
+            max-width: 100%;
         }
 
         .keywords-section h3 {
@@ -430,6 +436,14 @@
                 flex-direction: column;
                 gap: 0.5rem;
             }
+            
+            /* إعادة تعيين محاذاة الأقسام على الشاشات الصغيرة */
+            #download,
+            .keywords-section {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                max-width: 100% !important;
+            }
         }
 
         /* Extra small screens */
@@ -477,15 +491,17 @@
             to { transform: rotate(360deg); }
         }
 
-            /* Redoc container with controlled height */
+            /* Redoc container with better styling */
             #redoc-container {
-                max-height: 70vh;
+                min-height: 80vh;
+                max-height: 85vh;
                 overflow-y: auto;
-                border: 1px solid #e9ecef;
-                border-radius: 10px;
+                border: 2px solid #667eea;
+                border-radius: 15px;
                 margin: 2rem 0;
                 background: white;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
+                position: relative;
             }
 
             /* Custom scrollbar for redoc container */
@@ -524,4 +540,171 @@
                 color: #333;
                 font-size: 1.5rem;
                 margin-bottom: 1rem;
+            }
+            
+            /* Enhanced Redoc styling */
+            #redoc-container::before {
+                content: '📚 وثائق واجهة برمجة التطبيقات';
+                position: sticky;
+                top: 0;
+                display: block;
+                background: #f5f5f5;
+                color: #333;
+                padding: 1rem;
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.1rem;
+                border-radius: 15px 15px 0 0;
+                margin-bottom: 1rem;
+                z-index: 100;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                border-bottom: 2px solid #e0e0e0;
+            }
+            
+            /* Redoc menu styling */
+            #redoc-container [role="navigation"] {
+                background: #f8f9ff !important;
+                border-right: 2px solid #667eea !important;
+                padding: 1rem !important;
+            }
+            
+            /* Redoc content area styling - خلفية رمادية فاتحة */
+            #redoc-container .api-content {
+                background: #f5f5f5 !important;
+                padding: 2rem !important;
+            }
+            
+            /* Response panel background - خلفية رمادية فاتحة */
+            #redoc-container .redoc-right-panel {
+                background: #f5f5f5 !important;
+            }
+            
+            /* Schema and response samples background */
+            #redoc-container .response-content {
+                background: #f5f5f5 !important;
+            }
+            
+            /* Enhanced method badges */
+            #redoc-container .http-verb {
+                font-weight: bold !important;
+                border-radius: 6px !important;
+                padding: 0.3rem 0.8rem !important;
+                text-transform: uppercase !important;
+                font-size: 0.8rem !important;
+            }
+            
+            /* GET method styling */
+            #redoc-container .get {
+                background: linear-gradient(135deg, #28a745, #20c997) !important;
+                color: white !important;
+                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
+            }
+            
+            /* Response samples styling - VS Code style */
+            #redoc-container .redoc-json {
+                background: #1e1e1e !important;
+                color: #d4d4d4 !important;
+                border: 1px solid #333 !important;
+                border-radius: 8px !important;
+                padding: 1rem !important;
+                font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* JSON syntax highlighting - VS Code colors */
+            #redoc-container .redoc-json .token.string {
+                color: #ce9178 !important; /* String color */
+            }
+            
+            #redoc-container .redoc-json .token.number {
+                color: #b5cea8 !important; /* Number color */
+            }
+            
+            #redoc-container .redoc-json .token.boolean {
+                color: #569cd6 !important; /* Boolean color */
+            }
+            
+            #redoc-container .redoc-json .token.null {
+                color: #569cd6 !important; /* Null color */
+            }
+            
+            #redoc-container .redoc-json .token.property {
+                color: #9cdcfe !important; /* Property name color */
+            }
+            
+            #redoc-container .redoc-json .token.punctuation {
+                color: #d4d4d4 !important; /* Brackets, commas, etc */
+            }
+            
+            /* Additional JSON and code styling */
+            #redoc-container pre,
+            #redoc-container code,
+            #redoc-container .redoc-markdown code {
+                background: #1e1e1e !important;
+                color: #d4d4d4 !important;
+                border: 1px solid #333 !important;
+                border-radius: 6px !important;
+                font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+            }
+            
+            /* Response sample container */
+            #redoc-container .samples-wrapper,
+            #redoc-container .response-samples,
+            #redoc-container .example {
+                background: #1e1e1e !important;
+                border: 1px solid #333 !important;
+                border-radius: 8px !important;
+                padding: 1rem !important;
+            }
+            
+            /* JSON property keys */
+            #redoc-container .redoc-json .hljs-attr,
+            #redoc-container .redoc-json .hljs-string {
+                color: #9cdcfe !important;
+            }
+            
+            /* JSON string values */
+            #redoc-container .redoc-json .hljs-string:not(.hljs-attr) {
+                color: #ce9178 !important;
+            }
+            
+            /* JSON numbers */
+            #redoc-container .redoc-json .hljs-number {
+                color: #b5cea8 !important;
+            }
+            
+            /* JSON booleans and keywords */
+            #redoc-container .redoc-json .hljs-literal,
+            #redoc-container .redoc-json .hljs-keyword {
+                color: #569cd6 !important;
+            }
+            
+            /* Path parameters styling */
+            #redoc-container .param-name {
+                color: #667eea !important;
+                font-weight: bold !important;
+            }
+            
+            /* Section headers */
+            #redoc-container h1, 
+            #redoc-container h2, 
+            #redoc-container h3 {
+                color: #333 !important;
+                border-bottom: 2px solid #667eea !important;
+                padding-bottom: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Responsive for redoc container */
+            @media (max-width: 768px) {
+                #redoc-container {
+                    max-height: 70vh;
+                    min-height: 60vh;
+                }
+                
+                #redoc-container::before {
+                    font-size: 1rem;
+                    padding: 0.8rem;
+                }
             }

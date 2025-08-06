@@ -481,12 +481,43 @@ paths:
                                   type: string
                                   example: "Al-Fatihah"
 
-  /timing/reciters:
+  /reciters:
     get:
-      summary: استرجاع جميع القراء المتاحين للتوقيت
+      summary: استرجاع جميع القراء الصوتيين (133 قارئ)
+      description: يسترجع قائمة شاملة بجميع القراء الصوتيين المتاحين من جدول audio
       responses:
         "200":
-          description: قائمة بجميع القراء المتاحين
+          description: قائمة بجميع القراء الصوتيين
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reciter_name_ar:
+                          type: string
+                          example: أحمد الحواشي
+                        reciter_name_en:
+                          type: string
+                          example: Ahmed Al-Hawashi
+                  count:
+                    type: integer
+                    example: 133
+
+  /timing/reciters:
+    get:
+      summary: استرجاع قراء التوقيت المتاحين (4 قراء فقط)
+      description: يسترجع قائمة القراء الذين لديهم بيانات توقيت دقيقة للآيات
+      responses:
+        "200":
+          description: قائمة بقراء التوقيت المتاحين
           content:
             application/json:
               schema:
@@ -506,9 +537,12 @@ paths:
                         reciter_display_name:
                           type: string
                           example: Sudais
-                        total_verses:
+                        verses_count:
                           type: integer
                           example: 6349
+                  count:
+                    type: integer
+                    example: 4
 
   /timing/{reciter}/{surah_id}:
     get:
