@@ -27,7 +27,14 @@ app.use(cors());
 // Serve documentation files
 app.use('/docs/api-definition.yaml', express.static(apiDefinitionPath));
 app.use('/', express.static(publicFolderPath));
+
+// Handle docs route specifically
 app.get('/docs', (req, res) => {
+    res.sendFile(publicHtmlFilePath);
+});
+
+// Handle root route to redirect to docs
+app.get('/', (req, res) => {
     res.sendFile(publicHtmlFilePath);
 });
 
