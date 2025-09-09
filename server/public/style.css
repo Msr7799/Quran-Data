@@ -187,6 +187,27 @@
             direction: rtl;
         }
 
+        /* RTL layout for navbar */
+        .header-content {
+            direction: rtl;
+        }
+
+        .navbar-brand {
+            order: 3;
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .navbar-toggler {
+            order: 1;
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .navbar-collapse {
+            order: 2;
+        }
+
         /* Mobile navbar improvements */
         @media (max-width: 991.98px) {
             .navbar {
@@ -210,13 +231,33 @@
                 margin: 0.1rem 0;
                 padding: 0.8rem 1rem !important;
             }
+
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .navbar-brand {
+                order: 0;
+                width: 100%;
+                justify-content: center;
+                margin: 0.5rem 0;
+            }
+
+            .navbar-toggler {
+                order: 1;
+            }
+
+            .navbar-collapse {
+                order: 2;
+                width: 100%;
+            }
         }
 
         /* Hero Section */
         .hero-section {
             padding: 8rem 2rem 4rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(41, 107, 173, 0.8) 0%, rgba(0, 0, 0, 0.575) 100%), url('./Quran-Data.png') center/cover;
+            background: linear-gradient(135deg, rgba(41, 107, 173, 0.8) 0%, rgba(0, 0, 0, 0.575) 100%), url('./Quran-Data.png') center bottom/cover;
             color: white;
             min-height: 70vh;
             display: flex;
@@ -224,6 +265,7 @@
             justify-content: center;
             flex-direction: column;
             position: relative;
+            background-attachment: fixed;
         }
 
         .hero-section::before {
@@ -603,6 +645,8 @@
             .hero-section {
                 padding: 6rem 1rem 3rem;
                 min-height: 60vh;
+                background: linear-gradient(135deg, rgba(41, 107, 173, 0.8) 0%, rgba(0, 0, 0, 0.575) 100%), url('./Quran-Data.png') center top/cover;
+                background-attachment: scroll;
             }
             
             .hero-title {
