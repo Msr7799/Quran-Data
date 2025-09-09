@@ -36,13 +36,13 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid header-content">
-                <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="container-fluid header-content d-flex justify-content-between">
+                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
-                <div class="collapse navbar-collapse order-2" id="navbarNav">
-                    <ul class="navbar-nav me-auto align-items-center">
+                <div class="collapse navbar-collapse d-lg-flex justify-content-start" id="navbarNav">
+                    <ul class="navbar-nav align-items-center">
                         <li class="nav-item">
                             <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
                                 📖 <span>الكود المصدري</span>
@@ -68,7 +68,7 @@
                     </ul>
                 </div>
                 
-                <a class="navbar-brand d-flex align-items-center order-3" href="/">
+                <a class="navbar-brand d-flex align-items-center" href="/">
                     <span class="d-none d-md-inline">واجهة برمجة تطبيقات القرآن الكريم</span>
                     <span class="d-md-none">API القرآن</span>
                     <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-right: 10px;">
@@ -139,8 +139,8 @@
                 <h3>🚀 أمثلة سريعة لاستخدام API</h3>
                 <p>جرب هذه الأمثلة لبدء استخدام API القرآن الكريم:</p>
                 
-                <div class="api-examples row g-4">
-                    <div class="col-12 col-sm-6 col-lg-4">
+                <div class="api-examples row g-4 justify-content-center">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>📖 جلب جميع السور</h4>
                             <div class="api-endpoint">GET /api/surahs</div>
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>📜 سورة محددة</h4>
                             <div class="api-endpoint">GET /api/surah/1</div>
@@ -156,7 +156,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🔍 آية محددة</h4>
                             <div class="api-endpoint">GET /api/verse/1/1</div>
@@ -164,7 +164,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🎵 توقيت التلاوة</h4>
                             <div class="api-endpoint">GET /api/timing/sudais/1</div>
@@ -172,7 +172,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>👥 جميع القراء الصوتيين</h4>
                             <div class="api-endpoint">GET /api/reciters</div>
@@ -180,7 +180,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>👥 قراء التوقيت فقط</h4>
                             <div class="api-endpoint">GET /api/timing/reciters</div>
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🎧 ملفات صوتية</h4>
                             <div class="api-endpoint">GET /api/audio/1</div>
@@ -196,7 +196,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🕌 آيات السجدة</h4>
                             <div class="api-endpoint">GET /api/sajda</div>
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>📄 صفحة القرآن</h4>
                             <div class="api-endpoint">GET /api/pages/2/1</div>
@@ -212,7 +212,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>📚 جزء من القرآن</h4>
                             <div class="api-endpoint">GET /api/juz/1</div>
@@ -220,7 +220,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🖼️ صور صفحات القرآن</h4>
                             <div class="api-endpoint">GET /data/quran_image/1.png</div>
@@ -228,7 +228,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>📋 مرجع API</h4>
                             <div class="api-endpoint">GET /api/api-reference</div>
@@ -236,7 +236,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-6 col-xl-5">
                         <div class="api-card h-100">
                             <h4>🔍 البحث في التوقيتات</h4>
                             <div class="api-endpoint">GET /api/timing/sudais/surahs</div>
@@ -257,20 +257,20 @@
                 حمل قواعد البيانات بصيغ مختلفة لاستخدامها في مشاريعك
             </p>
             
-            <div class="download-grid row g-3">
-                <div class="col-12 col-md-4">
-                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.json" target="_blank" class="d-block h-100">
-                        📄 قاعدة بيانات JSON
+            <div class="download-grid row g-3 justify-content-center">
+                <div class="col-6 col-sm-4 col-md-3">
+                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.json" target="_blank" class="d-block h-100 download-btn">
+                        📄 JSON
                     </a>
                 </div>
-                <div class="col-12 col-md-4">
-                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.sqlite" target="_blank" class="d-block h-100">
-                        🗄️ قاعدة بيانات SQLite
+                <div class="col-6 col-sm-4 col-md-3">
+                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.sqlite" target="_blank" class="d-block h-100 download-btn">
+                        🗄️ SQLite
                     </a>
                 </div>
-                <div class="col-12 col-md-4">
-                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.csv" target="_blank" class="d-block h-100">
-                        📊 قاعدة بيانات CSV
+                <div class="col-6 col-sm-4 col-md-3">
+                    <a href="https://github.com/rn0x/Quran-Json/releases/download/database/database.csv" target="_blank" class="d-block h-100 download-btn">
+                        📊 CSV
                     </a>
                 </div>
             </div>
@@ -340,10 +340,12 @@
                 <strong>المطور: محمد سعود الرميحي</strong>
                 <br>
                 <br>
-                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center align-items-center mb-3">
-                    <a style=" color:maroon; background-color: rgba(255, 255, 255, 0.473); font-size: 16px; padding: 4px 8px; border-radius: 4px;" href="mailto:alromaihi2224@gmail.com">البريد الإلكتروني</a>
-                    <a style="background-color: rgba(255, 255, 255, 0.473); font-size: 16px; padding: 4px 8px; border-radius: 4px;" href="https://github.com/rn0x/Quran-Data" target="_blank" rel="noopener noreferrer" style="color: #667eea;">
-                        Quran-Data API
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center mb-3">
+                    <a class="footer-icon-link" href="mailto:alromaihi2224@gmail.com">
+                        <i class="bi bi-envelope-fill"></i>
+                    </a>
+                    <a class="footer-icon-link" href="https://github.com/Msr7799/Quran-Data" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-github"></i>
                     </a>
                 </div>
             </p>
