@@ -36,43 +36,49 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid header-content d-flex justify-content-between">
-                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse d-lg-flex justify-content-start" id="navbarNav">
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
-                                📖 <span>الكود المصدري</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#download">
-                                ⬇️ <span>تحميل البيانات</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#api-examples">
-                                🔗 <span>أمثلة API</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <div class="theme-toggle" onclick="toggleTheme()">
-                                <div class="switch">
-                                    <div class="switch-slider" id="theme-icon">🌙</div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+            <div class="container-fluid">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <!-- Options and Theme Toggle - Far Left -->
+                    <div class="navbar-nav-left d-flex align-items-center">
+                        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        
+                        <div class="collapse navbar-collapse d-lg-block" id="navbarNav">
+                            <ul class="navbar-nav d-flex flex-row align-items-center">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
+                                        📖 <span>الكود المصدري</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#download">
+                                        ⬇️ <span>تحميل البيانات</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#api-examples">
+                                        🔗 <span>أمثلة API</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <div class="theme-toggle" onclick="toggleTheme()">
+                                        <div class="switch">
+                                            <div class="switch-slider" id="theme-icon">🌙</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Logo and Title - Far Right -->
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-left: 10px;">
+                        <span class="d-none d-md-inline">واجهة برمجة تطبيقات القرآن الكريم</span>
+                        <span class="d-md-none">API القرآن</span>
+                    </a>
                 </div>
-                
-                <a class="navbar-brand d-flex align-items-center" href="/">
-                    <span class="d-none d-md-inline">واجهة برمجة تطبيقات القرآن الكريم</span>
-                    <span class="d-md-none">API القرآن</span>
-                    <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-right: 10px;">
-                </a>
             </div>
         </nav>
     </header>
