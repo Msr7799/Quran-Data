@@ -44,13 +44,12 @@ FUNCTION_INVOCATION_FAILED
 - `https://your-app.vercel.app/favicon.ico` → أيقونة الموقع ✅
 
 ### مسارات API للاختبار:
-- `https://your-app.vercel.app/api/surahs` → اختبار API
-- `https://your-app.vercel.app/api/surah/1` → اختبار API محدد
-- `https://your-app.vercel.app/docs/api-definition.yaml` → تعريف API
+- `https://msr-quran-data.vercel.app/api/surahs` → اختبار API
+- `https://msr-quran-data.vercel.app/api/surah/1` → اختبار API محدد
+- `https://msr-quran-data.vercel.app/docs/api-definition.yaml` → تعريف API
 
 ## خطوات النشر:
 ```bash
 vercel --prod
 ```
 
-**المشروع جاهز للنشر بدون أخطاء! 🚀**

@@ -505,6 +505,115 @@
             opacity: 0.9;
         }
 
+        /* Bootstrap Integration and Enhanced Responsive Design */
+        
+        /* Ensure Bootstrap doesn't override our custom styles */
+        .api-examples.row {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0 !important;
+        }
+        
+        /* Bootstrap grid override for small screens */
+        @media (max-width: 768px) {
+            .api-examples.row {
+                grid-template-columns: 1fr !important;
+                gap: 1rem;
+            }
+        }
+        
+        /* Ensure our custom card styling works with Bootstrap */
+        .api-card.h-100 {
+            height: auto !important;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Enhanced mobile navigation */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0.5rem;
+                align-items: center;
+            }
+            
+            .header-content h1 {
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Mobile-specific improvements */
+        @media (max-width: 576px) {
+            header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .hero-section {
+                padding: 6rem 1rem 3rem;
+                min-height: 60vh;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .stat-card {
+                min-width: 80px;
+                padding: 0.8rem 0.5rem;
+                margin: 0.2rem;
+            }
+            
+            .stat-number {
+                font-size: 1.1rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            
+            .container {
+                margin: 0.5rem;
+                padding: 1rem;
+                border-radius: 15px;
+            }
+            
+            .api-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .api-endpoint {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+                word-break: break-all;
+            }
+            
+            #menufo a {
+                padding: 0.5rem 0.8rem;
+                margin: 0.2rem;
+                font-size: 0.8rem;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .theme-toggle {
@@ -532,12 +641,6 @@
             .theme-text {
                 font-size: 0.8rem;
                 min-width: 40px;
-            }
-
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 0.5rem;
             }
 
             .hero-title {
@@ -572,11 +675,6 @@
                 margin: 1rem;
                 padding: 1rem;
                 margin-top: -2rem;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 0.5rem;
             }
             
             /* إعادة تعيين محاذاة الأقسام على الشاشات الصغيرة */
