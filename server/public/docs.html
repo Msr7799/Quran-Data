@@ -35,29 +35,46 @@
 
 <body>
     <header>
-        <div class="header-content container-fluid">
-            <h1 class="d-flex align-items-center">
-                <a href="/" class="d-flex align-items-center">
-                    <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-left: 10px; vertical-align: middle;">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid header-content">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-left: 10px;">
                     <span class="d-none d-md-inline">واجهة برمجة تطبيقات القرآن الكريم</span>
                     <span class="d-md-none">API القرآن</span>
                 </a>
-            </h1>
-            <nav>
-                <ul class="d-flex flex-column flex-md-row">
-                    <li><a href="https://github.com/Msr7799/Quran-Data" target="_blank">📖 <span class="d-none d-sm-inline">الكود المصدري</span></a></li>
-                    <li><a href="#download">⬇️ <span class="d-none d-sm-inline">تحميل البيانات</span></a></li>
-                    <li><a href="#api-examples">🔗 <span class="d-none d-sm-inline">أمثلة API</span></a></li>
-                    <li>
-                        <div class="theme-toggle" onclick="toggleTheme()">
-                            <div class="switch">
-                                <div class="switch-slider" id="theme-icon">🌙</div>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
+                                📖 <span class="d-none d-sm-inline">الكود المصدري</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#download">
+                                ⬇️ <span class="d-none d-sm-inline">تحميل البيانات</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#api-examples">
+                                🔗 <span class="d-none d-sm-inline">أمثلة API</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <div class="theme-toggle" onclick="toggleTheme()">
+                                <div class="switch">
+                                    <div class="switch-slider" id="theme-icon">🌙</div>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
 
     <!-- Hero Section -->
@@ -122,8 +139,8 @@
                 <h3>🚀 أمثلة سريعة لاستخدام API</h3>
                 <p>جرب هذه الأمثلة لبدء استخدام API القرآن الكريم:</p>
                 
-                <div class="api-examples row g-3">
-                    <div class="col-12 col-md-6 col-lg-4">
+                <div class="api-examples row g-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>📖 جلب جميع السور</h4>
                             <div class="api-endpoint">GET /api/surahs</div>
@@ -131,7 +148,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>📜 سورة محددة</h4>
                             <div class="api-endpoint">GET /api/surah/1</div>
@@ -139,7 +156,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🔍 آية محددة</h4>
                             <div class="api-endpoint">GET /api/verse/1/1</div>
@@ -147,7 +164,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🎵 توقيت التلاوة</h4>
                             <div class="api-endpoint">GET /api/timing/sudais/1</div>
@@ -155,7 +172,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>👥 جميع القراء الصوتيين</h4>
                             <div class="api-endpoint">GET /api/reciters</div>
@@ -163,7 +180,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>👥 قراء التوقيت فقط</h4>
                             <div class="api-endpoint">GET /api/timing/reciters</div>
@@ -171,7 +188,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🎧 ملفات صوتية</h4>
                             <div class="api-endpoint">GET /api/audio/1</div>
@@ -179,7 +196,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🕌 آيات السجدة</h4>
                             <div class="api-endpoint">GET /api/sajda</div>
@@ -187,7 +204,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>📄 صفحة القرآن</h4>
                             <div class="api-endpoint">GET /api/pages/2/1</div>
@@ -195,7 +212,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>📚 جزء من القرآن</h4>
                             <div class="api-endpoint">GET /api/juz/1</div>
@@ -203,7 +220,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🖼️ صور صفحات القرآن</h4>
                             <div class="api-endpoint">GET /data/quran_image/1.png</div>
@@ -211,7 +228,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>📋 مرجع API</h4>
                             <div class="api-endpoint">GET /api/api-reference</div>
@@ -219,7 +236,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="api-card h-100">
                             <h4>🔍 البحث في التوقيتات</h4>
                             <div class="api-endpoint">GET /api/timing/sudais/surahs</div>

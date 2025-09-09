@@ -59,8 +59,67 @@
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-primary);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
             transition: all 0.3s ease;
+        }
+
+        /* Bootstrap Navbar Customization */
+        .navbar {
+            padding: 1rem 2rem;
+            background: var(--header-bg) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: var(--text-primary) !important;
+            text-decoration: none;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.25rem 0.5rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 2px solid var(--border-primary);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 1.5em;
+            height: 1.5em;
+        }
+
+        [data-theme="dark"] .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 25px;
+            background: var(--selection-bg);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin: 0.2rem;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background: var(--accent-color) !important;
+            color: var(--bg-primary) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
         }
 
         /* زر التبديل بين الوضعين على شكل Switch - في الهيدر */
@@ -123,50 +182,34 @@
         }
 
         .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             max-width: 1200px;
             margin: 0 auto;
             direction: rtl;
         }
 
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        header h1 a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1rem;
-        }
-
-        nav ul li a {
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            background: var(--selection-bg);
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        nav ul li a:hover {
-            background: var(--accent-color);
-            color: var(--bg-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
+        /* Mobile navbar improvements */
+        @media (max-width: 991.98px) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+            
+            .navbar-collapse {
+                background: var(--header-bg);
+                border-radius: 10px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                border: 1px solid var(--border-primary);
+            }
+            
+            .navbar-nav {
+                gap: 0.5rem;
+            }
+            
+            .nav-link {
+                text-align: center;
+                margin: 0.1rem 0;
+                padding: 0.8rem 1rem !important;
+            }
         }
 
         /* Hero Section */
@@ -507,20 +550,16 @@
 
         /* Bootstrap Integration and Enhanced Responsive Design */
         
-        /* Ensure Bootstrap doesn't override our custom styles */
+        /* Use Bootstrap grid properly instead of CSS grid */
         .api-examples.row {
-            display: grid !important;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
             margin: 2rem 0 !important;
         }
         
-        /* Bootstrap grid override for small screens */
-        @media (max-width: 768px) {
-            .api-examples.row {
-                grid-template-columns: 1fr !important;
-                gap: 1rem;
-            }
+        /* Ensure cards have equal height */
+        .api-examples .col-12,
+        .api-examples .col-md-6, 
+        .api-examples .col-lg-4 {
+            margin-bottom: 1rem;
         }
         
         /* Ensure our custom card styling works with Bootstrap */
