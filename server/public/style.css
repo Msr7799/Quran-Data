@@ -1,13 +1,22 @@
-:root {
+/* تعريف الخط العثماني */
+        @font-face {
+            font-family: 'Uthmanic Hafs';
+            src: url('./uthmanic_hafs.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
             /* الوضع النهاري - Light Mode */
             --bg-primary: #ffffff;
             --bg-secondary: #f8f9fa;
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-gradient: linear-gradient(135deg, #47494e 0%, #181c3c 100%);
             --text-primary: #333333;
             --text-secondary: #666666;
             --border-primary: rgba(255, 255, 255, 0.2);
             --border-secondary: #e9ecef;
-            --accent-color: #FF7F00;
+            --accent-color: #56618c;
             --header-bg: rgba(255, 255, 255, 0.95);
             --card-bg: rgba(255, 255, 255, 0.235);
             --footer-bg: #333;
@@ -19,11 +28,11 @@
             --bg-primary: #212121;
             --bg-secondary: #181818;
             --bg-gradient: linear-gradient(135deg, #212121 0%, #181818 100%);
-            --text-primary: #ffffff;
+            --text-primary: #f9f0f9;
             --text-secondary: #cccccc;
-            --border-primary: rgba(255, 127, 0, 0.3);
-            --border-secondary: #FF7F00;
-            --accent-color: #FF7F00;
+            --border-primary: rgba(144, 149, 223, 0.3);
+            --border-secondary: #21214e;
+            --accent-color: #4c4a7f;
             --header-bg: rgba(33, 33, 33, 0.95);
             --card-bg: rgba(24, 24, 24, 0.8);
             --footer-bg: #181818;
@@ -57,23 +66,25 @@
             z-index: 1000000;
             background: var(--header-bg);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-primary);
+            border-bottom: 2px solid var(--border-primary);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
         /* Bootstrap Navbar Customization */
         .navbar {
-            padding: 1rem 2rem;
+            padding: 2rem 4rem;
             background: var(--header-bg) !important;
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size:2.5rem;
+            font-weight: 900;
+            background: var(--accent-color);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -110,17 +121,19 @@
             background: var(--selection-bg);
             transition: all 0.3s ease;
             font-weight: 500;
+            
             font-size: 0.9rem;
             margin: 0.2rem;
             text-decoration: none;
         }
 
         .nav-link:hover {
-            background: var(--accent-color) !important;
-            color: var(--bg-primary) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.4);
-        }
+                    background: #181818;
+                    color: whitesmoke;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+                    border: 1px solid #b5cea8;
+                }
 
         /* زر التبديل بين الوضعين على شكل Switch - في الهيدر */
         .theme-toggle {
@@ -139,7 +152,7 @@
 
         .theme-toggle:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 127, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(65, 116, 218, 0.164);
             border-color: var(--accent-color);
         }
 
@@ -206,7 +219,9 @@
         @media (max-width: 991.98px) {
             .navbar {
                 padding: 0.5rem 1rem;
+
             }
+
             
             .navbar-collapse {
                 background: var(--header-bg);
@@ -247,12 +262,12 @@
                 padding: 1rem 1.5rem !important;
                 width: 100%;
                 display: block;
-                font-size: 1.1rem;
+                font-size: 2rem;
                 transition: all 0.3s ease;
             }
 
             .nav-link:hover {
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.036);
                 padding-right: 2rem !important;
             }
 
@@ -278,17 +293,18 @@
 
         /* Hero Section */
         .hero-section {
-            padding: 8rem 2rem 4rem;
+            padding: 6rem 3rem 5rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(41, 107, 173, 0.8) 0%, rgba(0, 0, 0, 0.575) 100%), url('./Quran-Data.png') center 80%/cover;
+            background: linear-gradient(135deg, rgba(27, 47, 67, 0.436) 0%, rgba(0, 0, 0, 0.423) 100%), url('./Quran-Data.svg') center 80%/contain no-repeat fixed ;
             color: white;
             min-height: 70vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             flex-direction: column;
             position: relative;
-            background-attachment: fixed;
+            transition: background 0.3s ease, color 0.3s ease;
+           
         }
 
         .hero-section::before {
@@ -303,66 +319,96 @@
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
+            margin-bottom: 18rem;
         }
 
         .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
+            font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 15rem;
+            margin-top: 5rem;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            transition: all 0.3s ease-in-out;
         }
 
-        .hero-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            font-weight: 300;
+        /* للشاشات الكبيرة - جعل العنوان شفاف */
+        @media (min-width: 992px) {
+            .hero-title {
+                font-size: 3.5rem;
+                font-weight: 800;
+                margin-bottom: 1rem;
+                margin-top: 2rem;
+                line-height: 1.2;
+                opacity: 0;
+                transform: matrix(1, 0, 0, 1, 0, 0);
+                filter: brightness(1.1);
+            }
         }
+
+        /* للشاشات الكبيرة جداً - تحسين الشفافية */
+        @media (min-width: 1200px) {
+            .hero-title {
+                font-size: 4rem;
+                opacity: 0;
+                font-weight: 900;
+                margin-bottom: 2rem;
+                margin-top: 3rem;
+            }
+        }
+
+  
 
         .hero-stats {
             display: flex;
             flex-wrap: nowrap;
-            justify-content: flex-start;
-            gap: 1rem;
-            margin-top: 3rem;
-            max-width: 100%;
+            justify-content: center;
+            gap: 1rem; /* زيادة من 0.8rem */
+            margin-top: 0rem;
+            max-width: 60%; /* تقليل من 80% إلى 60% لتقصير السلسلة */
             overflow: hidden;
             position: relative;
-            min-height: 120px;
+            min-height: 150px; /* زيادة من 120px */
             align-items: center;
+            margin-top: 150px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.235);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
-            padding: 1rem;
-            border-radius: 15px;
+            padding: 1.2rem; /* زيادة من 0.8rem */
+            border-radius: 15px; /* زيادة من 12px */
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 120px;
-            max-width: 140px;
-            height: 100px;
+            min-width: 120px; /* زيادة من 110px */
+            max-width: 140px; /* زيادة من 130px */
+            height: 120px; /* زيادة من 110px */
             flex: 0 0 auto;
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
         }
 
         .stat-number {
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* زيادة من 1.3rem */
             font-weight: 700;
             display: block;
+            margin-bottom: 0.3rem;
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
+            font-size: 0.75rem; /* زيادة قليلة من 0.7rem */
+            opacity: 0.9; /* زيادة من 0.8 */
             text-align: center;
+            line-height: 1.2;
         }
 
         /* Main Content */
@@ -374,12 +420,13 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 3rem;
             background: var(--bg-primary);
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
+            margin-top: 3rem;
             position: relative;
+            border: 2px solid rgba(84, 92, 84, 0.509);
             z-index: 10;
         }
 
@@ -389,12 +436,12 @@
             padding: 2rem;
             background: var(--card-bg);
             border-radius: 15px;
-            border: 1px solid var(--border-primary);
+            border: 3px solid var(--border-primary);
             direction: rtl;
         }
 
         .quick-start h3 {
-            color: var(--accent-color);
+            color: var(--text-secondary);
             font-size: 1.5rem;
             margin-bottom: 1rem;
             display: flex;
@@ -413,7 +460,7 @@
             background: var(--bg-primary);
             padding: 1.5rem;
             border-radius: 10px;
-            border: 1px solid var(--border-secondary);
+            border: 2px solid var(--border-secondary);
             transition: all 0.3s ease;
         }
 
@@ -434,8 +481,8 @@
             padding: 0.8rem;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: var(--accent-color);
+            font-size: 1rem;
+            color: var(--text-secondary);
             margin: 0.5rem 0;
             direction: ltr;
             text-align: left;
@@ -445,7 +492,7 @@
         #download {
             margin: 3rem 0;
             padding: 2rem;
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0fff0 100%);
+            background: linear-gradient(135deg, #3c4049 0%, #9bc4cf 100%);
             border-radius: 15px;
             direction: rtl;
             margin-left: auto;
@@ -454,7 +501,7 @@
         }
 
         #download h2 {
-            color: #28a745;
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 2rem;
             font-size: 1.8rem;
@@ -471,25 +518,27 @@
             align-items: center;
             justify-content: center;
             gap: 0.3rem;
-            background: white;
-            color: #28a745;
+            background: rgba(108, 115, 138, 0.823);
+            color: #323279 !important;
             text-decoration: none;
             padding: 0.8rem 0.5rem;
             border-radius: 10px;
-            border: 2px solid #28a745;
+            border: 2px solid #136b73;
             transition: all 0.3s ease;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 3rem;
             box-shadow: 0 3px 10px rgba(40, 167, 69, 0.1);
             min-height: 50px;
+            text-align: center;
         }
 
         .download-btn:hover {
-            background: #28a745;
-            color: white;
+            background: #0e143676;
+            color: rgb(176, 176, 176) !important;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
             text-decoration: none;
+            
         }
 
         /* Mobile responsiveness for download buttons */
@@ -514,7 +563,7 @@
         }
 
         .keywords-section h3 {
-            color: #f57c00;
+            color: var(--accent-color);
             text-align: center;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
@@ -529,8 +578,9 @@
         }
 
         #Keywords li {
+            font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
             background: white;
-            color: #f57c00;
+            color: #a7a7a7;
             padding: 0.5rem 1rem;
             border-radius: 25px;
             border: 1px solid #f57c00;
@@ -703,6 +753,8 @@
             .hero-title {
                 font-size: 2rem;
                 margin-bottom: 0.8rem;
+                opacity: 1 !important;
+                font-weight: 700;
             }
             
             .hero-description {
@@ -779,6 +831,8 @@
 
             .hero-title {
                 font-size: 2.5rem;
+                opacity: 0.8;
+                font-weight: 700;
             }
 
             .hero-subtitle {
@@ -823,13 +877,17 @@
         /* Extra small screens */
         @media (max-width: 480px) {
             .hero-stats {
-                gap: 0.2rem;
-                margin-top: 2rem;
+                max-width: 100%;
+                gap: 0.3rem;
+                margin-top: 120px;
+                min-height: 80px;
             }
 
             .stat-card {
                 min-width: 60px;
-                padding: 0.5rem;
+                max-width: 60px;
+                height: 60px;
+                padding: 0.4rem;
             }
 
             .stat-number {
@@ -969,7 +1027,7 @@
             
             /* GET method styling */
             #redoc-container .get {
-                background: linear-gradient(135deg, #28a745, #20c997) !important;
+                background: linear-gradient(135deg, #28a728, #25a314) !important;
                 color: white !important;
                 box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
             }
@@ -1082,3 +1140,124 @@
                     padding: 0.8rem;
                 }
             }
+
+        /* تطبيق الخط العثماني على جميع النصوص العربية */
+body,
+html,
+* {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+}
+
+/* تحديد الخط للعناصر الرئيسية */
+.navbar-brand,
+.nav-link,
+.hero-title,
+.hero-description,
+.stat-label,
+.quick-start h3,
+.api-card h4,
+#download h2,
+.keywords-section h3,
+footer,
+.footer-content,
+.footer-prayer {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+}
+
+/* الأرقام والإحصائيات */
+.stat-number {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+/* الكلمات المفتاحية */
+#Keywords li {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+    background: white;
+    color: #f57c00;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    border: 1px solid #f57c00;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* أزرار التحميل */
+.download-btn {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    background: rgba(255, 255, 255, 0.529);
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.8rem 0.5rem;
+    border-radius: 10px;
+    border: 2px solid #136b73;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.1);
+    min-height: 50px;
+}
+
+/* الفوتر */
+.footer-content p,
+.footer-content strong {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+}
+
+/* أقسام الـ API */
+.api-card p,
+.api-card span,
+.quick-start p {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+}
+
+/* العناوين الفرعية */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+}
+
+/* الفقرات والنصوص العامة */
+p, span, div, label, button {
+    font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+}
+
+/* تخصيص للكود والنصوص الإنجليزية */
+.api-endpoint,
+code,
+pre,
+.redoc-json {
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+}
+
+/* تحديث media queries مع الخط العثماني */
+@media (max-width: 768px) {
+    .hero-title {
+        font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+        font-size: 2.5rem;
+        opacity: 0.8;
+        font-weight: 900;
+    }
+
+    .stat-label {
+        font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-family: 'Uthmanic Hafs', 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        opacity: 1 !important;
+        font-weight: 700;
+    }
+}
