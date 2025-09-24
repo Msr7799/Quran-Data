@@ -26,11 +26,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- cdn لوضع أيقونات bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <style>
-      
-    </style>
+
 </head>
 
 <body>
@@ -142,118 +139,290 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <!-- Quick Start Section -->
-            <section class="quick-start" id="api-examples">
-                <h3>🚀 أمثلة سريعة لاستخدام API</h3>
-                <p>جرب هذه الأمثلة لبدء استخدام API القرآن الكريم:</p>
-                
-                <div class="api-examples row g-4 justify-content-center">
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>📖 جلب جميع السور</h4>
-                            <div class="api-endpoint">GET /api/surahs</div>
-                            <p>احصل على قائمة جميع السور مع معلوماتها الأساسية</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>📜 سورة محددة</h4>
-                            <div class="api-endpoint">GET /api/surah/1</div>
-                            <p>احصل على بيانات كاملة لسورة محددة مع جميع آياتها</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🔍 آية محددة</h4>
-                            <div class="api-endpoint">GET /api/verse/1/1</div>
-                            <p>جلب بيانات آية محددة (رقم السورة/رقم الآية)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🎵 توقيت التلاوة</h4>
-                            <div class="api-endpoint">GET /api/timing/sudais/1</div>
-                            <p>احصل على توقيت تلاوة آيات سورة للشيخ السديس</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>👥 جميع القراء الصوتيين</h4>
-                            <div class="api-endpoint">GET /api/reciters</div>
-                            <p>قائمة شاملة بجميع القراء الصوتيين (133 قارئ)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>👥 قراء التوقيت فقط</h4>
-                            <div class="api-endpoint">GET /api/timing/reciters</div>
-                            <p>قائمة بقراء التوقيت فقط (4 قراء)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🎧 ملفات صوتية</h4>
-                            <div class="api-endpoint">GET /api/audio/1</div>
-                            <p>روابط التسجيلات الصوتية للسور (133 قارئ)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🕌 آيات السجدة</h4>
-                            <div class="api-endpoint">GET /api/sajda</div>
-                            <p>جميع آيات السجدة في القرآن الكريم (15 سجدة)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>📄 صفحة القرآن</h4>
-                            <div class="api-endpoint">GET /api/pages/2/1</div>
-                            <p>معلومات صفحة القرآن لآية محددة (604 صفحة)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>📚 جزء من القرآن</h4>
-                            <div class="api-endpoint">GET /api/juz/1</div>
-                            <p>معلومات جزء محدد من القرآن (30 جزء)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🖼️ صور صفحات القرآن</h4>
-                            <div class="api-endpoint">GET /data/quran_image/1.png</div>
-                            <p>صور عالية الجودة لصفحات المصحف الشريف</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>📋 مرجع API</h4>
-                            <div class="api-endpoint">GET /api/api-reference</div>
-                            <p>مرجع شامل لجميع endpoints والإحصائيات</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-xl-5">
-                        <div class="api-card h-100">
-                            <h4>🔍 البحث في التوقيتات</h4>
-                            <div class="api-endpoint">GET /api/timing/sudais/surahs</div>
-                            <p>البحث في السور المتوفرة لقارئ توقيت محدد</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+         <!-- Quick Start Section: كامل البطايق -->
+<section class="quick-start py-4" id="api-examples">
+  <div class="container">
+    <h3>🚀 أمثلة سريعة لاستخدام API</h3>
+    <p>جرب هذه الأمثلة لبدء استخدام API القرآن الكريم:</p>
 
+    <div class="api-examples row g-4 justify-content-center">
+
+      <!-- 1 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">📖 جلب جميع السور</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/surahs" title="GET /api/surahs">
+              <div class="endpoint-text">GET /api/surahs</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">احصل على قائمة جميع السور مع معلوماتها الأساسية</p>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">📜 سورة محددة</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/surah/1" title="GET /api/surah/1">
+              <div class="endpoint-text">GET /api/surah/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">احصل على بيانات كاملة لسورة محددة مع جميع آياتها</p>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🔍 آية محددة</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/verse/1/1" title="GET /api/verse/1/1">
+              <div class="endpoint-text">GET /api/verse/1/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">جلب بيانات آية محددة (رقم السورة/رقم الآية)</p>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🎵 توقيت التلاوة</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/timing/sudais/1" title="GET /api/timing/sudais/1">
+              <div class="endpoint-text">GET /api/timing/sudais/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">احصل على توقيت تلاوة آيات سورة للشيخ السديس</p>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">👥 جميع القراء الصوتيين</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/reciters" title="GET /api/reciters">
+              <div class="endpoint-text">GET /api/reciters</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">قائمة شاملة بجميع القراء الصوتيين (133 قارئ)</p>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">👥 قراء التوقيت فقط</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/timing/reciters" title="GET /api/timing/reciters">
+              <div class="endpoint-text">GET /api/timing/reciters</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">قائمة بقراء التوقيت فقط (4 قراء)</p>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🎧 ملفات صوتية</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/audio/1" title="GET /api/audio/1">
+              <div class="endpoint-text">GET /api/audio/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">روابط التسجيلات الصوتية للسور (133 قارئ)</p>
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🕌 آيات السجدة</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/sajda" title="GET /api/sajda">
+              <div class="endpoint-text">GET /api/sajda</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">جميع آيات السجدة في القرآن الكريم (15 سجدة)</p>
+        </div>
+      </div>
+
+      <!-- 9 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">📄 صفحة القرآن</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/pages/2/1" title="GET /api/pages/2/1">
+              <div class="endpoint-text">GET /api/pages/2/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">معلومات صفحة القرآن لآية محددة (604 صفحة)</p>
+        </div>
+      </div>
+
+      <!-- 10 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">📚 جزء من القرآن</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/juz/1" title="GET /api/juz/1">
+              <div class="endpoint-text">GET /api/juz/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">معلومات جزء محدد من القرآن (30 جزء)</p>
+        </div>
+      </div>
+
+      <!-- 11 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🖼️ صور صفحات القرآن</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /data/quran_image/1.png" title="GET /data/quran_image/1.png">
+              <div class="endpoint-text">GET /data/quran_image/1.png</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">صور عالية الجودة لصفحات المصحف الشريف</p>
+        </div>
+      </div>
+
+      <!-- 12 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">📋 مرجع API</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/api-reference" title="GET /api/api-reference">
+              <div class="endpoint-text">GET /api/api-reference</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">مرجع شامل لجميع endpoints والإحصائيات</p>
+        </div>
+      </div>
+
+      <!-- 13 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🔍 البحث في التوقيتات</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/timing/sudais/surahs" title="GET /api/timing/sudais/surahs">
+              <div class="endpoint-text">GET /api/timing/sudais/surahs</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">البحث في السور المتوفرة لقارئ توقيت محدد</p>
+        </div>
+      </div>
+
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+</section>
             <!-- API Documentation -->
             <div id="redoc-container"></div>
         </div>
@@ -261,7 +430,7 @@
         <!-- Download Section -->
         <section class="container" id="download">
             <h2>📦 تحميل قواعد البيانات</h2>
-            <p style="text-align: center; margin-bottom: 2rem; color: #666;">
+            <p style="text-align: center; margin-bottom: 2rem; color: #fcfcfc;">
                 حمل قواعد البيانات بصيغ مختلفة لاستخدامها في مشاريعك
             </p>
             
@@ -357,13 +526,6 @@
                     </a>
                 </div>
             </p>
-            
-            <div id="menufo" class="d-flex flex-wrap justify-content-center gap-2">
-                <a href="https://github.com/Msr7799" target="_blank" rel="noopener noreferrer"><i class="bi bi-github" id="github"></i><span class="d-none d-sm-inline">github</span></a>
-                <a href="https://t.me/tqw24h" target="_blank" rel="noopener noreferrer"><i class="bi bi-telegram"></i><span class="d-none d-sm-inline">Telegram</span></a>
-                <a href="https://t.me/KanzislamNet" target="_blank" rel="noopener noreferrer"><i class="bi bi-telegram"></i><span class="d-none d-sm-inline">قناة كنز الإسلام</span></a>
-                <a href="https://i8x.net" target="_blank" rel="noopener noreferrer"><i class="bi bi-link"></i><span class="d-none d-sm-inline">i8x.net</span></a>
-            </div>
         </div>
     </footer>
     
@@ -560,8 +722,57 @@
             `;
             document.head.appendChild(style);
         });
+
+ // استخراج المسار من "GET /api/xxx" -> "/api/xxx"
+  function extractPath(endpointText) {
+    const parts = endpointText.trim().split(/\s+/);
+    if (parts.length >= 2) return parts.slice(1).join(' ');
+    return endpointText.trim();
+  }
+
+  document.addEventListener('click', async (e) => {
+    // زر النسخ داخل الـ endpoint
+    if (e.target.closest('.copy-btn')) {
+      const btn = e.target.closest('.copy-btn');
+      const container = btn.closest('.api-endpoint');
+      const endpointText = container?.dataset.endpoint || container?.querySelector('.endpoint-text')?.innerText || '';
+      const path = extractPath(endpointText);
+
+      try {
+        await navigator.clipboard.writeText(path);
+        // feedback بصري: أيقونة صح و لون أخضر ثم يرجع
+        const originalHTML = btn.innerHTML;
+        btn.classList.remove('btn-outline-primary');
+        btn.classList.add('btn-success');
+        btn.innerHTML = '<i class="bi bi-check-lg"></i>';
+        setTimeout(() => {
+          btn.classList.remove('btn-success');
+          btn.classList.add('btn-outline-primary');
+          btn.innerHTML = originalHTML;
+        }, 1600);
+      } catch (err) {
+        console.error('فشل النسخ:', err);
+      }
+    }
+
+    // زر التجربة يفتح التاب الجديدة
+    if (e.target.closest('.test-btn')) {
+      const btn = e.target.closest('.test-btn');
+      const card = btn.closest('.card');
+      const endpointContainer = card.querySelector('.api-endpoint');
+      const endpointText = endpointContainer?.dataset.endpoint || endpointContainer?.querySelector('.endpoint-text')?.innerText || '';
+      const path = extractPath(endpointText);
+
+      // استخدم origin الحالي كـ base URL
+      const baseUrl = window.location.origin.replace(/\/$/, '');
+      const fullUrl = baseUrl + (path.startsWith('/') ? path : '/' + path);
+
+      // افتح في تاب جديدة
+      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    }
+  });
     </script>
-    
+
     <!-- Bootstrap JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
