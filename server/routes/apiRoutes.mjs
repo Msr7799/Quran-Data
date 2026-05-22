@@ -10,6 +10,36 @@ import {
 import { handleError } from '../utils/errorUtils.mjs';
 
 const router = express.Router();
+const CANONICAL_API_BASE_URL = 'https://quranapi-msr.vercel.app/api';
+const CANONICAL_DOCUMENTATION_URL = 'https://quran-api-msr.vercel.app';
+const LEGACY_URL_REPLACEMENTS = new Map([
+  ['https://quran-api-qklj.onrender.com/api', CANONICAL_API_BASE_URL],
+  ['https://quran-api-qklj.onrender.com/docs', CANONICAL_DOCUMENTATION_URL],
+  ['https://quran-api-qklj.onrender.com', CANONICAL_DOCUMENTATION_URL],
+  ['https://quran-api-msr.vercel.app/api', CANONICAL_API_BASE_URL],
+]);
+
+function normalizeApiReference(value) {
+  if (typeof value === 'string') {
+    let normalized = value;
+    for (const [legacyUrl, canonicalUrl] of LEGACY_URL_REPLACEMENTS) {
+      normalized = normalized.split(legacyUrl).join(canonicalUrl);
+    }
+    return normalized;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(normalizeApiReference);
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, normalizeApiReference(item)])
+    );
+  }
+
+  return value;
+}
 
 // سور وآيات
 router.get('/surahs', getAllSurahs);
@@ -53,7 +83,17 @@ router.get('/api-reference', async (req, res) => {
         error: 'No API reference data available'
       });
     }
-    const jsonContent = JSON.parse(apiRef.json_content);
+    const jsonContent = normalizeApiReference(JSON.parse(apiRef.json_content));
+    jsonContent.api_info = {
+      ...jsonContent.api_info,
+      base_url: CANONICAL_API_BASE_URL,
+      documentation_url: CANONICAL_DOCUMENTATION_URL,
+      deployment: {
+        ...jsonContent.api_info?.deployment,
+        platform: 'Vercel'
+      }
+    };
+
     res.json({
       success: true,
       data: {

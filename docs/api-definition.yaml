@@ -4,8 +4,8 @@ info:
   description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد.
   version: 2.1.0
 servers:
-  - url:https://quran-api-msr.vercel.app/api
-    description: الخادم المُنشر على Render
+  - url: https://quranapi-msr.vercel.app/api
+    description: الخادم المنشور على Vercel
   - url: http://localhost:5000/api
     description: الخادم المحلي
 

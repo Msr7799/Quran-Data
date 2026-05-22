@@ -580,6 +580,7 @@ body {
             background: var(--card-bg);
             border-radius: 15px;
             direction: rtl;
+            overflow: hidden;
         }
 
         .quick-start h3 {
@@ -591,20 +592,14 @@ body {
             gap: 0.5rem;
         }
 
-        .api-examples {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
         .api-card {
             background: var(--sec-primary) !important;
             padding: 1.5rem;
             border-radius: 10px;
             border: 4px solid var(--border-secondary);
             transition: all 0.3s ease;
-              color: var(--text-primary) !important;
+            color: var(--text-primary) !important;
+            min-width: 0;
         }
 
         .api-card:hover {
@@ -618,48 +613,65 @@ body {
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
-          .card-actions {
-    display: flex;
-    gap: .5rem;
-    align-items: center;
-  }
-    .api-endpoint .endpoint-text {
-    flex: 1 1 auto;
-    min-width: 0; /* for ellipsis */
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
-    font-size: 0.95rem;
-  }
+        .api-card .d-flex {
+            align-items: stretch !important;
+            gap: 0.75rem;
+        }
 
+        .card-actions {
+            display: flex;
+            gap: .5rem;
+            align-items: stretch;
+            flex: 0 0 auto;
+            margin: 0 !important;
+        }
+
+        .api-endpoint .endpoint-text {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
 
         .api-endpoint {
-
-    padding: 6px 8px;            border-radius: 8px;
+            padding: 6px 8px;
             font-family: 'Courier New', monospace;
             font-size: 1rem;
             color: #f8f8f8;
-            margin: 0.5rem 0;
+            margin: 0;
             direction: ltr;
             text-align: left;
             background: var(--input);
             width: 100%;
-         border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    min-width: 0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            overflow: hidden;
+            min-width: 0;
         }
 
-          .api-endpoint .copy-btn {
-    flex: 0 0 auto;
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    color: var(--theme-teal);
-    background: #313131;
-  }
+        .api-endpoint .copy-btn,
+        .api-card .test-btn {
+            flex: 0 0 auto;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 0.65rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .api-endpoint .copy-btn {
+            color: var(--theme-teal);
+            background: #313131;
+        }
 
         /* Download Section - محاذاة لليمين */
         #download {
@@ -866,21 +878,20 @@ body {
 
         /* Bootstrap Integration and Enhanced Responsive Design */
         
-        /* Use Bootstrap grid properly instead of CSS grid */
         .api-examples.row {
             margin: 2rem 0 !important;
         }
         
-        /* Ensure cards have equal height */
         .api-examples .col-12,
         .api-examples .col-md-6, 
-        .api-examples .col-lg-4 {
+        .api-examples .col-lg-4,
+        .api-examples .col-xl-5 {
             margin-bottom: 1rem;
         }
         
         /* Ensure our custom card styling works with Bootstrap */
         .api-card.h-100 {
-            height: auto !important;
+            height: 100% !important;
             display: flex;
             flex-direction: column;
         }
@@ -963,7 +974,7 @@ body {
             .api-endpoint {
                 padding: 0.6rem;
                 font-size: 0.8rem;
-                word-break: break-all;
+                word-break: normal;
             }
             
             #menufo a {
@@ -1072,7 +1083,8 @@ body {
             }
 
             .api-examples {
-                grid-template-columns: 1fr;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
             }
         }
 

@@ -1,9 +1,10 @@
 import fetch from 'node-fetch';
 
-const BASE_URL = 'https://quran-api-msr.vercel.app/api';
+const BASE_URL = 'https://quranapi-msr.vercel.app/api';
+const DOCUMENTATION_URL = 'https://quran-api-msr.vercel.app';
 
 async function testRenderAPI() {
-    console.log('🧪 اختبار API المُنشر على Render...\n');
+    console.log('🧪 اختبار API المنشور على Vercel...\n');
 
     const tests = [
         {
@@ -74,8 +75,8 @@ async function testRenderAPI() {
         console.log('-'.repeat(50));
     }
 
-    console.log('\n🎉 انتهى اختبار API على Render!');
-    console.log(`🌐 رابط الوثائق: ${BASE_URL.replace('/api', '/docs')}`);
+    console.log('\n🎉 انتهى اختبار API على Vercel!');
+    console.log(`🌐 رابط الوثائق: ${DOCUMENTATION_URL}`);
 }
 
 testRenderAPI();

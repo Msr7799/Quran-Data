@@ -8,7 +8,7 @@
     <meta name="description"
         content="واجهة برمجة تطبيقات للقرآن الكريم - استكشف بيانات السور والآيات والتسجيلات الصوتية، وحمل قواعد البيانات بصيغ مختلفة مثل JSON وSQLite وCSV.">
     <meta name="keywords"
-        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, توقيت التلاوة, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, السديس, الشريم, الحذيفي, الجهني, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran timing, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites, Islamic API, Render deployment">
+        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, توقيت التلاوة, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, السديس, الشريم, الحذيفي, الجهني, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran timing, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites, Islamic API, Vercel deployment">
     <meta name="author" content="mohamed alromaihi">
     <meta property="og:title" content="واجهة برمجة تطبيقات القرآن الكريم">
     <meta property="og:description"
@@ -534,9 +534,10 @@
 
     <div class="script-container">
 
-        <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
     <script src="./redoc.standalone.js"></script>
     <script>
+        const API_BASE_URL = 'https://quranapi-msr.vercel.app/api';
+
         // Initialize Redoc
         Redoc.init('/docs/api-definition.yaml', {
             theme: {
@@ -723,11 +724,22 @@
             document.head.appendChild(style);
         });
 
- // استخراج المسار من "GET /api/xxx" -> "/api/xxx"
+  // استخراج المسار من "GET /api/xxx" -> "/api/xxx"
   function extractPath(endpointText) {
     const parts = endpointText.trim().split(/\s+/);
     if (parts.length >= 2) return parts.slice(1).join(' ');
     return endpointText.trim();
+  }
+
+  function buildApiUrl(path) {
+    if (/^https?:\/\//i.test(path)) return path;
+    if (path.startsWith('/data/')) return window.location.origin.replace(/\/$/, '') + path;
+
+    const normalizedPath = path.startsWith('/api/')
+      ? path.slice('/api'.length)
+      : (path.startsWith('/') ? path : '/' + path);
+
+    return API_BASE_URL.replace(/\/$/, '') + normalizedPath;
   }
 
   document.addEventListener('click', async (e) => {
@@ -763,12 +775,7 @@
       const endpointText = endpointContainer?.dataset.endpoint || endpointContainer?.querySelector('.endpoint-text')?.innerText || '';
       const path = extractPath(endpointText);
 
-      // استخدم origin الحالي كـ base URL
-      const baseUrl = window.location.origin.replace(/\/$/, '');
-      const fullUrl = baseUrl + (path.startsWith('/') ? path : '/' + path);
-
-      // افتح في تاب جديدة
-      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+      window.open(buildApiUrl(path), '_blank', 'noopener,noreferrer');
     }
   });
     </script>
