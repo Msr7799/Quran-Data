@@ -10,12 +10,13 @@ import {
 import { handleError } from '../utils/errorUtils.mjs';
 
 const router = express.Router();
-const CANONICAL_API_BASE_URL = 'https://quranapi-msr.vercel.app/api';
+const CANONICAL_API_BASE_URL = 'https://quran-api-msr.vercel.app/api';
 const CANONICAL_DOCUMENTATION_URL = 'https://quran-api-msr.vercel.app';
 const LEGACY_URL_REPLACEMENTS = new Map([
   ['https://quran-api-qklj.onrender.com/api', CANONICAL_API_BASE_URL],
   ['https://quran-api-qklj.onrender.com/docs', CANONICAL_DOCUMENTATION_URL],
   ['https://quran-api-qklj.onrender.com', CANONICAL_DOCUMENTATION_URL],
+  ['https://quranapi-msr.vercel.app/api', CANONICAL_API_BASE_URL],
   ['https://quran-api-msr.vercel.app/api', CANONICAL_API_BASE_URL],
 ]);
 
