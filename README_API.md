@@ -2,7 +2,7 @@
 
 ## 🌐 Base URLs
 ```
-Production:  https://quran-api-qklj.onrender.com/api
+Production: https://quran-api-msr.vercel.app/api
 Local:       http://localhost:5000/api
 ```
 
@@ -263,16 +263,16 @@ You can test the API endpoints using the available methods:
 https://quran-api-qklj.onrender.com/docs
 
 # Test API Reference endpoint
-curl https://quran-api-qklj.onrender.com/api/api-reference
+curlhttps://quran-api-msr.vercel.app/api/api-reference
 
 # Test timing search endpoint
 curl "https://quran-api-qklj.onrender.com/api/timing/search?reciter=sudais&surah=1"
 
 # Test all audio reciters
-curl https://quran-api-qklj.onrender.com/api/reciters
+curlhttps://quran-api-msr.vercel.app/api/reciters
 
 # Test audio by specific reciter
-curl https://quran-api-qklj.onrender.com/api/audio/1/sudais
+curlhttps://quran-api-msr.vercel.app/api/audio/1/sudais
 ```
 
 ---
