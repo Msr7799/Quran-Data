@@ -3,8 +3,8 @@
     "title": "Quran Data API - مرجع شامل",
     "description": "واجهة برمجة تطبيقات شاملة للقرآن الكريم مع دعم التوقيتات والبيانات المفصلة",
     "version": "2.1.0",
-    "base_url": "https://quran-api-qklj.onrender.com/api",
-    "documentation_url": "https://quran-api-qklj.onrender.com/docs",
+    "base_url": "https://quran-api-msr.vercel.app/api",
+    "documentation_url": "https://quran-api-msr.vercel.app",
     "github_url": "https://github.com/Msr7799/Quran-Data",
     "deployment": {
       "platform": "Render",
@@ -280,7 +280,12 @@
             "success": true,
             "data": {
               "reciter": "Sudais",
-              "available_surahs": [1, 2, 3, "..."],
+              "available_surahs": [
+                1,
+                2,
+                3,
+                "..."
+              ],
               "total_surahs": 114
             }
           },
@@ -468,7 +473,7 @@
               "api_info": {
                 "title": "Quran Data API - مرجع شامل",
                 "version": "2.1.0",
-                "base_url": "https://quran-api-qklj.onrender.com/api"
+                "base_url": "https://quran-api-msr.vercel.app/api"
               },
               "statistics": {
                 "total_surahs": 114,

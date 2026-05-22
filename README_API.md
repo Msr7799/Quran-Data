@@ -68,27 +68,27 @@ Local:       http://localhost:5000/api
 
 ```javascript
 // Fetch all surahs
-const response = await fetch('https://quran-api-qklj.onrender.com/api/surahs');
+const response = await fetch('https://quran-api-msr.vercel.app/api/surahs');
 const surahs = await response.json();
 
 // Fetch verses of Al-Fatihah
-const verses = await fetch('https://quran-api-qklj.onrender.com/api/verses/1');
+const verses = await fetch('https://quran-api-msr.vercel.app/api/verses/1');
 const fatihahVerses = await verses.json();
 
 // Fetch all audio reciters (133 reciters)
-const allReciters = await fetch('https://quran-api-qklj.onrender.com/api/reciters');
+const allReciters = await fetch('https://quran-api-msr.vercel.app/api/reciters');
 const audioReciters = await allReciters.json();
 
 // Fetch timing reciters only (4 reciters)
-const timingReciters = await fetch('https://quran-api-qklj.onrender.com/api/timing/reciters');
+const timingReciters = await fetch('https://quran-api-msr.vercel.app/api/timing/reciters');
 const timingData = await timingReciters.json();
 
 // Fetch audio for specific reciter and surah
-const specificAudio = await fetch('https://quran-api-qklj.onrender.com/api/audio/1/sudais');
+const specificAudio = await fetch('https://quran-api-msr.vercel.app/api/audio/1/sudais');
 const sudaisAudio = await specificAudio.json();
 
 // Fetch verse timings for Al-Fatihah by Sudais
-const timings = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1');
+const timings = await fetch('https://quran-api-msr.vercel.app/api/timing/sudais/1');
 const fatihahTimings = await timings.json();
 ```
 
@@ -96,23 +96,23 @@ const fatihahTimings = await timings.json();
 
 ```javascript
 // Get timing for specific verse
-const verseOneTiming = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1/1');
+const verseOneTiming = await fetch('https://quran-api-msr.vercel.app/api/timing/sudais/1/1');
 const firstVerse = await verseOneTiming.json();
 
 // Get all available surahs for a reciter
-const surahsForSudais = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/surahs');
+const surahsForSudais = await fetch('https://quran-api-msr.vercel.app/api/timing/sudais/surahs');
 const availableSurahs = await surahsForSudais.json();
 
 // Get audio files for a surah
-const audioFiles = await fetch('https://quran-api-qklj.onrender.com/api/audio/1');
+const audioFiles = await fetch('https://quran-api-msr.vercel.app/api/audio/1');
 const fatihahAudio = await audioFiles.json();
 
 // Get page information
-const pageInfo = await fetch('https://quran-api-qklj.onrender.com/api/pages/1/1');
+const pageInfo = await fetch('https://quran-api-msr.vercel.app/api/pages/1/1');
 const page = await pageInfo.json();
 
 // Get API reference documentation
-const apiRef = await fetch('https://quran-api-qklj.onrender.com/api/api-reference');
+const apiRef = await fetch('https://quran-api-msr.vercel.app/api/api-reference');
 const documentation = await apiRef.json();
 ```
 
@@ -120,23 +120,23 @@ const documentation = await apiRef.json();
 
 ```javascript
 // Example 1: Get all available reciters
-const recitersResponse = await fetch('https://quran-api-qklj.onrender.com/api/timing/reciters');
+const recitersResponse = await fetch('https://quran-api-msr.vercel.app/api/timing/reciters');
 const reciters = await recitersResponse.json();
 console.log(reciters);
 // Returns: List of all 4 reciters with timing data
 
 // Example 2: Get timing for complete Al-Fatihah by Sudais
-const timingResponse = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1');
+const timingResponse = await fetch('https://quran-api-msr.vercel.app/api/timing/sudais/1');
 const fatihahTiming = await timingResponse.json();
 console.log(fatihahTiming);
 
 // Example 3: Get timing for first verse only
-const verseTimingResponse = await fetch('https://quran-api-qklj.onrender.com/api/timing/sudais/1/1');
+const verseTimingResponse = await fetch('https://quran-api-msr.vercel.app/api/timing/sudais/1/1');
 const firstVerseTiming = await verseTimingResponse.json();
 console.log(firstVerseTiming);
 
 // Example 4: Get available surahs for Shuraym
-const shurayimSurahs = await fetch('https://quran-api-qklj.onrender.com/api/timing/Shuraym/surahs');
+const shurayimSurahs = await fetch('https://quran-api-msr.vercel.app/api/timing/Shuraym/surahs');
 const availableSurahs = await shurayimSurahs.json();
 console.log(availableSurahs);
 ```
@@ -197,8 +197,8 @@ API supports Cross-Origin Resource Sharing (CORS) for web applications.
 
 The API is deployed on **Render** and available at:
 
-- **Production:** `https://quran-api-qklj.onrender.com/api`
-- **Documentation:** `https://quran-api-qklj.onrender.com/docs`
+- **Production:** `https://quran-api-msr.vercel.app/api`
+- **Documentation:** `https://quran-api-msr.vercel.app`
 - **Status:** ✅ Live and fully operational
 
 ### Performance Metrics (Render)
@@ -227,8 +227,8 @@ The API is deployed on **Render** and available at:
       "title": "Quran Data API - مرجع شامل",
       "description": "واجهة برمجة تطبيقات شاملة للقرآن الكريم",
       "version": "2.1.0",
-      "base_url": "https://quran-api-qklj.onrender.com/api",
-      "documentation_url": "https://quran-api-qklj.onrender.com/docs",
+      "base_url": "https://quran-api-msr.vercel.app/api",
+      "documentation_url": "https://quran-api-msr.vercel.app",
       "github_url": "https://github.com/Msr7799/Quran-Data"
     },
     "statistics": {
@@ -242,12 +242,12 @@ The API is deployed on **Render** and available at:
       "/surahs": {
         "method": "GET",
         "description": "جلب جميع السور",
-        "example_url": "https://quran-api-qklj.onrender.com/api/surahs"
+        "example_url": "https://quran-api-msr.vercel.app/api/surahs"
       },
       "/timing/reciters": {
         "method": "GET", 
         "description": "جلب جميع القراء المتاحين للتوقيت",
-        "example_url": "https://quran-api-qklj.onrender.com/api/timing/reciters"
+        "example_url": "https://quran-api-msr.vercel.app/api/timing/reciters"
       }
     }
   }
@@ -260,13 +260,13 @@ You can test the API endpoints using the available methods:
 
 ```bash
 # Visit documentation page
-https://quran-api-qklj.onrender.com/docs
+https://quran-api-msr.vercel.app
 
 # Test API Reference endpoint
 curlhttps://quran-api-msr.vercel.app/api/api-reference
 
 # Test timing search endpoint
-curl "https://quran-api-qklj.onrender.com/api/timing/search?reciter=sudais&surah=1"
+curl "https://quran-api-msr.vercel.app/api/timing/search?reciter=sudais&surah=1"
 
 # Test all audio reciters
 curlhttps://quran-api-msr.vercel.app/api/reciters
@@ -280,9 +280,9 @@ curlhttps://quran-api-msr.vercel.app/api/audio/1/sudais
 ## 📝 Quick Reference للمطور
 
 ### 🔗 URLs الأساسية:
-- **Production:** `https://quran-api-qklj.onrender.com/api`
+- **Production:** `https://quran-api-msr.vercel.app/api`
 - **Local Development:** `http://localhost:5000/api`
-- **Documentation:** `https://quran-api-qklj.onrender.com/docs`
+- **Documentation:** `https://quran-api-msr.vercel.app`
 
 ### 📊 إحصائيات سريعة:
 - **16 Endpoints** كاملة

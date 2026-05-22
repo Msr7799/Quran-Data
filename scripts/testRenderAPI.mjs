@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 
-const BASE_URL = 'https://quran-api-qklj.onrender.com/api';
+const BASE_URL = 'https://quran-api-msr.vercel.app/api';
 
 async function testRenderAPI() {
     console.log('🧪 اختبار API المُنشر على Render...\n');
-    
+
     const tests = [
         {
             name: 'جلب جميع القراء',
@@ -37,20 +37,20 @@ async function testRenderAPI() {
         try {
             console.log(`🔍 ${test.name}`);
             console.log(`📡 ${test.method} ${test.url}`);
-            
+
             const startTime = Date.now();
             const response = await fetch(test.url);
             const endTime = Date.now();
-            
+
             console.log(`⏱️  الوقت: ${endTime - startTime}ms`);
             console.log(`📊 الحالة: ${response.status}`);
-            
+
             if (response.ok) {
                 const data = await response.json();
-                
+
                 if (data.success) {
                     console.log('✅ نجح');
-                    
+
                     // عرض معلومات إضافية حسب نوع الاختبار
                     if (test.url.includes('/timing/reciters')) {
                         console.log(`📋 عدد القراء: ${data.data.length}`);
@@ -66,14 +66,14 @@ async function testRenderAPI() {
             } else {
                 console.log(`❌ فشل: HTTP ${response.status}`);
             }
-            
+
         } catch (error) {
             console.log(`❌ خطأ: ${error.message}`);
         }
-        
+
         console.log('-'.repeat(50));
     }
-    
+
     console.log('\n🎉 انتهى اختبار API على Render!');
     console.log(`🌐 رابط الوثائق: ${BASE_URL.replace('/api', '/docs')}`);
 }
