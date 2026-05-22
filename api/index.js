@@ -25,7 +25,11 @@ app.disable('x-powered-by');
 app.use(cors());
 
 // Serve documentation files
-app.use('/docs/api-definition.yaml', express.static(apiDefinitionPath));
+app.get('/docs/api-definition.yaml', (req, res) => {
+    res.set('Cache-Control', 'no-store, max-age=0');
+    res.type('yaml');
+    res.sendFile(apiDefinitionPath);
+});
 app.use('/', express.static(publicFolderPath));
 
 // Handle docs route specifically

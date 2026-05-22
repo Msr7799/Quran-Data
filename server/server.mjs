@@ -24,7 +24,11 @@ app.disable('x-powered-by');
 app.use(cors());
 
 // تقديم ملفات الوثائق من مجلد public
-app.use('/docs/api-definition.yaml', express.static(apiDefinitionPath));
+app.get('/docs/api-definition.yaml', (req, res) => {
+    res.set('Cache-Control', 'no-store, max-age=0');
+    res.type('yaml');
+    res.sendFile(apiDefinitionPath);
+});
 app.use('/', express.static(publicFolderPath));
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
