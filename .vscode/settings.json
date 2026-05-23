@@ -27,5 +27,25 @@
             },
             "connectionType": "socket"
         }
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#c14e4e",
+        "activityBar.background": "#c14e4e",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#5ac55a",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#c14e4e",
+        "statusBar.background": "#a33939",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#c14e4e",
+        "statusBarItem.remoteBackground": "#a33939",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#a33939",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#a3393999",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#a33939"
 }
