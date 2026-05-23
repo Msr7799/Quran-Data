@@ -3,6 +3,7 @@
   "description": "مشروع Quran Data يوفر واجهة برمجة تطبيقات للوصول إلى بيانات القرآن الكريم وتنظيمها بشكل مرن وشامل",
   "version": "2.1.0",
   "type": "module",
+  "packageManager": "pnpm@9.15.9",
   "main": "server/server.mjs",
   "directories": {
     "doc": "docs"
@@ -17,8 +18,8 @@
     "addTimingToSqlite": "node scripts/addTimingToSqlite.mjs",
     "addApiReferenceToSqlite": "node scripts/addApiReferenceToSqlite.mjs",
     "addJsonToSqlite": "node scripts/addJsonToSqlite.mjs",
-    "setup:db": "npm run jsonToSqlite && npm run addTimingToSqlite && npm run addApiReferenceToSqlite",
-    "export:data": "npm run splitData && npm run jsonToCsv"
+    "setup:db": "pnpm run jsonToSqlite && pnpm run addTimingToSqlite && pnpm run addApiReferenceToSqlite",
+    "export:data": "pnpm run splitData && pnpm run jsonToCsv"
   },
   "keywords": [],
   "author": {
@@ -38,7 +39,7 @@
     "sqlite3": "^5.1.7"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "22.x",
     "npm": ">=8.0.0"
   },
   "devDependencies": {

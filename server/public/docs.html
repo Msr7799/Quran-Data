@@ -8,7 +8,7 @@
     <meta name="description"
         content="واجهة برمجة تطبيقات للقرآن الكريم - استكشف بيانات السور والآيات والتسجيلات الصوتية، وحمل قواعد البيانات بصيغ مختلفة مثل JSON وSQLite وCSV.">
     <meta name="keywords"
-        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, توقيت التلاوة, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, السديس, الشريم, الحذيفي, الجهني, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran timing, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites, Islamic API, Vercel deployment">
+        content="API القرآن, بيانات القرآن, آيات القرآن, سور القرآن, القرآن الكريم, توقيت التلاوة, توقيتات 96 قارئ, صوت آية بآية, استرجاع الآيات, صوت القرآن, تجويد القرآن, تفسير القرآن, نصوص القرآن, تعليم القرآن, قراءة القرآن, ترجمة القرآن, حفظ القرآن, علوم القرآن, سور وآيات, آيات السجدة, تفسير الآيات, التطبيقات القرآنية, دروس القرآن, فقه القرآن, أمثلة القرآن, قراءة عصرية, نسخ القرآن, مواقع القرآن, Quran API, Quran data, Quran verses, Quran chapters, Holy Quran, Retrieve verses, Quran audio, Quran recitation, Quran timing, Quran interpretation, Quran texts, Quran education, Quran reading, Quran translation, Quran memorization, Quran sciences, Surahs and verses, Verses of prostration, Verse interpretation, Quranic applications, Quran lessons, Fiqh of the Quran, Quran examples, Modern recitation, Quran copies, Quran websites, Islamic API, Vercel deployment">
     <meta name="author" content="mohamed alromaihi">
     <meta property="og:title" content="واجهة برمجة تطبيقات القرآن الكريم">
     <meta property="og:description"
@@ -109,12 +109,16 @@
                     <span class="stat-label">قارئ صوتي</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">4</span>
-                    <span class="stat-label">قراء مع توقيت</span>
+                    <span class="stat-number">96</span>
+                    <span class="stat-label">قارئ توقيت</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">20,675</span>
+                    <span class="stat-number">600,327</span>
                     <span class="stat-label">توقيت آية</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">38</span>
+                    <span class="stat-label">قارئ آية-بآية</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-number">604</span>
@@ -129,7 +133,7 @@
                     <span class="stat-label">سجدة</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">16</span>
+                    <span class="stat-number">18</span>
                     <span class="stat-label">API Endpoints</span>
                 </div>
             </div>
@@ -215,8 +219,8 @@
         <div class="api-card h-100 card p-3 mb-3">
           <h4 class="card-title">🎵 توقيت التلاوة</h4>
           <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="api-endpoint" data-endpoint="GET /api/timing/sudais/1" title="GET /api/timing/sudais/1">
-              <div class="endpoint-text">GET /api/timing/sudais/1</div>
+            <div class="api-endpoint" data-endpoint="GET /api/timing/1/1" title="GET /api/timing/1/1">
+              <div class="endpoint-text">GET /api/timing/1/1</div>
               <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
                 <i class="bi bi-clipboard"></i>
               </button>
@@ -227,7 +231,7 @@
               </button>
             </div>
           </div>
-          <p class="mb-0">احصل على توقيت تلاوة آيات سورة للشيخ السديس</p>
+          <p class="mb-0">احصل على توقيت آيات سورة كاملة لقارئ برقم mp3quran</p>
         </div>
       </div>
 
@@ -269,7 +273,7 @@
               </button>
             </div>
           </div>
-          <p class="mb-0">قائمة بقراء التوقيت فقط (4 قراء)</p>
+          <p class="mb-0">قائمة بقراء التوقيت المتاحين (96 قارئ حفص)</p>
         </div>
       </div>
 
@@ -402,10 +406,10 @@
       <!-- 13 -->
       <div class="col-12 col-md-6 col-xl-5">
         <div class="api-card h-100 card p-3 mb-3">
-          <h4 class="card-title">🔍 البحث في التوقيتات</h4>
+          <h4 class="card-title">🔍 سور قارئ التوقيت</h4>
           <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="api-endpoint" data-endpoint="GET /api/timing/sudais/surahs" title="GET /api/timing/sudais/surahs">
-              <div class="endpoint-text">GET /api/timing/sudais/surahs</div>
+            <div class="api-endpoint" data-endpoint="GET /api/timing/1/surahs" title="GET /api/timing/1/surahs">
+              <div class="endpoint-text">GET /api/timing/1/surahs</div>
               <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
                 <i class="bi bi-clipboard"></i>
               </button>
@@ -417,6 +421,69 @@
             </div>
           </div>
           <p class="mb-0">البحث في السور المتوفرة لقارئ توقيت محدد</p>
+        </div>
+      </div>
+
+      <!-- 14 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🔎 بحث توقيت آية</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/timing/search?reciter=1&surah=1&verse=1" title="GET /api/timing/search?reciter=1&surah=1&verse=1">
+              <div class="endpoint-text">GET /api/timing/search?reciter=1&surah=1&verse=1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">البحث في التوقيتات حسب القارئ والسورة والآية</p>
+        </div>
+      </div>
+
+      <!-- 15 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🎙️ قراء آية-بآية</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-audio/reciters" title="GET /api/ayah-audio/reciters">
+              <div class="endpoint-text">GET /api/ayah-audio/reciters</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">قراء ملف ayahBayah.json مع روابط الجودات المتاحة</p>
+        </div>
+      </div>
+
+      <!-- 16 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🎧 صوت آية واحدة</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-audio/1/1/1?bitrate=32" title="GET /api/ayah-audio/1/1/1?bitrate=32">
+              <div class="endpoint-text">GET /api/ayah-audio/1/1/1?bitrate=32</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div class="card-actions ms-2">
+              <button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب">
+                <i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span>
+              </button>
+            </div>
+          </div>
+          <p class="mb-0">يبني رابط MP3 لآية محددة مثل 001001.mp3</p>
         </div>
       </div>
 
@@ -474,11 +541,13 @@
                 <li>صفحات المصحف</li>
                 <li>أجزاء القرآن</li>
                 <li>133 قارئ صوتي</li>
-                <li>20675 توقيت</li>
+                <li>96 قارئ توقيت</li>
+                <li>600327 توقيت</li>
+                <li>38 قارئ آية-بآية</li>
                 <li>604 صفحة</li>
                 <li>30 جزء</li>
                 <li>15 سجدة</li>
-                <li>16 راوت API</li>
+                <li>18 راوت API</li>
                 <li>JSON Database</li>
                 <li>SQLite Database</li>
                 <li>CSV Database</li>
@@ -536,10 +605,10 @@
 
     <script src="./redoc.standalone.js"></script>
     <script>
-        const API_BASE_URL = 'https://quran-api-msr.vercel.app/api';
+        const API_BASE_URL = `${window.location.origin}/api`;
 
         // Initialize Redoc
-        Redoc.init('/docs/api-definition.yaml?v=20260523', {
+        Redoc.init('/docs/api-definition.yaml?v=20260523-timing96', {
             theme: {
                 colors: {
                     primary: {

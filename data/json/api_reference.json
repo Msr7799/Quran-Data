@@ -3,7 +3,7 @@
     "title": "Quran Data API - مرجع شامل",
     "description": "واجهة برمجة تطبيقات شاملة للقرآن الكريم مع دعم التوقيتات والبيانات المفصلة",
     "version": "2.1.0",
-    "base_url": "https://quran-api-msr.vercel.appp/api",
+    "base_url": "https://quran-api-msr.vercel.app/api",
     "documentation_url": "https://quran-api-msr.vercel.app",
     "github_url": "https://github.com/Msr7799/Quran-Data",
     "deployment": {
@@ -17,11 +17,12 @@
     "total_surahs": 114,
     "total_verses": 6236,
     "total_audio_reciters": 158,
-    "timing_reciters": 4,
-    "total_verse_timings": 20675,
+    "timing_reciters": 96,
+    "total_verse_timings": 600327,
     "total_pages": 604,
     "total_juz": 30,
-    "total_sajda_verses": 15
+    "total_sajda_verses": 15,
+    "ayah_audio_reciters": 38
   },
   "endpoints": {
     "surahs": {
@@ -166,133 +167,194 @@
       ]
     },
     "timing": {
-      "description": "توقيتات التلاوة - بيانات توقيت الآيات للقراء المختلفين",
+      "description": "توقيتات التلاوة - بيانات توقيت الآيات لـ 96 قارئ حفص مع 114 سورة لكل قارئ",
       "available_reciters": [
         {
-          "key": "sudais",
-          "display_name": "الشيخ عبد الرحمن السديس",
-          "total_timings": 6349
+          "id": 1,
+          "name": "إبراهيم الأخضر",
+          "rewaya": "حفص عن عاصم",
+          "total_surahs": 114,
+          "timings_count": 6348
         },
         {
-          "key": "Shuraym",
-          "display_name": "الشيخ سعود الشريم",
-          "total_timings": 6354
-        },
-        {
-          "key": "Al-Juhaynee",
-          "display_name": "الشيخ عبد الله الجهني",
-          "total_timings": 6339
-        },
-        {
-          "key": "Hudhaify",
-          "display_name": "الشيخ علي الحذيفي",
-          "total_timings": 1633
+          "id": 4,
+          "name": "شيخ أبو بكر الشاطري",
+          "rewaya": "حفص عن عاصم",
+          "total_surahs": 114,
+          "timings_count": 6236
         }
       ],
       "routes": [
         {
           "method": "GET",
           "path": "/timing/reciters",
-          "description": "جلب قائمة بجميع القراء المتاحين مع إحصائياتهم",
+          "description": "جلب قائمة قراء التوقيت المتاحين. البيانات الحالية تحتوي على 96 قارئ حفص، وكل قارئ لديه 114 سورة.",
           "parameters": "لا يوجد",
           "response_example": {
             "success": true,
             "data": [
               {
-                "reciter_name": "sudais",
-                "reciter_display_name": "Sudais",
-                "total_verses": 6349,
-                "available_surahs": 114
+                "reciter_id": 1,
+                "reciter_name": "إبراهيم الأخضر",
+                "reciter_display_name": "إبراهيم الأخضر",
+                "rewaya": "حفص عن عاصم",
+                "folder_url": "https://server6.mp3quran.net/akdr/",
+                "soar_count": 114,
+                "timings_count": 6348,
+                "verses_count": 6236,
+                "surahs_count": 114
               }
-            ]
+            ],
+            "count": 96
           },
           "use_cases": [
-            "اختيار القارئ المفضل",
-            "عرض إحصائيات القراء",
-            "بناء واجهة اختيار القارئ"
+            "اختيار قارئ توقيت",
+            "بناء مشغل متزامن مع الآيات",
+            "عرض إحصائيات التوقيت"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/timing/:reciter/surahs",
+          "description": "جلب السور المتاحة لقارئ توقيت محدد. يفضل تمرير reciter كرقم القارئ.",
+          "parameters": {
+            "reciter": "رقم القارئ أو اسمه. مثال: 1"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "reciter": "إبراهيم الأخضر",
+              "reciter_id": 1,
+              "reciter_key": "1",
+              "rewaya": "حفص عن عاصم",
+              "surahs_count": 114,
+              "surahs": [
+                {
+                  "surah_number": 1,
+                  "timings_count": 7,
+                  "verses_count": 7,
+                  "total_duration_ms": 61100,
+                  "total_duration_seconds": 61.1
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "عرض السور المتاحة للقارئ",
+            "بناء قوائم تشغيل حسب القارئ"
           ]
         },
         {
           "method": "GET",
           "path": "/timing/:reciter/:surah_id",
-          "description": "جلب توقيت جميع آيات سورة لقارئ محدد",
+          "description": "جلب توقيت جميع آيات سورة لقارئ محدد من ملفات timings_hafs_114.",
           "parameters": {
-            "reciter": "اسم القارئ (sudais, Shuraym, Al-Juhaynee, Hudhaify)",
+            "reciter": "رقم القارئ أو اسمه. مثال: 1",
             "surah_id": "رقم السورة (1-114)"
           },
           "response_example": {
             "success": true,
             "data": {
-              "reciter": "Sudais",
-              "reciter_key": "sudais",
+              "reciter": "إبراهيم الأخضر",
+              "reciter_id": 1,
+              "reciter_key": "1",
+              "rewaya": "حفص عن عاصم",
+              "folder_url": "https://server6.mp3quran.net/akdr/",
               "surah_number": 1,
-              "verses_count": 8,
-              "total_duration_seconds": 38.126,
+              "verses_count": 7,
+              "timings_count": 7,
+              "total_duration_ms": 61100,
+              "total_duration_seconds": 61.1,
+              "timing_url": "https://www.mp3quran.net/api/v3/ayat_timing?surah=1&read=1",
               "verses": [
                 {
                   "verse_number": 1,
-                  "timing_seconds": 3.371,
-                  "reciter_display_name": "Sudais"
+                  "start_time_ms": 0,
+                  "end_time_ms": 13189,
+                  "start_time_seconds": 0,
+                  "end_time_seconds": 13.189,
+                  "timing_seconds": 0,
+                  "duration_ms": 13189,
+                  "duration_seconds": 13.189,
+                  "polygon": "181.08,18.31 57.54,18.31 57.54,48.94 181.08,48.94",
+                  "x": 66.48,
+                  "y": 34.46,
+                  "page": "https://www.mp3quran.net/api/quran_pages_svg/001.svg"
                 }
               ]
             }
           },
           "use_cases": [
             "تشغيل التلاوة المتزامنة",
-            "تطبيقات التعلم التفاعلي",
-            "مشغل القرآن مع التوقيت",
-            "تحليل سرعة التلاوة"
+            "تمييز الآية الحالية",
+            "تطبيقات التعليم والتكرار"
           ]
         },
         {
           "method": "GET",
           "path": "/timing/:reciter/:surah_id/:verse_id",
-          "description": "جلب توقيت آية واحدة محددة",
+          "description": "جلب توقيت آية واحدة محددة. بعض المصادر تحتوي verse_id=0 لمقطع افتتاحي قبل الآية الأولى.",
           "parameters": {
-            "reciter": "اسم القارئ",
+            "reciter": "رقم القارئ أو اسمه. مثال: 1",
             "surah_id": "رقم السورة",
             "verse_id": "رقم الآية"
           },
           "response_example": {
             "success": true,
             "data": {
-              "reciter": "Sudais",
+              "reciter": "إبراهيم الأخضر",
+              "reciter_id": 1,
+              "reciter_key": "1",
               "surah_number": 1,
               "verse_number": 1,
-              "timing_seconds": 3.371,
-              "verse_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+              "start_time_ms": 0,
+              "end_time_ms": 13189,
+              "start_time_seconds": 0,
+              "end_time_seconds": 13.189,
+              "duration_ms": 13189,
+              "duration_seconds": 13.189
             }
           },
           "use_cases": [
             "تكرار آية محددة",
-            "التدريب على التجويد",
-            "قياس سرعة الحفظ"
+            "التدريب على الحفظ",
+            "مزامنة النص مع الصوت"
           ]
         },
         {
           "method": "GET",
-          "path": "/timing/:reciter/surahs",
-          "description": "جلب السور المتاحة لقارئ محدد",
+          "path": "/timing/search",
+          "description": "البحث في التوقيتات حسب القارئ أو السورة أو الآية.",
           "parameters": {
-            "reciter": "اسم القارئ"
+            "reciter": "اختياري: رقم القارئ أو جزء من الاسم",
+            "surah": "اختياري: رقم السورة",
+            "verse": "اختياري: رقم الآية",
+            "limit": "اختياري: حد النتائج، بحد أقصى 500"
           },
           "response_example": {
             "success": true,
-            "data": {
-              "reciter": "Sudais",
-              "available_surahs": [
-                1,
-                2,
-                3,
-                "..."
-              ],
-              "total_surahs": 114
+            "data": [
+              {
+                "reciter_id": 1,
+                "reciter_name": "إبراهيم الأخضر",
+                "surah_number": 1,
+                "verse_number": 1,
+                "start_time_ms": 0,
+                "end_time_ms": 13189
+              }
+            ],
+            "count": 1,
+            "filters": {
+              "reciter": "1",
+              "surah": "1",
+              "verse": "1",
+              "limit": 50
             }
           },
           "use_cases": [
-            "فلترة السور حسب القارئ",
-            "عرض المحتوى المتاح",
-            "بناء قوائم التشغيل"
+            "فحص توقيت سريع",
+            "البحث داخل بيانات التوقيت",
+            "اختبار التكامل"
           ]
         }
       ]
@@ -489,6 +551,75 @@
             "إنشاء واجهات المستخدم الديناميكية",
             "مراجع للمطورين",
             "تكامل مع أدوات التوثيق"
+          ]
+        }
+      ]
+    },
+    "ayah_audio": {
+      "description": "الصوت آية-بآية - بناء روابط ملفات MP3 لكل آية من ملف ayahBayah.json",
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/ayah-audio/reciters",
+          "description": "جلب قراء الصوت آية-بآية المتاحين مع روابط الجودات الأساسية.",
+          "parameters": "لا يوجد",
+          "response_example": {
+            "success": true,
+            "data": [
+              {
+                "id": 1,
+                "name": "إبراهيم الأخضر",
+                "rewaya": "حفص عن عاصم",
+                "musshaf_type": "مرتل",
+                "audio_urls": {
+                  "32": "https://verse.mp3quran.net/arabic/ibrahim_alakhdar/32/",
+                  "64": "",
+                  "128": ""
+                }
+              }
+            ],
+            "count": 38
+          },
+          "use_cases": [
+            "اختيار قارئ صوت آية-بآية",
+            "عرض الجودات المتاحة",
+            "بناء مشغل آيات منفصلة"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/ayah-audio/:reciter/:surah_id/:verse_id",
+          "description": "بناء رابط صوت آية واحدة. اسم الملف يتكون من رقم السورة 3 خانات ثم رقم الآية 3 خانات، مثل 001001.mp3.",
+          "parameters": {
+            "reciter": "رقم القارئ أو اسمه. مثال: 1",
+            "surah_id": "رقم السورة (1-114)",
+            "verse_id": "رقم الآية",
+            "bitrate": "اختياري: 32 أو 64 أو 128"
+          },
+          "response_example": {
+            "success": true,
+            "data": {
+              "reciter": {
+                "id": 1,
+                "name": "إبراهيم الأخضر",
+                "rewaya": "حفص عن عاصم",
+                "musshaf_type": "مرتل"
+              },
+              "surah_number": 1,
+              "verse_number": 1,
+              "file_name": "001001.mp3",
+              "audio_files": [
+                {
+                  "bitrate": 32,
+                  "url": "https://verse.mp3quran.net/arabic/ibrahim_alakhdar/32/001001.mp3"
+                }
+              ]
+            }
+          },
+          "use_cases": [
+            "تشغيل آية منفردة",
+            "التكرار للحفظ",
+            "تحميل ملف آية محددة"
           ]
         }
       ]

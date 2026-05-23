@@ -6,273 +6,266 @@ import { open } from 'sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const timingFolderPath = path.join(__dirname, '../data/json/ayat_Timming');
-const dbFilePath = path.join(__dirname, '../data/sqlite/database.sqlite');
 
-// قراءة جميع ملفات التوقيت
-const readTimingFiles = async () => {
-    try {
-        const files = await fs.readdir(timingFolderPath);
-        const timingData = [];
-        
-        for (const file of files) {
-            if (file.endsWith('.json')) {
-                const filePath = path.join(timingFolderPath, file);
-                const data = await fs.readJSON(filePath);
-                const reciterName = file.replace('.json', '');
-                
-                timingData.push({
-                    reciter: reciterName,
-                    name: data.name || reciterName,
-                    data: data
-                });
-            }
-        }
-        
-        return timingData;
-    } catch (error) {
-        console.error('Error reading timing files:', error);
-        throw error;
-    }
+const dbFilePath = path.join(__dirname, '../data/sqlite/database.sqlite');
+const recitersPath = path.join(
+    __dirname,
+    '../data/json/reads_timing_data/ayat_timing_reads_hafs_114_only.json'
+);
+const timingsFolderPath = path.join(
+    __dirname,
+    '../data/json/reads_timing_data/timings_hafs_114'
+);
+const ayahAudioPath = path.join(__dirname, '../data/audio_verseByverse/ayahBayah.json');
+
+const toNumberOrNull = (value) => {
+    if (value === null || value === undefined || value === '') return null;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
 };
 
-// إضافة جدول التوقيت إلى قاعدة البيانات
-const createTimingTable = async (db) => {
+const extractPageNumber = (pageUrl) => {
+    if (!pageUrl) return null;
+    const match = String(pageUrl).match(/\/(\d{3})\.svg$/);
+    return match ? Number(match[1]) : null;
+};
+
+const readJson = async (filePath) => {
+    if (!(await fs.pathExists(filePath))) {
+        throw new Error(`الملف غير موجود: ${filePath}`);
+    }
+
+    return fs.readJSON(filePath);
+};
+
+const createTables = async (db) => {
     await db.exec(`
-        CREATE TABLE IF NOT EXISTS ayat_timing (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            reciter_name TEXT NOT NULL,
-            reciter_display_name TEXT,
-            surah_number INTEGER,
-            verse_number INTEGER,
-            timing_seconds REAL,
-            FOREIGN KEY (surah_number) REFERENCES surahs (number),
-            UNIQUE(reciter_name, surah_number, verse_number)
+        DROP TABLE IF EXISTS ayat_timing;
+        DROP TABLE IF EXISTS ayat_timing_geometry;
+        DROP TABLE IF EXISTS timing_reciters;
+        DROP TABLE IF EXISTS ayah_audio_reciters;
+
+        CREATE TABLE timing_reciters (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            rewaya TEXT,
+            folder_url TEXT,
+            soar_count INTEGER,
+            soar_link TEXT
         );
-        
-        CREATE INDEX IF NOT EXISTS idx_timing_reciter ON ayat_timing(reciter_name);
-        CREATE INDEX IF NOT EXISTS idx_timing_surah ON ayat_timing(surah_number);
-        CREATE INDEX IF NOT EXISTS idx_timing_verse ON ayat_timing(verse_number);
+
+        CREATE TABLE ayat_timing (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reciter_id INTEGER NOT NULL,
+            surah_number INTEGER NOT NULL,
+            verse_number INTEGER NOT NULL,
+            start_time_ms INTEGER NOT NULL,
+            end_time_ms INTEGER NOT NULL,
+            FOREIGN KEY (reciter_id) REFERENCES timing_reciters (id),
+            FOREIGN KEY (surah_number) REFERENCES surahs (number),
+            UNIQUE(reciter_id, surah_number, verse_number)
+        );
+
+        CREATE TABLE ayat_timing_geometry (
+            surah_number INTEGER NOT NULL,
+            verse_number INTEGER NOT NULL,
+            polygon TEXT,
+            x REAL,
+            y REAL,
+            page_number INTEGER,
+            PRIMARY KEY (surah_number, verse_number)
+        );
+
+        CREATE INDEX idx_timing_reciter_id ON ayat_timing(reciter_id);
+        CREATE INDEX idx_timing_surah ON ayat_timing(surah_number);
+        CREATE INDEX idx_timing_verse ON ayat_timing(verse_number);
+        CREATE INDEX idx_timing_reciter_surah ON ayat_timing(reciter_id, surah_number);
+
+        CREATE TABLE ayah_audio_reciters (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            rewaya TEXT,
+            musshaf_type TEXT,
+            audio_url_bit_rate_32 TEXT,
+            audio_url_bit_rate_64 TEXT,
+            audio_url_bit_rate_128 TEXT
+        );
     `);
 };
 
-// إدراج بيانات التوقيت
-const insertTimingData = async (db, timingFiles) => {
+const insertTimingReciters = async (db, reciters) => {
+    const insert = await db.prepare(`
+        INSERT INTO timing_reciters (
+            id, name, rewaya, folder_url, soar_count, soar_link
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
     try {
-        console.log('بدء إدراج بيانات التوقيت...');
-        
-        for (const timing of timingFiles) {
-            const reciterName = timing.reciter;
-            const displayName = timing.name;
-            
-            console.log(`معالجة بيانات القارئ: ${reciterName}`);
-            
-            // حذف البيانات السابقة للقارئ لتجنب التكرار
-            await db.run('DELETE FROM ayat_timing WHERE reciter_name = ?', [reciterName]);
-            
-            // معالجة كل سورة
-            for (const [surahKey, verses] of Object.entries(timing.data)) {
-                // تجاهل خاصية "name"
-                if (surahKey === 'name') continue;
-                
-                const surahNumber = parseInt(surahKey);
-                
-                // معالجة كل آية
-                for (const [verseKey, timingSeconds] of Object.entries(verses)) {
-                    const verseNumber = parseInt(verseKey);
-                    
-                    if (!isNaN(surahNumber) && !isNaN(verseNumber) && !isNaN(timingSeconds)) {
-                        await db.run(`
-                            INSERT INTO ayat_timing (
-                                reciter_name, reciter_display_name, 
-                                surah_number, verse_number, timing_seconds
-                            ) VALUES (?, ?, ?, ?, ?)
-                            ON CONFLICT(reciter_name, surah_number, verse_number) 
-                            DO UPDATE SET 
-                                reciter_display_name=excluded.reciter_display_name,
-                                timing_seconds=excluded.timing_seconds
-                        `, [reciterName, displayName, surahNumber, verseNumber, timingSeconds]);
+        for (const reciter of reciters) {
+            await insert.run(
+                Number(reciter.id),
+                reciter.name,
+                reciter.rewaya || null,
+                reciter.folder_url || null,
+                Number(reciter.soar_count || 0),
+                reciter.soar_link || null
+            );
+        }
+    } finally {
+        await insert.finalize();
+    }
+};
+
+const insertAyahAudioReciters = async (db, ayahAudioData) => {
+    const reciters = ayahAudioData.reciters_verse || [];
+    const insert = await db.prepare(`
+        INSERT INTO ayah_audio_reciters (
+            id, name, rewaya, musshaf_type,
+            audio_url_bit_rate_32, audio_url_bit_rate_64, audio_url_bit_rate_128
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    try {
+        for (const reciter of reciters) {
+            await insert.run(
+                Number(reciter.id),
+                reciter.name,
+                reciter.rewaya || null,
+                reciter.musshaf_type || null,
+                reciter.audio_url_bit_rate_32_ || null,
+                reciter.audio_url_bit_rate_64 || null,
+                reciter.audio_url_bit_rate_128 || null
+            );
+        }
+    } finally {
+        await insert.finalize();
+    }
+};
+
+const insertTimingRows = async (db, recitersById) => {
+    const files = (await fs.readdir(timingsFolderPath))
+        .filter((file) => /^timing_\d{3}\.json$/.test(file))
+        .sort();
+
+    const insert = await db.prepare(`
+        INSERT INTO ayat_timing (
+            reciter_id, surah_number, verse_number, start_time_ms, end_time_ms
+        ) VALUES (?, ?, ?, ?, ?)
+    `);
+    const insertGeometry = await db.prepare(`
+        INSERT INTO ayat_timing_geometry (
+            surah_number, verse_number, polygon, x, y, page_number
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(surah_number, verse_number) DO NOTHING
+    `);
+
+    let rowsCount = 0;
+
+    try {
+        for (const file of files) {
+            const timingFilePath = path.join(timingsFolderPath, file);
+            const surahTiming = await fs.readJSON(timingFilePath);
+            const surahNumber = Number(surahTiming.surah);
+
+            for (const read of surahTiming.reads || []) {
+                const reciter = recitersById.get(Number(read.read_id));
+
+                if (!reciter) {
+                    throw new Error(`القارئ ${read.read_id} غير موجود في ملف القراء: ${file}`);
+                }
+
+                for (const ayahTiming of read.ayat_timing || []) {
+                    const startTimeMs = Number(ayahTiming.start_time);
+                    const endTimeMs = Number(ayahTiming.end_time);
+
+                    if (!Number.isFinite(startTimeMs) || !Number.isFinite(endTimeMs)) {
+                        continue;
                     }
+
+                    await insert.run(
+                        Number(read.read_id),
+                        surahNumber,
+                        Number(ayahTiming.ayah),
+                        startTimeMs,
+                        endTimeMs
+                    );
+
+                    await insertGeometry.run(
+                        surahNumber,
+                        Number(ayahTiming.ayah),
+                        ayahTiming.polygon || null,
+                        toNumberOrNull(ayahTiming.x),
+                        toNumberOrNull(ayahTiming.y),
+                        extractPageNumber(ayahTiming.page)
+                    );
+                    rowsCount += 1;
                 }
             }
+
+            console.log(`تم استيراد ${file}`);
         }
-        
-        console.log('تم إدراج بيانات التوقيت بنجاح');
-    } catch (error) {
-        console.error('خطأ في إدراج بيانات التوقيت:', error);
-        throw error;
+    } finally {
+        await insert.finalize();
+        await insertGeometry.finalize();
     }
+
+    return { filesCount: files.length, rowsCount };
 };
 
-// عرض إحصائيات البيانات المدرجة
 const showStatistics = async (db) => {
-    try {
-        const reciters = await db.all('SELECT DISTINCT reciter_name, reciter_display_name FROM ayat_timing');
-        console.log('\n--- إحصائيات بيانات التوقيت ---');
-        console.log(`عدد القراء: ${reciters.length}`);
-        
-        for (const reciter of reciters) {
-            const count = await db.get(
-                'SELECT COUNT(*) as count FROM ayat_timing WHERE reciter_name = ?', 
-                [reciter.reciter_name]
-            );
-            console.log(`- ${reciter.reciter_display_name || reciter.reciter_name}: ${count.count} توقيت`);
-        }
-        
-        const totalCount = await db.get('SELECT COUNT(*) as total FROM ayat_timing');
-        console.log(`\nإجمالي عدد التوقيتات: ${totalCount.total}`);
-        
-    } catch (error) {
-        console.error('خطأ في عرض الإحصائيات:', error);
-    }
+    const timingReciters = await db.get('SELECT COUNT(*) AS count FROM timing_reciters');
+    const timingRows = await db.get('SELECT COUNT(*) AS count FROM ayat_timing');
+    const timingSurahs = await db.get('SELECT COUNT(DISTINCT surah_number) AS count FROM ayat_timing');
+    const ayahAudioReciters = await db.get('SELECT COUNT(*) AS count FROM ayah_audio_reciters');
+
+    console.log('\n--- إحصائيات قاعدة البيانات ---');
+    console.log(`قراء التوقيت: ${timingReciters.count}`);
+    console.log(`السور في التوقيتات: ${timingSurahs.count}`);
+    console.log(`صفوف التوقيت: ${timingRows.count}`);
+    console.log(`قراء الصوت آية-بآية: ${ayahAudioReciters.count}`);
 };
 
-// دوال مساعدة للاستعلام عن بيانات التوقيت
+export async function run() {
+    console.log('بدء تحديث توقيتات حفص 114 سورة وبيانات الصوت آية-بآية...');
+    console.log(`قاعدة البيانات: ${dbFilePath}`);
+    console.log(`ملف قراء التوقيت: ${recitersPath}`);
+    console.log(`مجلد توقيت السور: ${timingsFolderPath}`);
+    console.log(`ملف قراء الآية آية: ${ayahAudioPath}`);
 
-/**
- * جلب توقيت آيات سورة معينة لقارئ معين
- * @param {string} reciterName - اسم القارئ
- * @param {number} surahNumber - رقم السورة
- * @returns {Promise<Array>} - مصفوفة تحتوي على توقيت الآيات
- */
-export async function getVerseTimings(reciterName, surahNumber) {
+    const reciters = await readJson(recitersPath);
+    const ayahAudioData = await readJson(ayahAudioPath);
+    const recitersById = new Map(reciters.map((reciter) => [Number(reciter.id), reciter]));
+
     const db = await open({
         filename: dbFilePath,
         driver: sqlite3.Database
     });
 
     try {
-        const timings = await db.all(`
-            SELECT 
-                verse_number,
-                timing_seconds,
-                reciter_display_name
-            FROM ayat_timing 
-            WHERE reciter_name = ? 
-            AND surah_number = ? 
-            ORDER BY verse_number
-        `, [reciterName, surahNumber]);
+        await db.exec('PRAGMA foreign_keys = OFF');
+        await db.exec('BEGIN TRANSACTION');
+        await createTables(db);
+        await insertTimingReciters(db, reciters);
+        await insertAyahAudioReciters(db, ayahAudioData);
+        const timingStats = await insertTimingRows(db, recitersById);
+        await db.exec('COMMIT');
+        await db.exec('VACUUM');
 
-        return timings;
-    } finally {
-        await db.close();
-    }
-}
-
-/**
- * جلب قائمة بجميع القراء المتاحين
- * @returns {Promise<Array>} - مصفوفة تحتوي على أسماء القراء
- */
-export async function getAvailableReciters() {
-    const db = await open({
-        filename: dbFilePath,
-        driver: sqlite3.Database
-    });
-
-    try {
-        const reciters = await db.all(`
-            SELECT DISTINCT reciter_name, reciter_display_name 
-            FROM ayat_timing 
-            ORDER BY reciter_name
-        `);
-
-        return reciters;
-    } finally {
-        await db.close();
-    }
-}
-
-/**
- * عرض توقيت آيات سورة معينة بشكل مُنسق
- * @param {string} reciterName - اسم القارئ
- * @param {number} surahNumber - رقم السورة
- */
-export async function displayVerseTimings(reciterName, surahNumber) {
-    try {
-        console.log(`🔍 جلب توقيت آيات السورة ${surahNumber} للقارئ ${reciterName}...\n`);
-
-        const timings = await getVerseTimings(reciterName, surahNumber);
-
-        if (timings.length === 0) {
-            console.log(`❌ لم يتم العثور على توقيت للقارئ ${reciterName} في السورة ${surahNumber}`);
-            
-            const availableReciters = await getAvailableReciters();
-            console.log('\n📋 القراء المتاحون:');
-            availableReciters.forEach(r => {
-                console.log(`- ${r.reciter_name} (${r.reciter_display_name})`);
-            });
-            
-            return;
-        }
-
-        console.log(`✅ تم العثور على ${timings.length} آية\n`);
-        console.log(`📖 توقيت آيات السورة ${surahNumber} للقارئ ${timings[0].reciter_display_name}:`);
-        console.log('━'.repeat(50));
-        
-        timings.forEach(timing => {
-            const minutes = Math.floor(timing.timing_seconds / 60);
-            const seconds = (timing.timing_seconds % 60).toFixed(3);
-            console.log(`الآية ${timing.verse_number}: ${timing.timing_seconds}s (${minutes}:${seconds.padStart(6, '0')})`);
-        });
-        
-        const totalSeconds = timings[timings.length - 1].timing_seconds;
-        const totalMinutes = Math.floor(totalSeconds / 60);
-        const remainingSeconds = (totalSeconds % 60).toFixed(3);
-        
-        console.log('━'.repeat(50));
-        console.log(`📊 المدة الإجمالية: ${totalSeconds}s (${totalMinutes}:${remainingSeconds.padStart(6, '0')})`);
-        
-        return timings;
-        
-    } catch (error) {
-        console.error('❌ خطأ في جلب البيانات:', error);
-        throw error;
-    }
-}
-
-// تنفيذ السكربت الرئيسي
-const run = async () => {
-    try {
-        console.log('بدء معالجة ملفات التوقيت...');
-        console.log(`مسار قاعدة البيانات: ${dbFilePath}`);
-        console.log(`مسار ملفات التوقيت: ${timingFolderPath}`);
-        
-        // فتح قاعدة البيانات
-        const db = await open({
-            filename: dbFilePath,
-            driver: sqlite3.Database
-        });
-        console.log('✅ تم فتح قاعدة البيانات بنجاح');
-        
-        // إنشاء جدول التوقيت
-        await createTimingTable(db);
-        console.log('✅ تم إنشاء جدول التوقيت');
-        
-        // قراءة ملفات التوقيت
-        const timingFiles = await readTimingFiles();
-        console.log(`تم العثور على ${timingFiles.length} ملف توقيت`);
-        
-        // إدراج البيانات
-        await insertTimingData(db, timingFiles);
-        
-        // عرض الإحصائيات
+        console.log(`\nتمت معالجة ${timingStats.filesCount} ملف سورة.`);
+        console.log(`تم إدراج ${timingStats.rowsCount} صف توقيت.`);
         await showStatistics(db);
-        
-        // إغلاق قاعدة البيانات
-        await db.close();
-        
-        console.log('\nتم الانتهاء من معالجة جميع ملفات التوقيت بنجاح! ✅');
-        
+        console.log('\nتم تحديث قاعدة البيانات بنجاح.');
     } catch (error) {
-        console.error('خطأ أثناء معالجة البيانات:', error);
+        await db.exec('ROLLBACK');
+        throw error;
+    } finally {
+        await db.close();
     }
-};
+}
 
-// تشغيل السكربت إذا تم استدعاؤه مباشرة
 if (import.meta.url === `file://${process.argv[1]}`) {
-    console.log('تشغيل السكربت...');
-    run().catch(error => {
-        console.error('خطأ في تشغيل السكربت:', error);
+    run().catch((error) => {
+        console.error('فشل تحديث التوقيتات:', error);
         process.exit(1);
     });
 }

@@ -5,7 +5,7 @@ import {
 } from '../controllers/surahController.mjs';
 import {
   getAllReciters, getVerseTimings, getSingleVerseTiming, getAvailableSurahs,
-  searchTimings, getAllAudioReciters
+  searchTimings, getAllAudioReciters, getAyahAudioReciters, getAyahAudio
 } from '../controllers/timingController.mjs';
 import { handleError } from '../utils/errorUtils.mjs';
 
@@ -61,7 +61,7 @@ router.get('/audio/:surah_id/:reciter', getAudioByReciter); // ملفات صوت
 router.get('/reciters', getAllAudioReciters);
 
 // ============= Timing Routes =============
-// القراء الذين لديهم توقيتات فقط - 4 قراء
+// القراء الذين لديهم توقيتات حفص كاملة - 96 قارئ
 router.get('/timing/reciters', getAllReciters);
 // السور المتاحة لقارئ توقيت
 router.get('/timing/:reciter/surahs', getAvailableSurahs);
@@ -71,6 +71,12 @@ router.get('/timing/:reciter/:surah_id', getVerseTimings);
 router.get('/timing/:reciter/:surah_id/:verse_id', getSingleVerseTiming);
 // البحث في التوقيتات
 router.get('/timing/search', searchTimings);
+
+// ============= Verse-by-Verse Audio Routes =============
+// قراء الصوت آية-بآية
+router.get('/ayah-audio/reciters', getAyahAudioReciters);
+// رابط صوت آية واحدة لقارئ محدد
+router.get('/ayah-audio/:reciter/:surah_id/:verse_id', getAyahAudio);
 
 // ============= API Reference =============
 router.get('/api-reference', async (req, res) => {

@@ -513,8 +513,8 @@ paths:
 
   /timing/reciters:
     get:
-      summary: استرجاع قراء التوقيت المتاحين (4 قراء فقط)
-      description: يسترجع قائمة القراء الذين لديهم بيانات توقيت دقيقة للآيات
+      summary: استرجاع قراء التوقيت المتاحين (96 قارئ حفص)
+      description: يسترجع قائمة القراء الذين لديهم توقيتات حفص كاملة لكل السور 114.
       responses:
         "200":
           description: قائمة بقراء التوقيت المتاحين
@@ -533,16 +533,28 @@ paths:
                       properties:
                         reciter_name:
                           type: string
-                          example: sudais
+                          example: إبراهيم الأخضر
                         reciter_display_name:
                           type: string
-                          example: Sudais
+                          example: إبراهيم الأخضر
+                        reciter_id:
+                          type: integer
+                          example: 1
+                        rewaya:
+                          type: string
+                          example: حفص عن عاصم
+                        surahs_count:
+                          type: integer
+                          example: 114
+                        timings_count:
+                          type: integer
+                          example: 6348
                         verses_count:
                           type: integer
-                          example: 6349
+                          example: 6236
                   count:
                     type: integer
-                    example: 4
+                    example: 96
 
   /timing/{reciter}/{surah_id}:
     get:
@@ -553,8 +565,8 @@ paths:
           required: true
           schema:
             type: string
-            example: sudais
-          description: اسم القارئ
+            example: "1"
+          description: رقم القارئ من mp3quran أو اسمه
         - name: surah_id
           in: path
           required: true
@@ -578,19 +590,28 @@ paths:
                     properties:
                       reciter:
                         type: string
-                        example: Sudais
+                        example: إبراهيم الأخضر
+                      reciter_id:
+                        type: integer
+                        example: 1
                       reciter_key:
                         type: string
-                        example: sudais
+                        example: "1"
                       surah_number:
                         type: integer
                         example: 1
                       verses_count:
                         type: integer
-                        example: 8
+                        example: 7
+                      timings_count:
+                        type: integer
+                        example: 7
+                      total_duration_ms:
+                        type: integer
+                        example: 61100
                       total_duration_seconds:
                         type: number
-                        example: 38.126
+                        example: 61.1
                       verses:
                         type: array
                         items:
@@ -601,10 +622,22 @@ paths:
                               example: 1
                             timing_seconds:
                               type: number
-                              example: 3.371
-                            reciter_display_name:
+                              example: 0
+                            start_time_ms:
+                              type: integer
+                              example: 0
+                            end_time_ms:
+                              type: integer
+                              example: 13189
+                            duration_ms:
+                              type: integer
+                              example: 13189
+                            polygon:
                               type: string
-                              example: Sudais
+                              example: "181.08,18.31 57.54,18.31 57.54,48.94 181.08,48.94"
+                            page:
+                              type: string
+                              example: https://www.mp3quran.net/api/quran_pages_svg/001.svg
 
   /timing/{reciter}/{surah_id}/{verse_id}:
     get:
@@ -615,8 +648,8 @@ paths:
           required: true
           schema:
             type: string
-            example: sudais
-          description: اسم القارئ
+            example: "1"
+          description: رقم القارئ من mp3quran أو اسمه
         - name: surah_id
           in: path
           required: true
@@ -647,10 +680,13 @@ paths:
                     properties:
                       reciter:
                         type: string
-                        example: Sudais
+                        example: إبراهيم الأخضر
+                      reciter_id:
+                        type: integer
+                        example: 1
                       reciter_key:
                         type: string
-                        example: sudais
+                        example: "1"
                       surah_number:
                         type: integer
                         example: 1
@@ -659,7 +695,16 @@ paths:
                         example: 1
                       timing_seconds:
                         type: number
-                        example: 3.371
+                        example: 0
+                      start_time_ms:
+                        type: integer
+                        example: 0
+                      end_time_ms:
+                        type: integer
+                        example: 13189
+                      duration_ms:
+                        type: integer
+                        example: 13189
 
   /timing/{reciter}/surahs:
     get:
@@ -670,8 +715,8 @@ paths:
           required: true
           schema:
             type: string
-            example: sudais
-          description: اسم القارئ
+            example: "1"
+          description: رقم القارئ من mp3quran أو اسمه
       responses:
         "200":
           description: قائمة بالسور المتاحة للقارئ
@@ -688,18 +733,175 @@ paths:
                     properties:
                       reciter:
                         type: string
-                        example: Sudais
+                        example: إبراهيم الأخضر
+                      reciter_id:
+                        type: integer
+                        example: 1
                       reciter_key:
                         type: string
-                        example: sudais
-                      total_surahs:
+                        example: "1"
+                      surahs_count:
                         type: integer
                         example: 114
                       surahs:
                         type: array
                         items:
+                          type: object
+                          properties:
+                            surah_number:
+                              type: integer
+                              example: 1
+                            timings_count:
+                              type: integer
+                              example: 7
+                            verses_count:
+                              type: integer
+                              example: 7
+                            total_duration_seconds:
+                              type: number
+                              example: 61.1
+
+  /timing/search:
+    get:
+      summary: البحث في توقيتات الآيات
+      parameters:
+        - name: reciter
+          in: query
+          schema:
+            type: string
+            example: "1"
+          description: رقم القارئ أو جزء من الاسم
+        - name: surah
+          in: query
+          schema:
+            type: integer
+            example: 1
+          description: رقم السورة
+        - name: verse
+          in: query
+          schema:
+            type: integer
+            example: 1
+          description: رقم الآية
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 50
+          description: حد النتائج، بحد أقصى 500
+      responses:
+        "200":
+          description: نتائج البحث في التوقيتات
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    example: 1
+
+  /ayah-audio/reciters:
+    get:
+      summary: استرجاع قراء الصوت آية-بآية
+      description: يسترجع قراء ملف ayahBayah.json مع روابط الجودات المتاحة.
+      responses:
+        "200":
+          description: قائمة قراء الصوت آية-بآية
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
                           type: integer
                           example: 1
+                        name:
+                          type: string
+                          example: إبراهيم الأخضر
+                        rewaya:
+                          type: string
+                          example: حفص عن عاصم
+                        musshaf_type:
+                          type: string
+                          example: مرتل
+                        audio_urls:
+                          type: object
+                  count:
+                    type: integer
+                    example: 38
+
+  /ayah-audio/{reciter}/{surah_id}/{verse_id}:
+    get:
+      summary: بناء رابط صوت آية واحدة
+      description: يبني رابط ملف MP3 باسم من 6 خانات مثل 001001.mp3.
+      parameters:
+        - name: reciter
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "1"
+          description: رقم القارئ أو اسمه
+        - name: surah_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: رقم السورة
+        - name: verse_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: رقم الآية
+        - name: bitrate
+          in: query
+          schema:
+            type: integer
+            example: 32
+          description: جودة اختيارية 32 أو 64 أو 128
+      responses:
+        "200":
+          description: رابط أو روابط صوت الآية
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      file_name:
+                        type: string
+                        example: 001001.mp3
+                      audio_files:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            bitrate:
+                              type: integer
+                              example: 32
+                            url:
+                              type: string
+                              example: https://verse.mp3quran.net/arabic/ibrahim_alakhdar/32/001001.mp3
 
 components:
   schemas:

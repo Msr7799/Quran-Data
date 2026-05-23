@@ -8,30 +8,99 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dbFilePath = path.join(__dirname, '../../data/sqlite/database.sqlite');
 
-// فتح اتصال قاعدة البيانات
 async function openDatabase() {
-    return await open({
+    return open({
         filename: dbFilePath,
         driver: sqlite3.Database
     });
 }
 
+const parsePositiveInteger = (value) => {
+    const number = Number(value);
+    return Number.isInteger(number) && number > 0 ? number : null;
+};
+
+const normalizeLimit = (value) => {
+    const limit = parsePositiveInteger(value) || 50;
+    return Math.min(limit, 500);
+};
+
+const secondsExpression = (column) => `ROUND(${column} / 1000.0, 3)`;
+
+async function findTimingReciter(db, reciter) {
+    const reciterId = parsePositiveInteger(reciter);
+
+    if (reciterId) {
+        return db.get('SELECT * FROM timing_reciters WHERE id = ?', [reciterId]);
+    }
+
+    return db.get(`
+        SELECT *
+        FROM timing_reciters
+        WHERE name = ? OR name LIKE ?
+        ORDER BY id
+        LIMIT 1
+    `, [reciter, `%${reciter}%`]);
+}
+
+function timingSelectSql(whereSql = '') {
+    return `
+        SELECT
+            at.reciter_id,
+            tr.name AS reciter_name,
+            tr.name AS reciter_display_name,
+            tr.rewaya,
+            tr.folder_url,
+            at.surah_number,
+            at.verse_number,
+            at.start_time_ms,
+            at.end_time_ms,
+            ${secondsExpression('at.start_time_ms')} AS start_time_seconds,
+            ${secondsExpression('at.end_time_ms')} AS end_time_seconds,
+            ${secondsExpression('at.start_time_ms')} AS timing_seconds,
+            (at.end_time_ms - at.start_time_ms) AS duration_ms,
+            ROUND((at.end_time_ms - at.start_time_ms) / 1000.0, 3) AS duration_seconds,
+            geom.polygon,
+            geom.x,
+            geom.y,
+            CASE
+                WHEN geom.page_number IS NULL THEN NULL
+                ELSE 'https://www.mp3quran.net/api/quran_pages_svg/' || printf('%03d', geom.page_number) || '.svg'
+            END AS page,
+            'https://www.mp3quran.net/api/v3/ayat_timing?surah=' || at.surah_number || '&read=' || at.reciter_id AS timing_url
+        FROM ayat_timing at
+        JOIN timing_reciters tr ON tr.id = at.reciter_id
+        LEFT JOIN ayat_timing_geometry geom
+            ON geom.surah_number = at.surah_number
+            AND geom.verse_number = at.verse_number
+        ${whereSql}
+    `;
+}
+
 /**
- * جلب قراء التوقيت المتاحين (4 قراء فقط)
+ * جلب قراء التوقيت المتاحين (96 قارئا من حفص 114 سورة)
  * GET /api/timing/reciters
  */
 export const getAllReciters = async (req, res) => {
     try {
         const db = await openDatabase();
-        
+
         const reciters = await db.all(`
-            SELECT DISTINCT 
-                reciter_name,
-                reciter_display_name,
-                COUNT(*) as verses_count
-            FROM ayat_timing 
-            GROUP BY reciter_name, reciter_display_name
-            ORDER BY reciter_name
+            SELECT
+                tr.id AS reciter_id,
+                tr.name AS reciter_name,
+                tr.name AS reciter_display_name,
+                tr.rewaya,
+                tr.folder_url,
+                tr.soar_count,
+                tr.soar_link,
+                COUNT(at.id) AS timings_count,
+                SUM(CASE WHEN at.verse_number > 0 THEN 1 ELSE 0 END) AS verses_count,
+                COUNT(DISTINCT at.surah_number) AS surahs_count
+            FROM timing_reciters tr
+            LEFT JOIN ayat_timing at ON at.reciter_id = tr.id
+            GROUP BY tr.id
+            ORDER BY tr.id
         `);
 
         await db.close();
@@ -43,36 +112,43 @@ export const getAllReciters = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error fetching reciters:', error);
-        handleError(res, 500, 'خطأ في جلب قائمة القراء', { error: error.message });
+        console.error('Error fetching timing reciters:', error);
+        handleError(res, 500, 'خطأ في جلب قائمة قراء التوقيت', { error: error.message });
     }
 };
 
 /**
- * جلب توقيت آيات سورة معينة لقارئ معين
+ * جلب توقيت آيات سورة معينة لقارئ معين.
+ * reciter يقبل رقم القارئ من mp3quran ويفضل استخدامه مثل /api/timing/1/1.
  * GET /api/timing/:reciter/:surah_id
  */
 export const getVerseTimings = async (req, res) => {
     try {
         const { reciter, surah_id } = req.params;
-        
-        if (!reciter || !surah_id) {
-            return handleError(res, 400, 'اسم القارئ ورقم السورة مطلوبان', {
-                example: '/api/timing/sudais/1'
+        const surahNumber = parsePositiveInteger(surah_id);
+
+        if (!reciter || !surahNumber || surahNumber > 114) {
+            return handleError(res, 400, 'رقم القارئ ورقم السورة مطلوبان', {
+                example: '/api/timing/1/1',
+                note: 'استخدم /api/timing/reciters لمعرفة أرقام القراء'
             });
         }
 
         const db = await openDatabase();
-        
-        const timings = await db.all(`
-            SELECT 
-                verse_number,
-                timing_seconds,
-                reciter_display_name
-            FROM ayat_timing 
-            WHERE reciter_name = ? AND surah_number = ?
-            ORDER BY verse_number
-        `, [reciter, parseInt(surah_id)]);
+        const timingReciter = await findTimingReciter(db, reciter);
+
+        if (!timingReciter) {
+            await db.close();
+            return handleError(res, 404, `لم يتم العثور على قارئ التوقيت ${reciter}`, {
+                available_reciters_endpoint: '/api/timing/reciters'
+            });
+        }
+
+        const timings = await db.all(`${timingSelectSql(`
+            WHERE at.reciter_id = ? AND at.surah_number = ?
+        `)}
+            ORDER BY at.verse_number
+        `, [timingReciter.id, surahNumber]);
 
         await db.close();
 
@@ -82,17 +158,22 @@ export const getVerseTimings = async (req, res) => {
             });
         }
 
-        // حساب المدة الإجمالية
-        const totalDuration = timings[timings.length - 1].timing_seconds;
+        const totalDurationMs = Math.max(...timings.map((timing) => timing.end_time_ms));
 
         res.json({
             success: true,
             data: {
-                reciter: timings[0].reciter_display_name,
-                reciter_key: reciter,
-                surah_number: parseInt(surah_id),
-                verses_count: timings.length,
-                total_duration_seconds: totalDuration,
+                reciter: timingReciter.name,
+                reciter_id: timingReciter.id,
+                reciter_key: String(timingReciter.id),
+                rewaya: timingReciter.rewaya,
+                folder_url: timingReciter.folder_url,
+                surah_number: surahNumber,
+                verses_count: timings.filter((timing) => timing.verse_number > 0).length,
+                timings_count: timings.length,
+                total_duration_ms: totalDurationMs,
+                total_duration_seconds: Number((totalDurationMs / 1000).toFixed(3)),
+                timing_url: timings[0].timing_url,
                 verses: timings
             }
         });
@@ -104,30 +185,34 @@ export const getVerseTimings = async (req, res) => {
 };
 
 /**
- * جلب توقيت آية واحدة محددة
+ * جلب توقيت آية واحدة محددة.
  * GET /api/timing/:reciter/:surah_id/:verse_id
  */
 export const getSingleVerseTiming = async (req, res) => {
     try {
         const { reciter, surah_id, verse_id } = req.params;
-        
-        if (!reciter || !surah_id || !verse_id) {
-            return handleError(res, 400, 'اسم القارئ ورقم السورة ورقم الآية مطلوبان', {
-                example: '/api/timing/sudais/1/1'
+        const surahNumber = parsePositiveInteger(surah_id);
+        const verseNumber = Number(verse_id);
+
+        if (!reciter || !surahNumber || surahNumber > 114 || !Number.isInteger(verseNumber) || verseNumber < 0) {
+            return handleError(res, 400, 'رقم القارئ ورقم السورة ورقم الآية مطلوبة', {
+                example: '/api/timing/1/1/1'
             });
         }
 
         const db = await openDatabase();
-        
-        const timing = await db.get(`
-            SELECT 
-                verse_number,
-                timing_seconds,
-                reciter_display_name,
-                surah_number
-            FROM ayat_timing 
-            WHERE reciter_name = ? AND surah_number = ? AND verse_number = ?
-        `, [reciter, parseInt(surah_id), parseInt(verse_id)]);
+        const timingReciter = await findTimingReciter(db, reciter);
+
+        if (!timingReciter) {
+            await db.close();
+            return handleError(res, 404, `لم يتم العثور على قارئ التوقيت ${reciter}`);
+        }
+
+        const timing = await db.get(`${timingSelectSql(`
+            WHERE at.reciter_id = ? AND at.surah_number = ? AND at.verse_number = ?
+        `)}
+            LIMIT 1
+        `, [timingReciter.id, surahNumber, verseNumber]);
 
         await db.close();
 
@@ -137,7 +222,12 @@ export const getSingleVerseTiming = async (req, res) => {
 
         res.json({
             success: true,
-            data: timing
+            data: {
+                reciter: timingReciter.name,
+                reciter_id: timingReciter.id,
+                reciter_key: String(timingReciter.id),
+                ...timing
+            }
         });
 
     } catch (error) {
@@ -147,31 +237,42 @@ export const getSingleVerseTiming = async (req, res) => {
 };
 
 /**
- * جلب جميع السور المتاحة لقارئ معين
+ * جلب جميع السور المتاحة لقارئ معين.
+ * كل قراء حفص 114 لديهم كل السور.
  * GET /api/timing/:reciter/surahs
  */
 export const getAvailableSurahs = async (req, res) => {
     try {
         const { reciter } = req.params;
-        
+
         if (!reciter) {
-            return handleError(res, 400, 'اسم القارئ مطلوب', {
-                example: '/api/timing/sudais/surahs'
+            return handleError(res, 400, 'رقم القارئ مطلوب', {
+                example: '/api/timing/1/surahs'
             });
         }
 
         const db = await openDatabase();
-        
+        const timingReciter = await findTimingReciter(db, reciter);
+
+        if (!timingReciter) {
+            await db.close();
+            return handleError(res, 404, `لم يتم العثور على قارئ التوقيت ${reciter}`, {
+                available_reciters_endpoint: '/api/timing/reciters'
+            });
+        }
+
         const surahs = await db.all(`
-            SELECT 
+            SELECT
                 surah_number,
-                COUNT(*) as verses_count,
-                MAX(timing_seconds) as total_duration_seconds
-            FROM ayat_timing 
-            WHERE reciter_name = ?
+                COUNT(*) AS timings_count,
+                SUM(CASE WHEN verse_number > 0 THEN 1 ELSE 0 END) AS verses_count,
+                MAX(end_time_ms) AS total_duration_ms,
+                ROUND(MAX(end_time_ms) / 1000.0, 3) AS total_duration_seconds
+            FROM ayat_timing
+            WHERE reciter_id = ?
             GROUP BY surah_number
             ORDER BY surah_number
-        `, [reciter]);
+        `, [timingReciter.id]);
 
         await db.close();
 
@@ -184,9 +285,12 @@ export const getAvailableSurahs = async (req, res) => {
         res.json({
             success: true,
             data: {
-                reciter: reciter,
+                reciter: timingReciter.name,
+                reciter_id: timingReciter.id,
+                reciter_key: String(timingReciter.id),
+                rewaya: timingReciter.rewaya,
                 surahs_count: surahs.length,
-                surahs: surahs
+                surahs
             }
         });
 
@@ -197,33 +301,43 @@ export const getAvailableSurahs = async (req, res) => {
 };
 
 /**
- * البحث عن توقيت بمعايير مختلفة
- * GET /api/timing/search?reciter=...&surah=...&verse=...
+ * البحث عن توقيت بمعايير مختلفة.
+ * GET /api/timing/search?reciter=1&surah=1&verse=1
  */
 export const searchTimings = async (req, res) => {
     try {
-        const { reciter, surah, verse, limit = 50 } = req.query;
-        
-        let query = 'SELECT * FROM ayat_timing WHERE 1=1';
+        const { reciter, surah, verse } = req.query;
+        const limit = normalizeLimit(req.query.limit);
+
+        let query = timingSelectSql('WHERE 1=1');
         const params = [];
-        
+
         if (reciter) {
-            query += ' AND reciter_name LIKE ?';
-            params.push(`%${reciter}%`);
+            const reciterId = parsePositiveInteger(reciter);
+            if (reciterId) {
+                query += ' AND at.reciter_id = ?';
+                params.push(reciterId);
+            } else {
+                query += ' AND tr.name LIKE ?';
+                params.push(`%${reciter}%`);
+            }
         }
-        
+
         if (surah) {
-            query += ' AND surah_number = ?';
-            params.push(parseInt(surah));
+            query += ' AND at.surah_number = ?';
+            params.push(parsePositiveInteger(surah));
         }
-        
-        if (verse) {
-            query += ' AND verse_number = ?';
-            params.push(parseInt(verse));
+
+        if (verse !== undefined) {
+            const verseNumber = Number(verse);
+            if (Number.isInteger(verseNumber) && verseNumber >= 0) {
+                query += ' AND at.verse_number = ?';
+                params.push(verseNumber);
+            }
         }
-        
-        query += ' ORDER BY reciter_name, surah_number, verse_number LIMIT ?';
-        params.push(parseInt(limit));
+
+        query += ' ORDER BY at.reciter_id, at.surah_number, at.verse_number LIMIT ?';
+        params.push(limit);
 
         const db = await openDatabase();
         const results = await db.all(query, params);
@@ -243,7 +357,7 @@ export const searchTimings = async (req, res) => {
 };
 
 /**
- * جلب جميع القراء الصوتيين من جدول audio (133 قارئ)
+ * جلب جميع القراء الصوتيين من جدول audio.
  * GET /api/reciters
  */
 export const getAllAudioReciters = async (req, res) => {
@@ -263,5 +377,134 @@ export const getAllAudioReciters = async (req, res) => {
     } catch (error) {
         console.error('Error fetching audio reciters:', error);
         handleError(res, 500, 'خطأ في جلب جميع القراء الصوتيين', { error: error.message });
+    }
+};
+
+const pad3 = (value) => String(value).padStart(3, '0');
+
+const buildAyahAudioUrl = (baseUrl, surahNumber, verseNumber) => {
+    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    return `${normalizedBaseUrl}${pad3(surahNumber)}${pad3(verseNumber)}.mp3`;
+};
+
+async function findAyahAudioReciter(db, reciter) {
+    const reciterId = parsePositiveInteger(reciter);
+
+    if (reciterId) {
+        return db.get('SELECT * FROM ayah_audio_reciters WHERE id = ?', [reciterId]);
+    }
+
+    return db.get(`
+        SELECT *
+        FROM ayah_audio_reciters
+        WHERE name = ? OR name LIKE ?
+        ORDER BY id
+        LIMIT 1
+    `, [reciter, `%${reciter}%`]);
+}
+
+const formatAyahAudioReciter = (reciter) => ({
+    id: reciter.id,
+    name: reciter.name,
+    rewaya: reciter.rewaya,
+    musshaf_type: reciter.musshaf_type,
+    audio_urls: {
+        32: reciter.audio_url_bit_rate_32 || '',
+        64: reciter.audio_url_bit_rate_64 || '',
+        128: reciter.audio_url_bit_rate_128 || ''
+    }
+});
+
+/**
+ * جلب قراء الصوت آية-بآية.
+ * GET /api/ayah-audio/reciters
+ */
+export const getAyahAudioReciters = async (req, res) => {
+    try {
+        const db = await openDatabase();
+        const reciters = await db.all(`
+            SELECT *
+            FROM ayah_audio_reciters
+            ORDER BY id
+        `);
+        await db.close();
+
+        res.json({
+            success: true,
+            data: reciters.map(formatAyahAudioReciter),
+            count: reciters.length
+        });
+    } catch (error) {
+        console.error('Error fetching ayah audio reciters:', error);
+        handleError(res, 500, 'خطأ في جلب قراء الصوت آية-بآية', { error: error.message });
+    }
+};
+
+/**
+ * بناء رابط ملف صوت آية محددة لقارئ محدد.
+ * GET /api/ayah-audio/:reciter/:surah_id/:verse_id?bitrate=128
+ */
+export const getAyahAudio = async (req, res) => {
+    try {
+        const { reciter, surah_id, verse_id } = req.params;
+        const { bitrate } = req.query;
+        const surahNumber = parsePositiveInteger(surah_id);
+        const verseNumber = parsePositiveInteger(verse_id);
+
+        if (!reciter || !surahNumber || surahNumber > 114 || !verseNumber) {
+            return handleError(res, 400, 'رقم القارئ ورقم السورة ورقم الآية مطلوبة', {
+                example: '/api/ayah-audio/1/1/1?bitrate=32'
+            });
+        }
+
+        const db = await openDatabase();
+        const audioReciter = await findAyahAudioReciter(db, reciter);
+        await db.close();
+
+        if (!audioReciter) {
+            return handleError(res, 404, `لم يتم العثور على قارئ صوت آية-بآية ${reciter}`, {
+                available_reciters_endpoint: '/api/ayah-audio/reciters'
+            });
+        }
+
+        const availableBaseUrls = [
+            { bitrate: 32, base_url: audioReciter.audio_url_bit_rate_32 },
+            { bitrate: 64, base_url: audioReciter.audio_url_bit_rate_64 },
+            { bitrate: 128, base_url: audioReciter.audio_url_bit_rate_128 }
+        ].filter((item) => item.base_url);
+
+        if (availableBaseUrls.length === 0) {
+            return handleError(res, 404, `لا توجد روابط صوت آية-بآية للقارئ ${reciter}`);
+        }
+
+        const requestedBitrate = bitrate ? Number(bitrate) : null;
+        const selectedBaseUrls = requestedBitrate
+            ? availableBaseUrls.filter((item) => item.bitrate === requestedBitrate)
+            : availableBaseUrls;
+
+        if (selectedBaseUrls.length === 0) {
+            return handleError(res, 404, `الجودة ${bitrate} غير متاحة لهذا القارئ`, {
+                available_bitrates: availableBaseUrls.map((item) => item.bitrate)
+            });
+        }
+
+        const audioFiles = selectedBaseUrls.map((item) => ({
+            bitrate: item.bitrate,
+            url: buildAyahAudioUrl(item.base_url, surahNumber, verseNumber)
+        }));
+
+        res.json({
+            success: true,
+            data: {
+                reciter: formatAyahAudioReciter(audioReciter),
+                surah_number: surahNumber,
+                verse_number: verseNumber,
+                file_name: `${pad3(surahNumber)}${pad3(verseNumber)}.mp3`,
+                audio_files: audioFiles
+            }
+        });
+    } catch (error) {
+        console.error('Error building ayah audio URL:', error);
+        handleError(res, 500, 'خطأ في بناء رابط صوت الآية', { error: error.message });
     }
 };
