@@ -14,9 +14,5 @@
       "src": "/(.*)",
       "dest": "/api/index.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "All-Environments",
-    "VERCEL_SUPPORT_LARGE_FUNCTIONS": "1"
-  }
+  ]
 }
