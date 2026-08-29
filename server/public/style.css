@@ -6,9 +6,15 @@
             font-style: normal;
             font-display: swap;
         }
+/* تعريف الخط العربي الحديث */
+        @font-face {
+            font-family: 'ArabicModern';
+            src: url('./arabic-font.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
 
-
-         
   /* Light theme */
   :root {
     --bg-primary: #f8f8f8fa;
@@ -1549,6 +1555,18 @@ header{width:100%;left:0;right:0}
 .navbar-brand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .main-content,.hero-section,#reciter-gallery,#new-api-detailed-examples{width:100%}
 .container,.container-fluid{max-width:1536px}
+
+#reciter-gallery {
+  background: #111111 !important;
+  color: #f5f5f5 !important;
+  font-family: 'ArabicModern', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  border-radius: 0;
+}
+
+#reciter-gallery * {
+  color: inherit;
+  font-family: inherit;
+}
 
 /* Gallery cards: compact, responsive, and consistent. */
 #reciterGalleryGrid{align-items:stretch}

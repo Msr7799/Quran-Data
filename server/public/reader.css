@@ -1198,12 +1198,6 @@ html[data-theme="dark"] .verse-card.active {
 /* Large black viewport for the SVG Surah name.
    The image is slightly zoomed to compensate for whitespace inside many SVG viewBoxes. */
 .surah-art-large {
-  width: min(260px, 36%);
-  height: 94px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
   background: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
