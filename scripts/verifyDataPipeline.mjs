@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 import { createReadStream } from 'node:fs';
 import { access, readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -145,7 +146,7 @@ export async function run() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   run().catch((error) => {
     console.error('❌ verifyDataPipeline failed:', error);
     process.exit(1);

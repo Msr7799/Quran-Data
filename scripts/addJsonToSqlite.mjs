@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -191,7 +192,7 @@ export async function run(options = parseArguments()) {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   run().catch((error) => {
     console.error('❌ addJsonToSqlite failed:', error);
     process.exit(1);

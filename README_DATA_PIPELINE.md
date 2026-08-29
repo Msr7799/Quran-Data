@@ -72,3 +72,17 @@ Binary images are intentionally **referenced by path**, not stored as BLOB/base6
 ## Source anomalies
 
 The builder never silently changes source timing values. It records source anomalies in the generated manifest, including reversed timing ranges, special `verse_number=0` timing markers, out-of-range source timing rows, invalid source entries, and empty segment datasets.
+
+## Windows / PowerShell
+
+إذا انتهى `pnpm run data:rebuild` مباشرة بدون ظهور `1/3`، تأكد أنك تستخدم هذه النسخة؛
+تم إصلاح فحص تشغيل ESM ليعمل على Windows وLinux/macOS.
+
+المسار الموصى به للمشروع هو Node.js 22.x كما هو محدد في `package.json`.
+Node 24 قد يعمل محليًا، لكن pnpm سيعرض تحذير `Unsupported engine` لأن المشروع مثبت على Node 22.x.
+
+التحقق النهائي الناجح ينتهي بالسطر:
+
+```text
+✅ DATA_PIPELINE_OK
+```

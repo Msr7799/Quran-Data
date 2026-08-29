@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 /**
  * سكربت مساعد لاستعلام وإدارة ملفات JSON المخزنة في قاعدة البيانات
  * يوفر دوال للبحث والاستعلام عن البيانات المدخلة
@@ -396,6 +397,6 @@ export {
 };
 
 // تشغيل السكربت إذا تم استدعاؤه مباشرة
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
     main().catch(console.error);
 }

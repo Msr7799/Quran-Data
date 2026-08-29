@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 import { run as splitData } from './splitData.mjs';
 import { run as buildData } from './buildData.mjs';
 import { run as verifyData } from './verifyDataPipeline.mjs';
@@ -11,7 +12,7 @@ export async function run() {
   return verifyData();
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   run().catch((error) => {
     console.error('❌ data:rebuild failed:', error);
     process.exit(1);

@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,7 +30,7 @@ import {
 } from './dataPipelineLib.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
-const isDirect = import.meta.url === `file://${process.argv[1]}`;
+const isDirect = isMainModule(import.meta.url);
 
 function parseFormats(argv = process.argv.slice(2)) {
   const arg = argv.find((value) => value.startsWith('--formats='));

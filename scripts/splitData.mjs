@@ -1,3 +1,4 @@
+import { isMainModule } from './runtime.mjs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,7 +76,7 @@ export async function run() {
   return stats;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   run().catch((error) => {
     console.error('❌ splitData failed:', error);
     process.exit(1);

@@ -266,7 +266,7 @@ curl -X GET "http://localhost:5000/api/surahs"
 
 #### 📦 مثال `curl`:
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/surah?surah_id=1"
 or
 curl -X GET "http://localhost:5000/api/surah/1"
@@ -274,7 +274,7 @@ curl -X GET "http://localhost:5000/api/surah/1"
 
 #### ✅ الاستجابة:
 
-```json
+```json copybtn
 {
   "success": true,
   "result": {
@@ -313,7 +313,7 @@ curl -X GET "http://localhost:5000/api/surah/1"
 
 #### 📦 مثال `curl`:
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/verses?surah_id=1"
 or
 curl -X GET "http://localhost:5000/api/verses/1"
@@ -321,7 +321,7 @@ curl -X GET "http://localhost:5000/api/verses/1"
 
 #### ✅ الاستجابة:
 
-```json
+```json copybtn
 {
   "success": true,
   "result": [
@@ -348,13 +348,13 @@ curl -X GET "http://localhost:5000/api/verses/1"
 
 #### 📦 مثال `curl`:
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/sajda"
 ```
 
 #### ✅ الاستجابة:
 
-```json
+```json copybtn
 {
   "success": true,
   "result": [
@@ -387,7 +387,7 @@ curl -X GET "http://localhost:5000/api/sajda"
 
 #### 📦 مثال `curl`:
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/audio?surah_id=1"
 or
 curl -X GET "http://localhost:5000/api/audio/1"
@@ -395,7 +395,7 @@ curl -X GET "http://localhost:5000/api/audio/1"
 
 #### ✅ الاستجابة:
 
-```json
+```json copybtn
 {
   "success": true,
   "result": [
@@ -429,7 +429,7 @@ curl -X GET "http://localhost:5000/api/audio/1"
 
 **استرجاع الصفحات بناءً على معرف السورة:**
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/pages/2"
 or
 curl -X GET "http://localhost:5000/api/pages?surah_id=2"
@@ -437,7 +437,7 @@ curl -X GET "http://localhost:5000/api/pages?surah_id=2"
 
 **استرجاع الصفحة بناءً على السورة والآية:**
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/pages?surah_id=2&verse_id=15"
 or
 curl -X GET "http://localhost:5000/api/pages/2/15"
@@ -445,13 +445,13 @@ curl -X GET "http://localhost:5000/api/pages/2/15"
 
 **استرجاع الصفحة بناءً على رقم الصفحة:**
 
-```bash
+```bash copybtn prompt:"$"
 curl -X GET "http://localhost:5000/api/pages?page=604"
 ```
 
 #### ✅ الاستجابة:
 
-```json
+```json copybtn
 {
   "success": true,
   "result": {
@@ -495,9 +495,11 @@ curl -X GET "http://localhost:5000/api/pages?page=604"
 
    انتقل إلى جذر مشروعك ثم استخدم الأمر التالي لبناء الصورة:
 
-   ```bash
+```bash copybtn prompt:"$"
+
    docker build -t quran_data .
-   ```
+   
+```
 
 ### تشغيل الحاوية
 
@@ -517,15 +519,17 @@ curl -X GET "http://localhost:5000/api/pages?page=604"
 
    يمكنك الوصول إلى التطبيق عبر متصفح الويب باستخدام العنوان التالي:
 
-   ```
-   http://localhost:5000
-   ```
+```bash copybtn prompt:"$"
+
+http://localhost:5000
+
+```
 
 ### إيقاف الحاوية
 
 لإيقاف الحاوية، استخدم الأمر التالي:
 
-```bash
+```bash copybtn prompt:"$"
 docker stop quran_data_container
 ```
 
@@ -533,7 +537,7 @@ docker stop quran_data_container
 
 إذا كنت ترغب في حذف الحاوية والصورة، استخدم الأوامر التالية:
 
-```bash
+```bash copybtn prompt:"$"
 docker rm quran_data_container
 docker rmi quran_data
 ```
@@ -581,6 +585,8 @@ docker rmi quran_data
 
 اختبار بنية الواجهة:
 
-```bash
-npm run test:reader
+```bash copybtn prompt:"$"
+
+pnpm run test:reader
+
 ```
