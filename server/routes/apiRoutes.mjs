@@ -4,8 +4,7 @@ import {
   getVersesByJuz, getSajdaVerses, getPage
 } from '../controllers/surahController.mjs';
 import {
-  getAllReciters, getVerseTimings, getSingleVerseTiming, getAvailableSurahs,
-  searchTimings, getAllAudioReciters, getAyahAudioReciters, getAyahAudio,
+  getAllAudioReciters, getAyahAudioReciters, getAyahAudio,
   getReciterImages, getSurahNames, getAyahBayahReciters, getAyahBayahReciterById,
   getAyahBayahSurah, getAyahBayahVerse
 } from '../controllers/timingController.mjs';
@@ -61,18 +60,6 @@ router.get('/audio/:surah_id/:reciter', getAudioByReciter); // ملفات صوت
 
 // جميع القراء الصوتيين (من جدول audio) - 158 قارئ
 router.get('/reciters', getAllAudioReciters);
-
-// ============= Timing Routes =============
-// القراء الذين لديهم توقيتات حفص كاملة - 96 قارئ
-router.get('/timing/reciters', getAllReciters);
-// السور المتاحة لقارئ توقيت
-router.get('/timing/:reciter/surahs', getAvailableSurahs);
-// توقيتات سورة كاملة لقارئ
-router.get('/timing/:reciter/:surah_id', getVerseTimings);
-// توقيت آية واحدة
-router.get('/timing/:reciter/:surah_id/:verse_id', getSingleVerseTiming);
-// البحث في التوقيتات
-router.get('/timing/search', searchTimings);
 
 // ============= Verse-by-Verse Audio Routes =============
 // قراء الصوت آية-بآية

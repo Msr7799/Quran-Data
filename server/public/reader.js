@@ -633,7 +633,6 @@
       ),
       selectedName =
         st.selected?.reciter?.ar || st.selected?.name || "عبدالرحمن السديس",
-      timingReciter = matchingReciterId(st.timingReciters, "reciter_id") || 1,
       ayahAudioReciter = matchingReciterId(st.ayahAudioReciters, "id") || 1;
     return [
       { key: "surahs", title: "استرجاع جميع السور", path: "/api/surahs" },
@@ -655,31 +654,6 @@
         preview: "pages",
       },
       { key: "audio-reciters", title: "جميع قراء الصوت", path: "/api/reciters" },
-      {
-        key: "timing-reciters",
-        title: "قراء التوقيت",
-        path: "/api/timing/reciters",
-      },
-      {
-        key: "timing-surah",
-        title: "توقيت السورة",
-        path: `/api/timing/${timingReciter}/${s}`,
-      },
-      {
-        key: "timing-ayah",
-        title: "توقيت آية واحدة",
-        path: `/api/timing/${timingReciter}/${s}/${a}`,
-      },
-      {
-        key: "timing-surahs",
-        title: "سور قارئ التوقيت المتاحة",
-        path: `/api/timing/${timingReciter}/surahs`,
-      },
-      {
-        key: "timing-search",
-        title: "البحث في التوقيتات",
-        path: `/api/timing/search?reciter=${timingReciter}&surah=${s}&verse=${a}&limit=50`,
-      },
       {
         key: "ayah-audio-reciters",
         title: "قراء الصوت آية بآية",
