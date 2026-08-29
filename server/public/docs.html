@@ -54,9 +54,9 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         
-                        <div class="collapse navbar-collapse d-lg-block" id="navbarNav">
-                            <ul class="navbar-nav d-flex flex-row align-items-center">
-                                <li class="nav-item"><a class="nav-link btn btn-success btn-sm text-white px-3" href="/reader" title="فتح الموقع التجريبي لتجربة الداتا">🧪 <span>الموقع التجريبي</span></a></li>
+                        <div class="collapse navbar-collapse docs-navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav docs-navbar-nav d-flex flex-row align-items-center flex-wrap">
+                                <li class="nav-item"><a class="nav-link btn btn-success btn-sm text-white px-3" href="/index.html" title="فتح الموقع التجريبي لتجربة الداتا">🧪 <span>الموقع التجريبي</span></a></li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
                                         📖 <span>الكود المصدري</span>
@@ -89,7 +89,7 @@
                     </div>
                     
                     <!-- Logo and Title - Far Right -->
-                    <a class="navbar-brand d-flex align-items-center" href="/">
+                    <a class="navbar-brand d-flex align-items-center" href="/docs">
                         <img src="./icon-192.png" alt="Quran Data Logo" style="height: 40px; width: 40px; margin-left: 10px;">
                         <span class="d-none d-md-inline">واجهة برمجة تطبيقات القرآن الكريم</span>
                         <span class="d-md-none">API القرآن</span>
@@ -166,7 +166,7 @@
         <h3 class="mb-1">🎧 مثال كامل جاهز: المصحف التفاعلي</h3>
         <p class="mb-0">يعرض جميع القراء والسور، يستخدم الخط العثماني المحلي، يشغّل السورة أو آية منفردة، ويتتبع الآية والكلمة عندما تتوفر بيانات التوقيت.</p>
       </div>
-      <a class="btn btn-success btn-lg" href="/reader">فتح المصحف التفاعلي</a>
+      <a class="btn btn-success btn-lg" href="/index.html">فتح المصحف التفاعلي</a>
     </div>
     <pre class="mt-3 mb-0"><code>GET /api/surah/1
 GET /api/reciter-images
@@ -752,7 +752,7 @@ GET /api/ayah-bayah/68/1/1</code></pre>
         const API_BASE_URL = `${window.location.origin}/api`;
 
         // Initialize Redoc
-        Redoc.init('/docs/api-definition.yaml?v=3.1.0', {
+        Redoc.init('/docs/api-definition.yaml?v=3.1.0-nav-scroll-fix', {
             theme: {
                 colors: {
                     primary: {

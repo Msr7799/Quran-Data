@@ -19,7 +19,7 @@ const docs = fs.readFileSync(path.join(publicDir,'docs.html'),'utf8');
 const openapi = fs.readFileSync(path.join(root,'docs','api-definition.yaml'),'utf8');
 ok(html.includes('المصحف التفاعلي') && html.includes('api-lab'), 'واجهة القارئ ومختبر API موجودان');
 ok(js.includes('/api/ayah-bayah/') && js.includes('/api/reciter-images') && js.includes('/api/surah/'), 'الواجهة مربوطة بمسارات API الفعلية');
-ok(docs.includes('href="/reader"') && docs.includes('الموقع التجريبي'), 'docs.html يحتوي زر الموقع التجريبي في الناف بار');
+ok(docs.includes('href="/index.html"') && docs.includes('الموقع التجريبي'), 'docs.html يحتوي زر الموقع التجريبي في الناف بار');
 ok(openapi.includes('version: 3.1.0') && openapi.includes('/ayah-bayah/{reciter_id}/{surah_id}/{verse_id}') && openapi.includes('shuraim_960'), 'أمثلة القراء والتتبع موجودة داخل OpenAPI/ReDoc v3.1.0');
 
 const svgCount = fs.readdirSync(path.join(dataDir,'suwer-name')).filter(x=>/^\d{3}\.svg$/i.test(x)).length;

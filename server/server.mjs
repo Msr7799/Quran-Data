@@ -31,9 +31,9 @@ app.get('/docs/api-definition.yaml', (req, res) => {
     res.sendFile(apiDefinitionPath);
 });
 
-// الصفحة الرئيسية للمشروع هي وثائق الـ API.
+// الصفحة الرئيسية تتحول صراحة إلى /docs حتى لا يسبقها index.html في أي بيئة.
 app.get('/', (req, res) => {
-    res.sendFile(publicHtmlFilePath);
+    res.redirect(307, '/docs');
 });
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
