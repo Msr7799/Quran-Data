@@ -57,6 +57,13 @@ body {
   color: var(--text);
   font-family: ArabicModern, Tahoma, Arial, "Segoe UI", sans-serif;
   line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: color-mix(in srgb, var(--brand) 30%, transparent);
+}
+.w-full {
+  width: 100%;
 }
 button,
 select,
@@ -1370,86 +1377,92 @@ html[data-theme="dark"] .surah-art-mini img {
 
 
 /* =========================================================
-   v3.1.0 — balanced Surah-name artwork sizing
+   v3.1.0 — centered Surah-name artwork sizing
    ========================================================= */
-/* The previous wrapper had no desktop width/height, so the SVG intrinsic
-   size could make the Surah-name panel dominate the Mushaf header. */
-.surah-art-large{
-  width:clamp(220px,29vw,340px) !important;
-  height:clamp(92px,11vw,122px) !important;
-  flex:0 0 auto !important;
-  display:grid !important;
-  place-items:center !important;
-  overflow:hidden !important;
-  background:#000 !important;
-  border:1px solid rgba(255,255,255,.14) !important;
-  border-radius:14px !important;
+/* reader.js trims the empty SVG viewBox space before assigning the image.
+   These rules only control the visible frame and keep the artwork centered. */
+.surah-art-large {
+  width: clamp(240px, 31vw, 370px) !important;
+  height: clamp(96px, 11vw, 126px) !important;
+  flex: 0 0 auto !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 14px !important;
 }
-.surah-art-large img{
-  width:100% !important;
-  height:100% !important;
-  max-width:none !important;
-  object-fit:contain !important;
-  object-position:center !important;
-  padding:0 !important;
-  background:#000 !important;
-  transform:scale(2.65) !important;
-  transform-origin:center !important;
-}
-
-.surah-art-mini{
-  width:132px !important;
-  height:54px !important;
-  overflow:hidden !important;
-  background:#000 !important;
-}
-.surah-art-mini img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:contain !important;
-  max-width:none !important;
-  object-position:center !important;
-  padding:0 !important;
-  background:#000 !important;
-  transform:scale(2.45) !important;
-  transform-origin:center !important;
+.surah-art-large img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: 50% 50% !important;
+  padding: 10px 14px !important;
+  background: #000 !important;
+  transform: none !important;
+  transform-origin: center !important;
 }
 
-/* Keep the header compact instead of letting artwork create a huge empty area. */
-.surah-head{
-  min-height:138px !important;
-  padding:16px clamp(16px,3vw,28px) !important;
-  align-items:center !important;
+.surah-art-mini {
+  width: 148px !important;
+  height: 62px !important;
+  flex: 0 0 auto !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 12px !important;
 }
-.surah-head>div:first-child{
-  min-width:0 !important;
-  flex:1 1 auto;
+.surah-art-mini img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: 50% 50% !important;
+  padding: 6px 9px !important;
+  background: #000 !important;
+  transform: none !important;
+  transform-origin: center !important;
 }
 
-@media(max-width:900px){
-  .surah-art-large{
-    width:clamp(190px,38vw,270px) !important;
-    height:96px !important;
-  }
-  .surah-art-large img{transform:scale(2.65) !important}
+.surah-head {
+  min-height: 146px !important;
+  padding: 16px clamp(16px, 3vw, 28px) !important;
+  align-items: center !important;
 }
-@media(max-width:600px){
-  .surah-head{
-    min-height:108px !important;
-    padding:11px !important;
+.surah-head > div:first-child {
+  min-width: 0 !important;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 900px) {
+  .surah-art-large {
+    width: clamp(205px, 40vw, 290px) !important;
+    height: 98px !important;
   }
-  .surah-art-large{
-    width:min(155px,42vw) !important;
-    height:68px !important;
-    border-radius:10px !important;
+}
+@media (max-width: 600px) {
+  .surah-head {
+    min-height: 112px !important;
+    padding: 11px !important;
   }
-  .surah-art-large img{
-    padding:0 !important;
-    transform:scale(2.38) !important;
+  .surah-art-large {
+    width: min(168px, 44vw) !important;
+    height: 72px !important;
+    border-radius: 10px !important;
   }
-  .surah-art-mini{
-    width:112px !important;
-    height:46px !important;
+  .surah-art-large img {
+    padding: 5px 7px !important;
   }
-  .surah-art-mini img{transform:scale(2.30) !important}
+  .surah-art-mini {
+    width: 120px !important;
+    height: 50px !important;
+  }
+  .surah-art-mini img {
+    padding: 4px 6px !important;
+  }
 }

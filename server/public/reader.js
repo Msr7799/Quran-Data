@@ -152,6 +152,17 @@
   }
   function fillReciters() {
     const tids = new Set(st.tracked.map((x) => Number(x.id)));
+    el.statR.textContent = ar.format(st.reciters.length);
+    el.statT.textContent = ar.format(st.tracked.length);
+
+    if (!st.reciters.length) {
+      el.reciter.innerHTML = '<option value="">لا توجد بيانات قراء متاحة</option>';
+      el.reciter.disabled = true;
+      st.selected = null;
+      return;
+    }
+
+    el.reciter.disabled = false;
     el.reciter.innerHTML = st.reciters
       .map(
         (r) =>
@@ -164,8 +175,6 @@
     el.reciter.value = String(id);
     st.selected =
       st.reciters.find((r) => Number(r.id) === id) || st.reciters[0];
-    el.statR.textContent = ar.format(st.reciters.length);
-    el.statT.textContent = ar.format(st.tracked.length);
   }
   function rImage(r) {
     return r?.image_url || r?.image?.url || "/quran-data-icon.svg";
@@ -205,6 +214,85 @@
       el.note.textContent =
         "تشغيل السورة متاح من المكتبة العامة. اختر قارئًا بعلامة ● للتتبع.";
   }
+  const artworkUrls = new WeakMap();
+  async function setSurahArtwork(img, url) {
+    if (!img || !url) return;
+    img.dataset.source = url;
+    img.src = url;
+
+    // The source SVG files include different amounts of empty viewBox space.
+    // Crop that whitespace in-browser so every Surah name is centered and
+    // fills the black artwork panel consistently without editing the SVG files.
+    try {
+      const response = await fetch(url, { cache: "force-cache" });
+      if (!response.ok) return;
+      const text = await response.text();
+      const doc = new DOMParser().parseFromString(text, "image/svg+xml");
+      if (doc.querySelector("parsererror")) return;
+      const svg = doc.documentElement;
+      if (String(svg.tagName).toLowerCase() !== "svg") return;
+
+      const holder = document.createElement("div");
+      holder.setAttribute("aria-hidden", "true");
+      Object.assign(holder.style, {
+        position: "fixed",
+        insetInlineStart: "-100000px",
+        top: "0",
+        width: "1200px",
+        height: "600px",
+        visibility: "hidden",
+        pointerEvents: "none",
+        overflow: "hidden",
+      });
+      svg.setAttribute("width", "1200");
+      svg.setAttribute("height", "600");
+      holder.appendChild(svg);
+      document.body.appendChild(holder);
+
+      let box = null;
+      try {
+        box = svg.getBBox();
+      } catch {}
+      holder.remove();
+
+      if (
+        !box ||
+        !Number.isFinite(box.x) ||
+        !Number.isFinite(box.y) ||
+        !Number.isFinite(box.width) ||
+        !Number.isFinite(box.height) ||
+        box.width <= 0 ||
+        box.height <= 0
+      )
+        return;
+
+      const padX = Math.max(2, box.width * 0.07);
+      const padY = Math.max(2, box.height * 0.1);
+      svg.setAttribute(
+        "viewBox",
+        `${box.x - padX} ${box.y - padY} ${box.width + padX * 2} ${box.height + padY * 2}`,
+      );
+      svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+      svg.removeAttribute("width");
+      svg.removeAttribute("height");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
+        type: "image/svg+xml",
+      });
+      const objectUrl = URL.createObjectURL(blob);
+      if (img.dataset.source !== url) {
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+      const previous = artworkUrls.get(img);
+      if (previous) URL.revokeObjectURL(previous);
+      artworkUrls.set(img, objectUrl);
+      img.src = objectUrl;
+    } catch {
+      // Keep the original same-origin SVG as a safe fallback.
+    }
+  }
   function header() {
     const s = st.surahData;
     if (!s) return;
@@ -215,8 +303,8 @@
     el.snum.textContent = `سورة ${ar.format(n)}`;
     el.stitle.textContent = s.name?.ar || `سورة ${ar.format(n)}`;
     el.ssub.textContent = meta;
-    el.shimg.src = img;
-    el.simg.src = img;
+    setSurahArtwork(el.shimg, img);
+    setSurahArtwork(el.simg, img);
     el.smini.textContent = s.name?.ar || "";
     el.smeta.textContent = `${ar.format(cnt)} آيات · ${s.revelation_place?.ar || ""}`;
     el.bism.hidden = n === 1 || n === 9;
@@ -803,21 +891,31 @@
     );
     status("جاري تحميل فهارس السور والقراء…");
     try {
-      const [s, r, t, timing, ayahAudio] = await Promise.all([
-        api("/api/surahs"),
-        api("/api/reciter-images"),
-        api("/api/ayah-bayah/reciters"),
-        api("/api/timing/reciters"),
-        api("/api/ayah-audio/reciters"),
-      ]);
-      st.surahs = Array.isArray(s.result) ? s.result : [];
-      st.reciters = Array.isArray(r.data) ? r.data : [];
-      st.tracked = Array.isArray(t.data) ? t.data : [];
-      st.timingReciters = Array.isArray(timing.data) ? timing.data : [];
-      st.ayahAudioReciters = Array.isArray(ayahAudio.data) ? ayahAudio.data : [];
+      // Only the Surah index is critical for rendering the Mushaf.  The timing
+      // and ayah-audio catalogs use SQLite on the server and may be unavailable
+      // on a deployment; they must never prevent the whole reader from loading.
+      const [surahsResult, recitersResult, trackedResult] =
+        await Promise.allSettled([
+          api("/api/surahs"),
+          api("/api/reciter-images"),
+          api("/api/ayah-bayah/reciters"),
+        ]);
+
+      if (surahsResult.status !== "fulfilled") throw surahsResult.reason;
+
+      const s = surahsResult.value;
+      const r =
+        recitersResult.status === "fulfilled" ? recitersResult.value : null;
+      const t = trackedResult.status === "fulfilled" ? trackedResult.value : null;
+
+      st.surahs = Array.isArray(s?.result) ? s.result : [];
+      if (!st.surahs.length) throw new Error("لم تصل قائمة السور من الخادم");
+      st.reciters = Array.isArray(r?.data) ? r.data : [];
+      st.tracked = Array.isArray(t?.data) ? t.data : [];
       st.trackedMap = new Map(
         st.tracked.filter((x) => x.id != null).map((x) => [Number(x.id), x]),
       );
+
       fillSurahs();
       fillReciters();
       profile();

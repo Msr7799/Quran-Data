@@ -11,23 +11,8 @@
     <title>المصحف التفاعلي — Quran Data</title>
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/reader.css" />
-    <!-- Tailwind CSS CDN (utilities; preflight disabled so the existing Quran reader styles stay stable) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        corePlugins: { preflight: false },
-        theme: {
-          extend: {
-            fontFamily: {
-              uthmani: ["UthmanicHafs", "Traditional Arabic", "serif"],
-            },
-            screens: { xs: "420px" },
-          },
-        },
-      };
-    </script>
   </head>
-  <body class="antialiased selection:bg-emerald-500/30">
+  <body>
     <header class="topbar w-full">
       <a class="brand" href="/"
         ><img src="/icon-192.png" alt="" /><span
