@@ -226,7 +226,7 @@ The API is deployed on **Vercel** and available at:
     "api_info": {
       "title": "Quran Data API - مرجع شامل",
       "description": "واجهة برمجة تطبيقات شاملة للقرآن الكريم",
-      "version": "2.1.0",
+      "version": "3.1.0",
       "base_url": "https://quran-api-msr.vercel.appp/api",
       "documentation_url": "https://quran-api-msr.vercel.app",
       "github_url": "https://github.com/Msr7799/Quran-Data"

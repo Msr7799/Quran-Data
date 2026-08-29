@@ -1,117 +1,76 @@
-import fs from 'fs-extra';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { DatabaseSync } from 'node:sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const apiReferenceFilePath = path.join(__dirname, '../data/json/api_reference.json');
-const dbFilePath = path.join(__dirname, '../data/sqlite/database.sqlite');
+const root = path.join(__dirname, '..');
+const apiReferenceFilePath = path.join(root, 'data', 'json', 'api_reference.json');
+const dbFilePath = path.join(root, 'data', 'sqlite', 'database.sqlite');
 
-async function addApiReferenceToSqlite() {
-    console.log('🔍 بدء عملية إدخال ملف API Reference إلى قاعدة البيانات SQLite...');
-    
+export async function run() {
+  const apiReferenceData = JSON.parse(await readFile(apiReferenceFilePath, 'utf8'));
+  if (!apiReferenceData?.api_info?.title) throw new Error('api_reference.json لا يحتوي api_info صالح.');
+
+  const db = new DatabaseSync(dbFilePath);
+  try {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS api_reference (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT,
+        version TEXT,
+        base_url TEXT,
+        documentation_url TEXT,
+        github_url TEXT,
+        json_content TEXT NOT NULL,
+        statistics TEXT,
+        last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    const insert = db.prepare(`
+      INSERT INTO api_reference (
+        title, description, version, base_url,
+        documentation_url, github_url, json_content, statistics
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    db.exec('BEGIN IMMEDIATE TRANSACTION;');
     try {
-        // التحقق من وجود الملفات
-        if (!await fs.pathExists(dbFilePath)) {
-            console.error('❌ ملف قاعدة البيانات غير موجود:', dbFilePath);
-            return;
-        }
-        
-        if (!await fs.pathExists(apiReferenceFilePath)) {
-            console.error('❌ ملف API Reference غير موجود:', apiReferenceFilePath);
-            return;
-        }
-
-        // اتصال بقاعدة البيانات
-        const db = await open({
-            filename: dbFilePath,
-            driver: sqlite3.Database
-        });
-        console.log('✅ تم الاتصال بقاعدة البيانات بنجاح');
-
-        // إنشاء جدول api_reference إذا لم يكن موجوداً
-        const createTableQuery = `
-            CREATE TABLE IF NOT EXISTS api_reference (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT,
-                version TEXT,
-                base_url TEXT,
-                documentation_url TEXT,
-                github_url TEXT,
-                json_content TEXT NOT NULL,
-                statistics TEXT,
-                last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        `;
-        
-        await db.exec(createTableQuery);
-        console.log('✅ تم إنشاء/التحقق من جدول api_reference');
-
-        // قراءة ملف api_reference.json
-        console.log('📖 جاري قراءة ملف api_reference.json...');
-        const apiReferenceData = await fs.readJSON(apiReferenceFilePath);
-
-        // حذف البيانات السابقة (إذا وجدت)
-        const deleteResult = await db.run('DELETE FROM api_reference');
-        console.log(`🗑️ تم حذف ${deleteResult.changes || 0} سجل سابق`);
-
-        // إدخال البيانات الجديدة
-        const insertQuery = `
-            INSERT INTO api_reference (
-                title, description, version, base_url, 
-                documentation_url, github_url, json_content, statistics
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
-        const result = await db.run(
-            insertQuery,
-            apiReferenceData.api_info.title,
-            apiReferenceData.api_info.description,
-            apiReferenceData.api_info.version,
-            apiReferenceData.api_info.base_url,
-            apiReferenceData.api_info.documentation_url,
-            apiReferenceData.api_info.github_url,
-            JSON.stringify(apiReferenceData, null, 2),
-            JSON.stringify(apiReferenceData.statistics, null, 2)
-        );
-
-        console.log(`✅ تم إدخال البيانات بنجاح! ID: ${result.lastID}`);
-
-        // التحقق من البيانات المدخلة
-        const verifyResult = await db.all('SELECT id, title, version, created_at FROM api_reference');
-        
-        console.log('\n📊 البيانات المدخلة:');
-        verifyResult.forEach(row => {
-            console.log(`   - ID: ${row.id}`);
-            console.log(`   - العنوان: ${row.title}`);
-            console.log(`   - الإصدار: ${row.version}`);
-            console.log(`   - تاريخ الإنشاء: ${row.created_at}`);
-        });
-
-        // عرض إحصائيات الجدول
-        const countResult = await db.get('SELECT COUNT(*) as total FROM api_reference');
-        console.log(`\n📈 إجمالي السجلات في جدول api_reference: ${countResult.total}`);
-
-        // إحصائيات إضافية من المحتوى
-        console.log('\n📋 إحصائيات API Reference:');
-        console.log(`   - إجمالي السور: ${apiReferenceData.statistics.total_surahs}`);
-        console.log(`   - إجمالي الآيات: ${apiReferenceData.statistics.total_verses}`);
-        console.log(`   - القراء الصوتيين: ${apiReferenceData.statistics.total_audio_reciters}`);
-        console.log(`   - قراء التوقيت: ${apiReferenceData.statistics.timing_reciters}`);
-        console.log(`   - إجمالي توقيتات الآيات: ${apiReferenceData.statistics.total_verse_timings}`);
-
-        await db.close();
-        console.log('\n🎉 تمت العملية بنجاح! تم إغلاق الاتصال بقاعدة البيانات');
-
+      db.exec('DELETE FROM api_reference;');
+      insert.run(
+        apiReferenceData.api_info.title,
+        apiReferenceData.api_info.description ?? null,
+        apiReferenceData.api_info.version ?? null,
+        apiReferenceData.api_info.base_url ?? null,
+        apiReferenceData.api_info.documentation_url ?? null,
+        apiReferenceData.api_info.github_url ?? null,
+        JSON.stringify(apiReferenceData),
+        JSON.stringify(apiReferenceData.statistics ?? {})
+      );
+      db.exec('COMMIT;');
     } catch (error) {
-        console.error('❌ خطأ أثناء العملية:', error.message);
-        console.error('تفاصيل الخطأ:', error);
+      db.exec('ROLLBACK;');
+      throw error;
     }
+
+    const row = db.prepare('SELECT id, title, version FROM api_reference LIMIT 1').get();
+    const count = Number(db.prepare('SELECT COUNT(*) AS count FROM api_reference').get().count);
+    if (count !== 1 || !row) throw new Error('فشل التحقق من جدول api_reference.');
+
+    console.log(`✅ API Reference stored: ID=${row.id}, title=${row.title}, version=${row.version ?? 'n/a'}.`);
+    return { count, id: Number(row.id), version: row.version ?? null };
+  } finally {
+    db.close();
+  }
 }
 
-// تشغيل الدالة
-addApiReferenceToSqlite();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run().catch((error) => {
+    console.error('❌ addApiReferenceToSqlite failed:', error);
+    process.exit(1);
+  });
+}

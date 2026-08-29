@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: واجهة برمجة تطبيقات القرآن
   description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد.
-  version: 2.1.0
+  version: 3.1.0
 servers:
   - url: https://quran-api-msr.vercel.app/api
     description: الخادم المنشور على Vercel

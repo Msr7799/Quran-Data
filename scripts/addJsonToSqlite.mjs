@@ -1,400 +1,194 @@
-/**
- * سكربت إدخال ملفات JSON إلى قاعدة البيانات SQLite
- * يقوم بإنشاء جدول json_files وإدخال ملفات JSON من مجلد data/json
- * 
- * الاستخدام:
- * node scripts/addJsonToSqlite.mjs
- * node scripts/addJsonToSqlite.mjs --file=api_reference.json
- * node scripts/addJsonToSqlite.mjs --folder=audio
- */
-
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { readFile, readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { DatabaseSync } from 'node:sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const root = path.join(__dirname, '..');
+const dbPath = path.join(root, 'data', 'sqlite', 'database.sqlite');
+const jsonBasePath = path.join(root, 'data', 'json');
 
-// مسارات المجلدات
-const dbPath = path.join(__dirname, '..', 'data', 'sqlite', 'database.sqlite');
-const jsonBasePath = path.join(__dirname, '..', 'data', 'json');
-
-/**
- * إنشاء جدول json_files في قاعدة البيانات
- */
-async function createJsonTable(db) {
-    const createTableSQL = `
-        CREATE TABLE IF NOT EXISTS json_files (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            file_name TEXT NOT NULL UNIQUE,
-            file_path TEXT NOT NULL,
-            file_type TEXT NOT NULL DEFAULT 'json',
-            json_content TEXT NOT NULL,
-            content_size INTEGER NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            description TEXT,
-            version TEXT DEFAULT '1.0.0',
-            is_active BOOLEAN DEFAULT 1,
-            tags TEXT
-        );
-    `;
-
-    await db.exec(createTableSQL);
-    console.log('✅ تم إنشاء جدول json_files بنجاح');
-
-    // إنشاء فهارس للبحث السريع
-    const indexSQL = `
-        CREATE INDEX IF NOT EXISTS idx_json_files_name ON json_files(file_name);
-        CREATE INDEX IF NOT EXISTS idx_json_files_type ON json_files(file_type);
-        CREATE INDEX IF NOT EXISTS idx_json_files_created ON json_files(created_at);
-    `;
-    await db.exec(indexSQL);
-    console.log('✅ تم إنشاء الفهارس بنجاح');
+function createJsonTable(db) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS json_files (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      file_name TEXT NOT NULL,
+      file_path TEXT NOT NULL UNIQUE,
+      file_type TEXT NOT NULL DEFAULT 'json',
+      json_content TEXT NOT NULL,
+      content_size INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      description TEXT,
+      version TEXT DEFAULT '1.0.0',
+      is_active INTEGER DEFAULT 1,
+      tags TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_json_files_name ON json_files(file_name);
+    CREATE INDEX IF NOT EXISTS idx_json_files_type ON json_files(file_type);
+    CREATE INDEX IF NOT EXISTS idx_json_files_created ON json_files(created_at);
+  `);
 }
 
-/**
- * قراءة محتوى ملف JSON وإرجاع المعلومات
- */
-async function readJsonFile(filePath) {
-    try {
-        const fileContent = await fs.readFile(filePath, 'utf8');
-        const jsonData = JSON.parse(fileContent);
-        const stats = await fs.stat(filePath);
-        
-        return {
-            content: fileContent,
-            parsed: jsonData,
-            size: stats.size,
-            lastModified: stats.mtime
-        };
-    } catch (error) {
-        console.error(`❌ خطأ في قراءة الملف ${filePath}:`, error.message);
-        return null;
-    }
+function ensureJsonTable(db) {
+  const existing = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='json_files'").get();
+  if (!existing) {
+    createJsonTable(db);
+    return;
+  }
+
+  const sql = String(existing.sql ?? '').replace(/\s+/g, ' ').toLowerCase();
+  const hasPathUnique = /file_path\s+text\s+not\s+null\s+unique/.test(sql);
+  if (hasPathUnique) {
+    createJsonTable(db);
+    return;
+  }
+
+  console.log('ℹ️ Migrating json_files key from file_name to file_path...');
+  db.exec('BEGIN IMMEDIATE TRANSACTION;');
+  try {
+    db.exec(`
+      DROP INDEX IF EXISTS idx_json_files_name;
+      DROP INDEX IF EXISTS idx_json_files_type;
+      DROP INDEX IF EXISTS idx_json_files_created;
+      ALTER TABLE json_files RENAME TO json_files_v30_old;
+    `);
+    createJsonTable(db);
+    db.exec(`
+      INSERT OR REPLACE INTO json_files (
+        id, file_name, file_path, file_type, json_content, content_size,
+        created_at, updated_at, description, version, is_active, tags
+      )
+      SELECT id, file_name, file_path, file_type, json_content, content_size,
+             created_at, updated_at, description, version, is_active, tags
+      FROM json_files_v30_old;
+      DROP TABLE json_files_v30_old;
+    `);
+    db.exec('COMMIT;');
+  } catch (error) {
+    db.exec('ROLLBACK;');
+    throw error;
+  }
 }
 
-/**
- * استخراج معلومات وصفية من محتوى JSON
- */
 function extractMetadata(jsonData, fileName) {
-    let description = '';
-    let version = '1.0.0';
-    let tags = '';
-
-    try {
-        // استخراج الوصف
-        if (jsonData.api_info?.description) {
-            description = jsonData.api_info.description;
-        } else if (jsonData.description) {
-            description = jsonData.description;
-        } else if (jsonData.metadata?.description) {
-            description = jsonData.metadata.description;
-        }
-
-        // استخراج الإصدار
-        if (jsonData.api_info?.version) {
-            version = jsonData.api_info.version;
-        } else if (jsonData.version) {
-            version = jsonData.version;
-        } else if (jsonData.metadata?.version) {
-            version = jsonData.metadata.version;
-        }
-
-        // استخراج العلامات
-        const tagsArray = [];
-        if (fileName.includes('api')) tagsArray.push('api');
-        if (fileName.includes('reference')) tagsArray.push('reference');
-        if (fileName.includes('metadata')) tagsArray.push('metadata');
-        if (fileName.includes('audio')) tagsArray.push('audio');
-        if (fileName.includes('surah')) tagsArray.push('surah');
-        if (fileName.includes('verse')) tagsArray.push('verse');
-        
-        tags = tagsArray.join(',');
-
-    } catch (error) {
-        console.warn(`⚠️ تحذير: لا يمكن استخراج الميتاداتا من ${fileName}`);
-    }
-
-    return { description, version, tags };
+  const description = jsonData?.api_info?.description ?? jsonData?.description ?? jsonData?.metadata?.description ?? '';
+  const version = jsonData?.api_info?.version ?? jsonData?.version ?? jsonData?.metadata?.version ?? '1.0.0';
+  const tags = [];
+  const lower = fileName.toLowerCase();
+  for (const tag of ['api', 'reference', 'metadata', 'audio', 'surah', 'verse', 'timing']) {
+    if (lower.includes(tag)) tags.push(tag);
+  }
+  return { description: String(description ?? ''), version: String(version ?? '1.0.0'), tags: tags.join(',') };
 }
 
-/**
- * إدخال ملف JSON إلى قاعدة البيانات
- */
-async function insertJsonFile(db, filePath, relativePath) {
-    const fileName = path.basename(filePath);
-    console.log(`📁 معالجة الملف: ${fileName}`);
-
-    const fileData = await readJsonFile(filePath);
-    if (!fileData) {
-        return false;
-    }
-
-    const metadata = extractMetadata(fileData.parsed, fileName);
-
-    try {
-        // التحقق من وجود الملف
-        const existingFile = await db.get(
-            'SELECT id FROM json_files WHERE file_name = ?',
-            [fileName]
-        );
-
-        if (existingFile) {
-            // تحديث الملف الموجود
-            await db.run(`
-                UPDATE json_files 
-                SET json_content = ?, 
-                    content_size = ?, 
-                    updated_at = CURRENT_TIMESTAMP,
-                    description = ?,
-                    version = ?,
-                    tags = ?
-                WHERE file_name = ?
-            `, [
-                fileData.content,
-                fileData.size,
-                metadata.description,
-                metadata.version,
-                metadata.tags,
-                fileName
-            ]);
-            console.log(`🔄 تم تحديث الملف: ${fileName}`);
-        } else {
-            // إدخال ملف جديد
-            await db.run(`
-                INSERT INTO json_files (
-                    file_name, file_path, json_content, content_size,
-                    description, version, tags
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
-            `, [
-                fileName,
-                relativePath,
-                fileData.content,
-                fileData.size,
-                metadata.description,
-                metadata.version,
-                metadata.tags
-            ]);
-            console.log(`✅ تم إدخال الملف: ${fileName}`);
-        }
-
-        return true;
-    } catch (error) {
-        console.error(`❌ خطأ في إدخال الملف ${fileName}:`, error.message);
-        return false;
-    }
-}
-
-/**
- * البحث عن جميع ملفات JSON في مجلد
- */
 async function findJsonFiles(dirPath, basePath = '') {
-    const files = [];
-    
-    try {
-        const items = await fs.readdir(dirPath, { withFileTypes: true });
-        
-        for (const item of items) {
-            const fullPath = path.join(dirPath, item.name);
-            const relativePath = path.join(basePath, item.name);
-            
-            if (item.isDirectory()) {
-                // البحث في المجلدات الفرعية
-                const subFiles = await findJsonFiles(fullPath, relativePath);
-                files.push(...subFiles);
-            } else if (item.isFile() && item.name.endsWith('.json')) {
-                files.push({
-                    fullPath: fullPath,
-                    relativePath: relativePath.replace(/\\/g, '/'), // توحيد مسار النظام
-                    name: item.name
-                });
-            }
-        }
-    } catch (error) {
-        console.error(`❌ خطأ في قراءة المجلد ${dirPath}:`, error.message);
+  const results = [];
+  const entries = await readdir(dirPath, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    const relativePath = path.join(basePath, entry.name).replaceAll('\\', '/');
+    if (entry.isDirectory()) {
+      results.push(...await findJsonFiles(fullPath, relativePath));
+    } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.json')) {
+      results.push({ fullPath, relativePath, name: entry.name });
     }
-    
-    return files;
+  }
+  return results;
 }
 
-/**
- * عرض إحصائيات البيانات المدخلة
- */
-async function showStatistics(db) {
-    try {
-        const stats = await db.get(`
-            SELECT 
-                COUNT(*) as total_files,
-                SUM(content_size) as total_size,
-                COUNT(DISTINCT file_path) as unique_paths,
-                AVG(content_size) as avg_size
-            FROM json_files
-        `);
-
-        const recentFiles = await db.all(`
-            SELECT file_name, created_at, content_size 
-            FROM json_files 
-            ORDER BY created_at DESC 
-            LIMIT 5
-        `);
-
-        console.log('\n📊 إحصائيات قاعدة البيانات:');
-        console.log(`📁 إجمالي الملفات: ${stats.total_files}`);
-        console.log(`💾 إجمالي الحجم: ${(stats.total_size / 1024).toFixed(2)} KB`);
-        console.log(`📂 المسارات الفريدة: ${stats.unique_paths}`);
-        console.log(`📏 متوسط حجم الملف: ${(stats.avg_size / 1024).toFixed(2)} KB`);
-
-        if (recentFiles.length > 0) {
-            console.log('\n📋 آخر الملفات المضافة:');
-            recentFiles.forEach(file => {
-                const date = new Date(file.created_at).toLocaleString('ar');
-                const size = (file.content_size / 1024).toFixed(2);
-                console.log(`  • ${file.file_name} (${size} KB) - ${date}`);
-            });
-        }
-    } catch (error) {
-        console.error('❌ خطأ في عرض الإحصائيات:', error.message);
-    }
-}
-
-/**
- * معالجة المعاملات من سطر الأوامر
- */
 function parseArguments() {
-    const args = process.argv.slice(2);
-    const options = {
-        specificFile: null,
-        specificFolder: null,
-        showHelp: false
-    };
-
-    args.forEach(arg => {
-        if (arg.startsWith('--file=')) {
-            options.specificFile = arg.split('=')[1];
-        } else if (arg.startsWith('--folder=')) {
-            options.specificFolder = arg.split('=')[1];
-        } else if (arg === '--help' || arg === '-h') {
-            options.showHelp = true;
-        }
-    });
-
-    return options;
+  const options = { specificFile: null, specificFolder: null, showHelp: false };
+  for (const arg of process.argv.slice(2)) {
+    if (arg.startsWith('--file=')) options.specificFile = arg.slice('--file='.length);
+    else if (arg.startsWith('--folder=')) options.specificFolder = arg.slice('--folder='.length);
+    else if (arg === '--help' || arg === '-h') options.showHelp = true;
+  }
+  return options;
 }
 
-/**
- * عرض مساعدة الاستخدام
- */
 function showHelp() {
-    console.log(`
-🔧 سكربت إدخال ملفات JSON إلى قاعدة البيانات SQLite
-
-📖 الاستخدام:
-  node scripts/addJsonToSqlite.mjs                    # معالجة جميع ملفات JSON
-  node scripts/addJsonToSqlite.mjs --file=api_reference.json  # ملف محدد
-  node scripts/addJsonToSqlite.mjs --folder=audio    # مجلد محدد
-  node scripts/addJsonToSqlite.mjs --help            # عرض هذه المساعدة
-
-📁 المجلدات المدعومة:
-  • data/json/                 # الملفات الرئيسية
-  • data/json/audio/           # ملفات الصوت
-  • data/json/ayat_Timming/    # ملفات التوقيت
-  • data/json/surah/           # ملفات السور
-  • data/json/verses/          # ملفات الآيات
-
-💡 الميزات:
-  ✅ إنشاء جدول json_files تلقائياً
-  ✅ البحث المتكرر في المجلدات الفرعية
-  ✅ استخراج الميتاداتا تلقائياً
-  ✅ تحديث الملفات الموجودة
-  ✅ عرض إحصائيات مفصلة
-`);
+  console.log(`Usage:\n  node scripts/addJsonToSqlite.mjs\n  node scripts/addJsonToSqlite.mjs --file=api_reference.json\n  node scripts/addJsonToSqlite.mjs --folder=audio`);
 }
 
-/**
- * الدالة الرئيسية
- */
-async function main() {
-    const options = parseArguments();
+export async function run(options = parseArguments()) {
+  if (options.showHelp) {
+    showHelp();
+    return { processed: 0 };
+  }
 
-    if (options.showHelp) {
-        showHelp();
-        return;
-    }
+  let files;
+  if (options.specificFile) {
+    files = [{
+      fullPath: path.join(jsonBasePath, options.specificFile),
+      relativePath: `json/${options.specificFile}`.replaceAll('\\', '/'),
+      name: path.basename(options.specificFile)
+    }];
+  } else if (options.specificFolder) {
+    files = await findJsonFiles(path.join(jsonBasePath, options.specificFolder), `json/${options.specificFolder}`);
+  } else {
+    files = await findJsonFiles(jsonBasePath, 'json');
+  }
 
-    console.log('🚀 بدء سكربت إدخال ملفات JSON إلى SQLite...\n');
+  files.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  const db = new DatabaseSync(dbPath);
+  try {
+    ensureJsonTable(db);
+    const upsert = db.prepare(`
+      INSERT INTO json_files (
+        file_name, file_path, file_type, json_content, content_size,
+        description, version, tags, updated_at
+      ) VALUES (?, ?, 'json', ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(file_path) DO UPDATE SET
+        file_name=excluded.file_name,
+        json_content=excluded.json_content,
+        content_size=excluded.content_size,
+        description=excluded.description,
+        version=excluded.version,
+        tags=excluded.tags,
+        is_active=1,
+        updated_at=CURRENT_TIMESTAMP
+    `);
 
+    let successful = 0;
+    let totalBytes = 0;
+    db.exec('BEGIN IMMEDIATE TRANSACTION;');
     try {
-        // الاتصال بقاعدة البيانات
-        const db = await open({
-            filename: dbPath,
-            driver: sqlite3.Database
-        });
-
-        console.log('✅ تم الاتصال بقاعدة البيانات بنجاح');
-
-        // إنشاء الجدول
-        await createJsonTable(db);
-
-        let processedFiles = 0;
-        let successfulFiles = 0;
-
-        if (options.specificFile) {
-            // معالجة ملف محدد
-            const filePath = path.join(jsonBasePath, options.specificFile);
-            const relativePath = `json/${options.specificFile}`;
-            
-            try {
-                await fs.access(filePath);
-                processedFiles = 1;
-                const success = await insertJsonFile(db, filePath, relativePath);
-                if (success) successfulFiles = 1;
-            } catch (error) {
-                console.error(`❌ الملف غير موجود: ${options.specificFile}`);
-            }
-
-        } else if (options.specificFolder) {
-            // معالجة مجلد محدد
-            const folderPath = path.join(jsonBasePath, options.specificFolder);
-            const files = await findJsonFiles(folderPath, `json/${options.specificFolder}`);
-            
-            processedFiles = files.length;
-            console.log(`📁 تم العثور على ${files.length} ملف JSON في المجلد: ${options.specificFolder}\n`);
-
-            for (const file of files) {
-                const success = await insertJsonFile(db, file.fullPath, file.relativePath);
-                if (success) successfulFiles++;
-            }
-
-        } else {
-            // معالجة جميع الملفات
-            const allFiles = await findJsonFiles(jsonBasePath, 'json');
-            processedFiles = allFiles.length;
-            console.log(`📁 تم العثور على ${allFiles.length} ملف JSON إجمالاً\n`);
-
-            for (const file of allFiles) {
-                const success = await insertJsonFile(db, file.fullPath, file.relativePath);
-                if (success) successfulFiles++;
-            }
-        }
-
-        // عرض النتائج النهائية
-        console.log('\n🎉 انتهت العملية بنجاح!');
-        console.log(`📊 النتائج: ${successfulFiles}/${processedFiles} ملف تم إدخاله بنجاح`);
-
-        // عرض الإحصائيات
-        await showStatistics(db);
-
-        await db.close();
-        console.log('\n✅ تم إغلاق الاتصال بقاعدة البيانات');
-
+      for (const file of files) {
+        const content = await readFile(file.fullPath, 'utf8');
+        const parsed = JSON.parse(content);
+        const info = await stat(file.fullPath);
+        const metadata = extractMetadata(parsed, file.name);
+        upsert.run(
+          file.name,
+          file.relativePath,
+          content,
+          Number(info.size),
+          metadata.description,
+          metadata.version,
+          metadata.tags
+        );
+        successful += 1;
+        totalBytes += Number(info.size);
+      }
+      db.exec('COMMIT;');
     } catch (error) {
-        console.error('❌ خطأ في تنفيذ السكربت:', error.message);
-        process.exit(1);
+      db.exec('ROLLBACK;');
+      throw error;
     }
+
+    const stored = Number(db.prepare('SELECT COUNT(*) AS count FROM json_files').get().count);
+    console.log(`✅ JSON SQLite import complete: processed=${successful}, stored=${stored}, bytes=${totalBytes}.`);
+    return { processed: successful, stored, totalBytes };
+  } finally {
+    db.close();
+  }
 }
 
-// تشغيل السكربت
-main().catch(console.error);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run().catch((error) => {
+    console.error('❌ addJsonToSqlite failed:', error);
+    process.exit(1);
+  });
+}
