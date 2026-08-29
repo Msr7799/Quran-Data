@@ -175,16 +175,59 @@ GET /api/ayah-bayah/68/1/1</code></pre>
   </div>
 </section>
 
-<section class="mx-auto w-full max-w-screen-2xl px-3 py-5 sm:px-5 lg:px-8" id="reciter-gallery">
-        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+<section class="gallery-section mx-auto w-full max-w-screen-2xl px-3 py-5 sm:px-5 lg:px-8" id="reciter-gallery">
+        <div class="gallery-section-head mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p class="mb-1 text-xs font-bold text-amber-400">معرض الداتا</p>
-              <h3 class="m-0 text-xl sm:text-2xl" style="color: #f5f5f5;">🖼️ صور القراء وأسماء السور</h3>
-              <p class="mt-1 mb-0 text-sm opacity-70" style="color: #f5f5f5;">صور أسماء السور تعرض على خلفية سوداء لضمان وضوح ملف SVG.</p>
+              <p class="gallery-kicker mb-1 text-xs font-bold">معرض الداتا</p>
+              <h3 class="gallery-title m-0 text-xl sm:text-2xl">🖼️ صور القراء وأسماء السور</h3>
+              <p class="gallery-description mt-1 mb-0 text-sm">يتم تحميل الصور تدريجيًا عند الحاجة لتقليل استهلاك الصفحة وتسريع فتح الوثائق.</p>
             </div>
-            <button type="button" class="btn btn-warning self-start sm:self-auto" id="reloadReciterGalleryBtn">تحديث المعرض</button>
+            <button type="button" class="gallery-refresh-btn" id="reloadReciterGalleryBtn">↻ تحديث المعرض</button>
         </div>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" id="reciterGalleryGrid"></div>
+
+        <div class="gallery-group" id="reciters-gallery-section">
+          <div class="gallery-group-head">
+            <div>
+              <span class="gallery-group-icon">🎙️</span>
+              <div>
+                <h4>صور القراء</h4>
+                <p>تظهر الدفعة الأولى فقط، والباقي يُضاف عند الضغط على السهم.</p>
+              </div>
+            </div>
+            <span class="gallery-count" id="reciterGalleryCount">—</span>
+          </div>
+          <div class="gallery-grid" id="reciterGalleryGrid" aria-live="polite"></div>
+          <div class="gallery-more-wrap">
+            <button type="button" class="gallery-more-btn" id="loadMoreRecitersBtn" aria-controls="reciterGalleryGrid" aria-expanded="false">
+              <span class="gallery-more-arrow">⌄</span>
+              <span class="gallery-more-label">عرض المزيد من القراء</span>
+              <span class="gallery-more-count" id="moreRecitersCount"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="gallery-divider" aria-hidden="true"></div>
+
+        <div class="gallery-group" id="surahs-gallery-section">
+          <div class="gallery-group-head">
+            <div>
+              <span class="gallery-group-icon">🕌</span>
+              <div>
+                <h4>أسماء السور</h4>
+                <p>ملفات SVG تظهر دائمًا فوق خلفية سوداء للحفاظ على وضوح الخط.</p>
+              </div>
+            </div>
+            <span class="gallery-count" id="surahGalleryCount">—</span>
+          </div>
+          <div class="gallery-grid" id="surahGalleryGrid" aria-live="polite"></div>
+          <div class="gallery-more-wrap">
+            <button type="button" class="gallery-more-btn" id="loadMoreSurahsBtn" aria-controls="surahGalleryGrid" aria-expanded="false">
+              <span class="gallery-more-arrow">⌄</span>
+              <span class="gallery-more-label">عرض المزيد من أسماء السور</span>
+              <span class="gallery-more-count" id="moreSurahsCount"></span>
+            </button>
+          </div>
+        </div>
     </section>
 
     <!-- Main Content -->
@@ -955,68 +998,168 @@ GET /api/ayah-bayah/68/1/1</code></pre>
     return API_BASE_URL.replace(/\/$/, '') + normalizedPath;
   }
 
-  async function loadReciterGallery() {
-    const gallery = document.getElementById('reciterGalleryGrid');
-    if (!gallery) return;
+  const docsGalleryState = {
+    reciters: [],
+    surahs: [],
+    reciterLimit: 8,
+    surahLimit: 8,
+    batchSize: 8
+  };
 
-    gallery.innerHTML = '<div class="col-span-full text-center py-8"><div class="loading"></div><p class="mt-3">جاري تحميل صور القراء...</p></div>';
+  function escapeGalleryHtml(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function galleryCard(item, type) {
+    const isSurah = type === 'surah';
+    const title = isSurah
+      ? (item.name?.ar || `سورة ${item.number || ''}`)
+      : (item.name || item.reciter?.ar || 'قارئ');
+    const image = item.image_url || '';
+    const meta = isSurah
+      ? `السورة ${item.number || ''}`
+      : (item.file ? `ملف: ${item.file}` : (item.reciter?.en || 'قارئ'));
+    const safeImage = escapeGalleryHtml(image);
+    const safeTitle = escapeGalleryHtml(title);
+    const safeMeta = escapeGalleryHtml(meta);
+
+    return `
+      <article class="reciter-gallery-card ${isSurah ? 'gallery-surah-card' : 'gallery-reciter-card'}">
+        <div class="gallery-image-shell">
+          <img
+            class="${isSurah ? 'gallery-surah-image' : 'gallery-reciter-image'}"
+            src="${safeImage}"
+            alt="${safeTitle}"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22 viewBox=%220 0 600 400%22%3E%3Crect width=%22600%22 height=%22400%22 fill=%22%23111111%22/%3E%3Ctext x=%22300%22 y=%22205%22 text-anchor=%22middle%22 fill=%22%23ffffff%22 font-size=%2230%22%3EQuran Data%3C/text%3E%3C/svg%3E';"
+          />
+        </div>
+        <div class="card-body">
+          <h5 title="${safeTitle}">${safeTitle}</h5>
+          <div class="meta-badge">${safeMeta}</div>
+          ${image ? `<div class="gallery-card-action"><a href="${safeImage}" target="_blank" rel="noopener noreferrer">فتح الصورة ↗</a></div>` : ''}
+        </div>
+      </article>
+    `;
+  }
+
+  function updateGalleryMoreButton(buttonId, countId, remaining, total, visible) {
+    const button = document.getElementById(buttonId);
+    const count = document.getElementById(countId);
+    if (!button) return;
+    const hasMore = remaining > 0;
+    button.hidden = !hasMore;
+    button.setAttribute('aria-expanded', String(!hasMore));
+    if (count) count.textContent = hasMore ? `+${Math.min(docsGalleryState.batchSize, remaining)} / ${remaining}` : '';
+    button.dataset.remaining = String(remaining);
+    button.title = hasMore
+      ? `المعروض ${visible} من ${total} — اضغط لتحميل دفعة جديدة`
+      : `تم عرض جميع العناصر (${total})`;
+  }
+
+  function renderDocsGalleries() {
+    const reciterGrid = document.getElementById('reciterGalleryGrid');
+    const surahGrid = document.getElementById('surahGalleryGrid');
+    if (!reciterGrid || !surahGrid) return;
+
+    const visibleReciters = docsGalleryState.reciters.slice(0, docsGalleryState.reciterLimit);
+    const visibleSurahs = docsGalleryState.surahs.slice(0, docsGalleryState.surahLimit);
+
+    reciterGrid.innerHTML = visibleReciters.map(item => galleryCard(item, 'reciter')).join('');
+    surahGrid.innerHTML = visibleSurahs.map(item => galleryCard(item, 'surah')).join('');
+
+    const reciterCount = document.getElementById('reciterGalleryCount');
+    const surahCount = document.getElementById('surahGalleryCount');
+    if (reciterCount) reciterCount.textContent = `${visibleReciters.length} / ${docsGalleryState.reciters.length}`;
+    if (surahCount) surahCount.textContent = `${visibleSurahs.length} / ${docsGalleryState.surahs.length}`;
+
+    updateGalleryMoreButton(
+      'loadMoreRecitersBtn',
+      'moreRecitersCount',
+      Math.max(0, docsGalleryState.reciters.length - visibleReciters.length),
+      docsGalleryState.reciters.length,
+      visibleReciters.length
+    );
+    updateGalleryMoreButton(
+      'loadMoreSurahsBtn',
+      'moreSurahsCount',
+      Math.max(0, docsGalleryState.surahs.length - visibleSurahs.length),
+      docsGalleryState.surahs.length,
+      visibleSurahs.length
+    );
+  }
+
+  async function loadReciterGallery(resetLimits = true) {
+    const reciterGrid = document.getElementById('reciterGalleryGrid');
+    const surahGrid = document.getElementById('surahGalleryGrid');
+    if (!reciterGrid || !surahGrid) return;
+
+    if (resetLimits) {
+      docsGalleryState.reciterLimit = 8;
+      docsGalleryState.surahLimit = 8;
+    }
+
+    reciterGrid.innerHTML = '<div class="gallery-loading"><div class="loading"></div><p>جاري تحميل فهرس صور القراء...</p></div>';
+    surahGrid.innerHTML = '<div class="gallery-loading"><div class="loading"></div><p>جاري تحميل فهرس أسماء السور...</p></div>';
 
     try {
       const [recitersRes, surahRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/reciter-images`),
-        fetch(`${API_BASE_URL}/surah-names`)
+        fetch(`${API_BASE_URL}/reciter-images`, { headers: { Accept: 'application/json' } }),
+        fetch(`${API_BASE_URL}/surah-names`, { headers: { Accept: 'application/json' } })
       ]);
 
-      const recitersJson = await recitersRes.json();
-      const surahJson = await surahRes.json();
-
-      const reciterItems = Array.isArray(recitersJson.data) ? recitersJson.data.slice(0, 12) : [];
-      const surahItems = Array.isArray(surahJson.data) ? surahJson.data.slice(0, 12) : [];
-
-      const items = [...reciterItems.map(item => ({
-        type: 'reciter',
-        title: item.name || 'قارئ',
-        image: item.image_url || 'https://placehold.co/600x400/374151/ffffff?text=Quran',
-        meta: item.file ? `ملف: ${item.file}` : 'قارئ',
-        link: item.image_url ? item.image_url : null
-      })), ...surahItems.map(item => ({
-        type: 'surah',
-        title: item.name?.ar || `سورة ${item.number}`,
-        image: item.image_url || 'https://placehold.co/600x400/7c2d12/ffffff?text=Surah',
-        meta: `السورة ${item.number}`,
-        link: item.image_url ? item.image_url : null
-      }))];
-
-      if (!items.length) {
-        gallery.innerHTML = '<div class="col-span-full text-center py-8">لا توجد صور متاحة حاليًا.</div>';
-        return;
+      if (!recitersRes.ok || !surahRes.ok) {
+        throw new Error(`Gallery API error: reciters=${recitersRes.status}, surahs=${surahRes.status}`);
       }
 
-      gallery.innerHTML = items.map(item => {
-        const isSurah = item.type === 'surah';
-        const imageClass = isSurah
-          ? 'gallery-surah-image h-48 w-full bg-black object-contain p-6 sm:h-52'
-          : 'gallery-reciter-image h-48 w-full bg-zinc-950 object-cover sm:h-52';
-        return `
-          <article class="reciter-gallery-card ${isSurah ? 'gallery-surah-card' : 'gallery-reciter-card'} min-w-0 overflow-hidden rounded-2xl">
-            <div class="gallery-image-shell ${isSurah ? 'bg-black' : 'bg-zinc-950'}">
-              <img class="${imageClass}" src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111111/ffffff?text=Quran';" />
-            </div>
-            <div class="card-body p-4">
-              <h5 class="mb-2 truncate text-base font-black" title="${item.title}">${item.title}</h5>
-              <div class="meta-badge max-w-full break-words">${item.meta}</div>
-              ${item.link ? `<div class="mt-3"><a class="btn btn-sm btn-outline-primary" href="${item.link}" target="_blank" rel="noopener noreferrer">فتح الصورة</a></div>` : ''}
-            </div>
-          </article>
-        `;
-      }).join('');
+      const [recitersJson, surahJson] = await Promise.all([
+        recitersRes.json(),
+        surahRes.json()
+      ]);
+
+      docsGalleryState.reciters = Array.isArray(recitersJson.data) ? recitersJson.data : [];
+      docsGalleryState.surahs = Array.isArray(surahJson.data) ? surahJson.data : [];
+
+      renderDocsGalleries();
     } catch (error) {
-      gallery.innerHTML = '<div class="col-span-full text-center text-danger py-8">تعذر تحميل الصور في هذه اللحظة.</div>';
+      reciterGrid.innerHTML = '<div class="gallery-error">تعذر تحميل صور القراء في هذه اللحظة.</div>';
+      surahGrid.innerHTML = '<div class="gallery-error">تعذر تحميل أسماء السور في هذه اللحظة.</div>';
       console.error('Failed to load gallery:', error);
     }
   }
 
-  document.getElementById('reloadReciterGalleryBtn')?.addEventListener('click', loadReciterGallery);
+  document.getElementById('reloadReciterGalleryBtn')?.addEventListener('click', () => loadReciterGallery(true));
+
+  document.getElementById('loadMoreRecitersBtn')?.addEventListener('click', () => {
+    const previous = docsGalleryState.reciterLimit;
+    docsGalleryState.reciterLimit = Math.min(
+      docsGalleryState.reciters.length,
+      docsGalleryState.reciterLimit + docsGalleryState.batchSize
+    );
+    renderDocsGalleries();
+    const firstNewCard = document.querySelector(`#reciterGalleryGrid .reciter-gallery-card:nth-child(${previous + 1})`);
+    firstNewCard?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  document.getElementById('loadMoreSurahsBtn')?.addEventListener('click', () => {
+    const previous = docsGalleryState.surahLimit;
+    docsGalleryState.surahLimit = Math.min(
+      docsGalleryState.surahs.length,
+      docsGalleryState.surahLimit + docsGalleryState.batchSize
+    );
+    renderDocsGalleries();
+    const firstNewCard = document.querySelector(`#surahGalleryGrid .reciter-gallery-card:nth-child(${previous + 1})`);
+    firstNewCard?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+
   document.addEventListener('click', async (e) => {
     // زر النسخ داخل الـ endpoint
     if (e.target.closest('.copy-btn')) {

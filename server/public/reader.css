@@ -1292,3 +1292,85 @@ html[data-theme="dark"] .surah-art-mini img {
     font-size: 21px;
   }
 }
+
+
+/* =========================================================
+   v3.1.0 — balanced Surah-name artwork sizing
+   ========================================================= */
+/* The previous wrapper had no desktop width/height, so the SVG intrinsic
+   size could make the Surah-name panel dominate the Mushaf header. */
+.surah-art-large{
+  width:clamp(220px,29vw,340px) !important;
+  height:clamp(92px,11vw,122px) !important;
+  flex:0 0 auto !important;
+  display:grid !important;
+  place-items:center !important;
+  overflow:hidden !important;
+  background:#000 !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:14px !important;
+}
+.surah-art-large img{
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  padding:8px 12px !important;
+  background:#000 !important;
+  transform:scale(1.08) !important;
+  transform-origin:center !important;
+}
+
+.surah-art-mini{
+  width:132px !important;
+  height:54px !important;
+  overflow:hidden !important;
+  background:#000 !important;
+}
+.surah-art-mini img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  padding:5px 8px !important;
+  background:#000 !important;
+  transform:scale(1.04) !important;
+}
+
+/* Keep the header compact instead of letting artwork create a huge empty area. */
+.surah-head{
+  min-height:138px !important;
+  padding:16px clamp(16px,3vw,28px) !important;
+  align-items:center !important;
+}
+.surah-head>div:first-child{
+  min-width:0 !important;
+  flex:1 1 auto;
+}
+
+@media(max-width:900px){
+  .surah-art-large{
+    width:clamp(190px,38vw,270px) !important;
+    height:96px !important;
+  }
+  .surah-art-large img{padding:7px 9px !important}
+}
+@media(max-width:600px){
+  .surah-head{
+    min-height:108px !important;
+    padding:11px !important;
+  }
+  .surah-art-large{
+    width:min(155px,42vw) !important;
+    height:68px !important;
+    border-radius:10px !important;
+  }
+  .surah-art-large img{
+    padding:4px 5px !important;
+    transform:scale(1.02) !important;
+  }
+  .surah-art-mini{
+    width:112px !important;
+    height:46px !important;
+  }
+}
