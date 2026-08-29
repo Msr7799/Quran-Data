@@ -224,6 +224,57 @@ paths:
                         sajda:
                           type: boolean
                           example: false
+  /verse:
+    get:
+      summary: استرجاع آية محددة حسب رقم السورة والآية
+      parameters:
+      - name: surah_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
+      - name: verse_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: بيانات الآية المطلوبة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                        example: 1
+                      text:
+                        type: object
+                        properties:
+                          ar:
+                            type: string
+                            example: الٓمٓ
+                          en:
+                            type: string
+                            example: Alif, Lam, Meem
+                      juz:
+                        type: integer
+                        example: 1
+                      page:
+                        type: integer
+                        example: 2
+                      sajda:
+                        type: boolean
+                        example: false
   /sajda:
     get:
       summary: استرجاع جميع الآيات التي تحتوي على سجدة
@@ -334,6 +385,53 @@ paths:
                         link:
                           type: string
                           example: https://server11.mp3quran.net/hawashi/001.mp3
+  /audio/{surah_id}/{reciter}:
+    get:
+      summary: استرجاع ملفات صوتية لسورة معينة حسب القارئ
+      parameters:
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      - name: reciter
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ahmed al-hawashi
+      responses:
+        '200':
+          description: ملفات الصوت المطابقة للقارئ في السورة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        reciter:
+                          type: object
+                          properties:
+                            ar:
+                              type: string
+                              example: أحمد الحواشي
+                            en:
+                              type: string
+                              example: Ahmed Al-Hawashi
+                        link:
+                          type: string
+                          example: https://server11.mp3quran.net/hawashi/001.mp3
   /juz:
     get:
       summary: استرجاع الآيات حسب ID الجزء
@@ -387,6 +485,23 @@ paths:
                         surahNumber:
                           type: integer
                           example: 100
+  /juz/{juz_id}:
+    get:
+      summary: استرجاع الآيات في جزء محدد باستخدام path param
+      parameters:
+      - name: juz_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: قائمة الآيات في الجزء المحدد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerseListResponse'
   /pages:
     get:
       summary: استرجاع بيانات الصفحات
@@ -476,6 +591,37 @@ paths:
                                 transliteration:
                                   type: string
                                   example: Al-Fatihah
+  /pages/{surah_id}/{verse_id}:
+    get:
+      summary: استرجاع بيانات صفحة/آية محددة عبر path params
+      parameters:
+      - name: surah_id
+        in: path
+        required: false
+        schema:
+          type: integer
+          example: 2
+      - name: verse_id
+        in: path
+        required: false
+        schema:
+          type: integer
+          example: 15
+      responses:
+        '200':
+          description: بيانات الصفحة المرتبطة بالآية أو السورة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PageRecord'
   /reciters:
     get:
       summary: استرجاع جميع القراء الصوتيين (158 قارئ)
@@ -790,9 +936,47 @@ paths:
                   success:
                     type: boolean
                     example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reciter_id:
+                          type: integer
+                          example: 1
+                        reciter_name:
+                          type: string
+                          example: إبراهيم الأخضر
+                        surah_number:
+                          type: integer
+                          example: 1
+                        verse_number:
+                          type: integer
+                          example: 1
+                        start_time_ms:
+                          type: integer
+                          example: 0
+                        end_time_ms:
+                          type: integer
+                          example: 13189
                   count:
                     type: integer
                     example: 1
+                  filters:
+                    type: object
+                    properties:
+                      reciter:
+                        type: string
+                        example: '1'
+                      surah:
+                        type: integer
+                        example: 1
+                      verse:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 50
   /ayah-audio/reciters:
     get:
       summary: استرجاع قراء الصوت آية-بآية
@@ -931,6 +1115,44 @@ paths:
                   image_url: /data/suwer-name/001.svg
                   image_file: 001.svg
                 count: 114
+  /api-reference:
+    get:
+      summary: استرجاع بيانات المرجع API من قاعدة البيانات
+      description: يرجع النسخة الحالية من مرجع الـ OpenAPI/JSON المسجل في قاعدة البيانات، مع معلومات الاستضافة والروابط الأساسية.
+      responses:
+        '200':
+          description: بيانات مرجع API كاملة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    additionalProperties: true
+                  database_info:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Quran API
+                      version:
+                        type: string
+                        example: 3.1.0
+                      last_updated:
+                        type: string
+                        format: date-time
+                        example: '2024-01-01T00:00:00.000Z'
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: '2024-01-01T00:00:00.000Z'
   /ayah-bayah/reciters:
     get:
       summary: قراء التتبع آية بآية
@@ -1228,3 +1450,73 @@ components:
           example: حدث خطأ أثناء استرجاع البيانات.
         details:
           type: object
+    VerseListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              number:
+                type: integer
+                example: 1
+              text:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: الٓمٓ
+                  en:
+                    type: string
+                    example: Alif, Lam, Meem
+              juz:
+                type: integer
+                example: 1
+              page:
+                type: integer
+                example: 2
+              sajda:
+                type: boolean
+                example: false
+    PageRecord:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              example: /data/quran_image/1.png
+        start:
+          type: object
+          properties:
+            surah_number:
+              type: integer
+              example: 1
+            verse:
+              type: integer
+              example: 1
+            name:
+              type: object
+              additionalProperties:
+                type: string
+        end:
+          type: object
+          properties:
+            surah_number:
+              type: integer
+              example: 1
+            verse:
+              type: integer
+              example: 7
+            name:
+              type: object
+              additionalProperties:
+                type: string
