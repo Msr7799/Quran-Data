@@ -1,15 +1,44 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: واجهة برمجة تطبيقات القرآن
-  description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد. تشمل النسخة
-    3.1.0 صور القراء وأسماء السور وواجهات تتبع التلاوة Surah-by-Surah وAyah-by-Ayah مع أمثلة جاهزة داخل ReDoc.
+  description: واجهة برمجة تطبيقات Quran Data للوصول إلى السور والآيات والتسجيلات الصوتية وصور القراء وأسماء السور وبيانات
+    التوقيت. الخادم العام الرسمي الوحيد هو https://msr-quran-data.vercel.app، مع localhost للتطوير المحلي فقط.
   version: 3.1.0
 servers:
 - url: https://msr-quran-data.vercel.app/api
-  description: الخادم الإنتاجي على Vercel
+  description: الخادم الرسمي للإنتاج
 - url: http://localhost:5000/api
-  description: الخادم المحلي
+  description: التطوير المحلي فقط
 paths:
+  /:
+    get:
+      tags:
+      - واجهة القرآن الأساسية
+      summary: معلومات واجهة Quran Data API
+      description: يعرض إصدار الواجهة والرابط الأساسي وروابط الوثائق وقائمة المسارات المتاحة.
+      responses:
+        '200':
+          description: معلومات API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  name:
+                    type: string
+                    example: Quran Data API
+                  version:
+                    type: string
+                    example: 3.1.0
+                  base_url:
+                    type: string
+                    example: https://msr-quran-data.vercel.app/api
+                  documentation_url:
+                    type: string
+                    example: https://msr-quran-data.vercel.app/docs
   /surahs:
     get:
       summary: استرجاع جميع السور
@@ -1111,6 +1140,272 @@ paths:
                         - - 4
                           - 2080
                           - 2800
+  /surah/{surah_id}:
+    get:
+      summary: استرجاع سورة محددة باستخدام ID
+      parameters:
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: السورة المطلوبة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                        example: 1
+                      name:
+                        type: object
+                        properties:
+                          ar:
+                            type: string
+                            example: الفاتحة
+                          en:
+                            type: string
+                            example: The Opening
+                          transliteration:
+                            type: string
+                            example: Al-Fatihah
+                      revelation_place:
+                        type: object
+                        properties:
+                          ar:
+                            type: string
+                            example: مكية
+                          en:
+                            type: string
+                            example: meccan
+                      verses_count:
+                        type: integer
+                        example: 7
+                      words_count:
+                        type: integer
+                        example: 29
+                      letters_count:
+                        type: integer
+                        example: 139
+                      verses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            number:
+                              type: integer
+                              example: 1
+                            text:
+                              type: object
+                              properties:
+                                ar:
+                                  type: string
+                                  example: الٓمٓ
+                                en:
+                                  type: string
+                                  example: Alif, Lam, Meem
+                            juz:
+                              type: integer
+                              example: 1
+                            page:
+                              type: integer
+                              example: 2
+                            sajda:
+                              type: boolean
+                              example: false
+                      audio:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            reciter:
+                              type: object
+                              properties:
+                                ar:
+                                  type: string
+                                  example: أحمد الحواشي
+                                en:
+                                  type: string
+                                  example: Ahmed Al-Hawashi
+                            rewaya:
+                              type: object
+                              properties:
+                                ar:
+                                  type: string
+                                  example: حفص عن عاصم
+                                en:
+                                  type: string
+                                  example: Hafs on the authority of Asim
+                            server:
+                              type: string
+                              example: https://server11.mp3quran.net/hawashi
+                            link:
+                              type: string
+                              example: https://server11.mp3quran.net/hawashi/001.mp3
+  /verses/{surah_id}:
+    get:
+      summary: استرجاع جميع الآيات لسورة محددة
+      parameters:
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: قائمة بالآيات في السورة المحددة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        number:
+                          type: integer
+                          example: 1
+                        text:
+                          type: object
+                          properties:
+                            ar:
+                              type: string
+                              example: الٓمٓ
+                            en:
+                              type: string
+                              example: Alif, Lam, Meem
+                        juz:
+                          type: integer
+                          example: 1
+                        page:
+                          type: integer
+                          example: 2
+                        sajda:
+                          type: boolean
+                          example: false
+  /verse/{surah_id}/{verse_id}:
+    get:
+      summary: استرجاع آية محددة حسب رقم السورة والآية
+      parameters:
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      - name: verse_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: بيانات الآية المطلوبة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                        example: 1
+                      text:
+                        type: object
+                        properties:
+                          ar:
+                            type: string
+                            example: الٓمٓ
+                          en:
+                            type: string
+                            example: Alif, Lam, Meem
+                      juz:
+                        type: integer
+                        example: 1
+                      page:
+                        type: integer
+                        example: 2
+                      sajda:
+                        type: boolean
+                        example: false
+  /audio/{surah_id}:
+    get:
+      summary: استرجاع التسجيل الصوتي لسورة محددة
+      parameters:
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      responses:
+        '200':
+          description: بيانات التسجيل الصوتي للسورة المحددة
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        reciter:
+                          type: object
+                          properties:
+                            ar:
+                              type: string
+                              example: أحمد الحواشي
+                            en:
+                              type: string
+                              example: Ahmed Al-Hawashi
+                        rewaya:
+                          type: object
+                          properties:
+                            ar:
+                              type: string
+                              example: حفص عن عاصم
+                            en:
+                              type: string
+                              example: Hafs on the authority of Asim
+                        server:
+                          type: string
+                          example: https://server11.mp3quran.net/hawashi
+                        link:
+                          type: string
+                          example: https://server11.mp3quran.net/hawashi/001.mp3
 components:
   schemas:
     Error:

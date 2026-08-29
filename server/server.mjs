@@ -57,6 +57,8 @@ export default app;
 // تشغيل الخادم محلياً فقط
 if (process.env.NODE_ENV !== 'production') {
     app.listen(config.port, () => {
-        console.log(`[QURAN-DATA]-[${new Date().toISOString()}] 🚀 Server is running on http://localhost:${config.port}`);
+        console.log(`[QURAN-DATA]-[${new Date().toISOString()}] 🚀 Server: ${config.localOrigin}`);
+        console.log(`[QURAN-DATA] API:  ${config.localApiBaseUrl}`);
+        console.log(`[QURAN-DATA] Docs: ${config.localOrigin}/docs`);
     });
 }

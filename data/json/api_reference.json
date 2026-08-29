@@ -3,8 +3,8 @@
     "title": "Quran Data API",
     "description": "واجهة برمجة تطبيقات القرآن الكريم للنسخة الفعّالة على Vercel، مع دعم البيانات الأساسية فقط للـ API المتاح في الإنتاج.",
     "version": "3.1.0",
-    "base_url": "https://quran-api-msr.vercel.app/api",
-    "documentation_url": "https://quran-api-msr.vercel.app",
+    "base_url": "https://msr-quran-data.vercel.app/api",
+    "documentation_url": "https://msr-quran-data.vercel.app/docs",
     "github_url": "https://github.com/Msr7799/Quran-Data",
     "deployment": {
       "platform": "Vercel",
