@@ -4,13 +4,20 @@ import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { handleError } from '../utils/errorUtils.mjs';
+import {
+    loadReciterCatalogWithImages,
+    listAyahBayahReciters,
+    publicReciterSummary,
+    resolveAyahBayahReciter,
+    getSurahFromDataset,
+    getVerseFromDataset,
+    formatAyahRecord
+} from '../services/reciterDataService.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dbFilePath = path.join(__dirname, '../../data/sqlite/database.sqlite');
 const dataRootPath = path.join(__dirname, '..', '..', 'data');
-const reciterBasePath = path.join(dataRootPath, 'Timming-Reciters-ayahBayah');
-const reciterImagesManifestPath = path.join(dataRootPath, 'reciter_images', 'manifest.json');
 const surahNamesPath = path.join(dataRootPath, 'suwer-name');
 
 const readJsonIfExists = async (filePath) => {
@@ -18,10 +25,6 @@ const readJsonIfExists = async (filePath) => {
     return fs.readJSON(filePath);
 };
 
-const normalizeRelativeUrl = (inputPath) => {
-    if (!inputPath) return null;
-    return inputPath.startsWith('/') ? inputPath : `/${inputPath.replace(/\\/g, '/')}`;
-};
 
 async function openDatabase() {
     return open({
@@ -377,6 +380,31 @@ export const searchTimings = async (req, res) => {
  */
 export const getAllAudioReciters = async (req, res) => {
     try {
+        // data/json/surah/surah_1.json is the canonical source for the reciter ID.
+        // The numeric ID is also the prefix used by data/reciter_images (001-, 002-, ...).
+        const catalog = await loadReciterCatalogWithImages();
+
+        if (catalog.length) {
+            return res.json({
+                success: true,
+                data: catalog.map((item) => ({
+                    id: item.id,
+                    reciter: item.reciter,
+                    reciter_name_ar: item.reciter?.ar || null,
+                    reciter_name_en: item.reciter?.en || null,
+                    rewaya: item.rewaya,
+                    server: item.server,
+                    link: item.link,
+                    image: item.image,
+                    image_url: item.image?.url || null
+                })),
+                count: catalog.length,
+                id_source: 'data/json/surah/surah_1.json',
+                image_mapping: 'reciter.id -> data/reciter_images/NNN-*'
+            });
+        }
+
+        // Database fallback for installations that do not ship the JSON data directory.
         const db = await openDatabase();
         const reciters = await db.all(`
             SELECT DISTINCT reciter_ar AS reciter_name_ar, reciter_en AS reciter_name_en
@@ -384,10 +412,11 @@ export const getAllAudioReciters = async (req, res) => {
             ORDER BY reciter_name_ar
         `);
         await db.close();
-        res.json({
+        return res.json({
             success: true,
             data: reciters,
-            count: reciters.length
+            count: reciters.length,
+            warning: 'Canonical reciter IDs/images were unavailable because surah_1.json was not found.'
         });
     } catch (error) {
         console.error('Error fetching audio reciters:', error);
@@ -524,48 +553,26 @@ export const getAyahAudio = async (req, res) => {
     }
 };
 
-const deriveReciterImageInfo = (manifestList, folderName) => {
-    const normalized = folderName.toLowerCase();
-    const item = manifestList.find((entry) => {
-        const name = String(entry.name || '').toLowerCase();
-        return name && (normalized.includes(name.replace(/[^a-z\s]/gi, '').trim().slice(0, 6)) || name.includes(folderName.split('-').slice(-2).join(' ')));
-    });
-
-    if (item) {
-        return {
-            id: item.id || null,
-            name: item.name || folderName,
-            file: item.file || null,
-            image_url: item.file ? `/data/reciter_images/${encodeURIComponent(item.file)}` : null,
-            source_page: item.source_page || null
-        };
-    }
-
-    return {
-        id: null,
-        name: folderName,
-        file: null,
-        image_url: null,
-        source_page: null
-    };
-};
-
 export const getReciterImages = async (req, res) => {
     try {
-        const manifest = await readJsonIfExists(reciterImagesManifestPath) || [];
-        const items = Array.isArray(manifest) ? manifest : [];
-
+        const catalog = await loadReciterCatalogWithImages();
         res.json({
             success: true,
-            data: items.map((item) => ({
-                id: item.id ?? null,
-                name: item.name || null,
-                file: item.file || null,
-                image_url: item.file ? `/data/reciter_images/${encodeURIComponent(item.file)}` : null,
+            data: catalog.map((item) => ({
+                id: item.id,
+                name: item.name,
+                reciter: item.reciter,
+                rewaya: item.rewaya,
+                server: item.server,
+                link: item.link,
+                file: item.image?.file || null,
+                image: item.image,
+                image_url: item.image?.url || null,
                 matched_name: item.matched_name || null,
                 source_page: item.source_page || null
             })),
-            count: items.length
+            count: catalog.length,
+            mapping_rule: 'The reciter id is matched directly to the 3-digit image filename prefix.'
         });
     } catch (error) {
         console.error('Error loading reciter images:', error);
@@ -602,43 +609,20 @@ export const getSurahNames = async (req, res) => {
     }
 };
 
+/**
+ * قائمة التسجيلات التي تحتوي على بيانات تتبع آية/كلمة.
+ * يدعم نوعي QUL:
+ * - surah-by-surah: surah.json + segments.json
+ * - ayah-by-ayah: JSON يحتوي surah/ayah/audio_url/segments لكل آية
+ */
 export const getAyahBayahReciters = async (req, res) => {
     try {
-        const manifest = await readJsonIfExists(reciterImagesManifestPath) || [];
-        const reciterEntries = await fs.readdir(reciterBasePath);
-        const reciters = [];
-
-        for (const folderName of reciterEntries) {
-            const folderPath = path.join(reciterBasePath, folderName);
-            const stats = await fs.stat(folderPath);
-            if (!stats.isDirectory()) continue;
-
-            const surahFile = path.join(folderPath, 'surah.json');
-            const segmentsFile = path.join(folderPath, 'segments.json');
-            const surahData = await readJsonIfExists(surahFile) || {};
-            const segmentsData = await readJsonIfExists(segmentsFile) || {};
-
-            const info = deriveReciterImageInfo(manifest, folderName);
-            const entry = {
-                id: info.id,
-                slug: folderName,
-                folder_name: folderName,
-                name: info.name,
-                image_url: info.image_url,
-                source_page: info.source_page,
-                surah_count: Object.keys(surahData).length,
-                segment_count: Object.keys(segmentsData).length,
-                audio_files: surahData,
-                data_path: normalizeRelativeUrl(path.relative(dataRootPath, folderPath))
-            };
-
-            reciters.push(entry);
-        }
-
+        const reciters = await listAyahBayahReciters();
         res.json({
             success: true,
-            data: reciters,
-            count: reciters.length
+            data: reciters.map(publicReciterSummary),
+            count: reciters.length,
+            supported_types: ['surah-by-surah', 'ayah-by-ayah']
         });
     } catch (error) {
         console.error('Error loading ayah bayah reciters:', error);
@@ -649,42 +633,27 @@ export const getAyahBayahReciters = async (req, res) => {
 export const getAyahBayahReciterById = async (req, res) => {
     try {
         const { reciter_id } = req.params;
-        const manifest = await readJsonIfExists(reciterImagesManifestPath) || [];
-        const reciterEntries = await fs.readdir(reciterBasePath);
-        const targetId = Number(reciter_id);
-        const matches = [];
+        const reciter = await resolveAyahBayahReciter(reciter_id);
 
-        for (const folderName of reciterEntries) {
-            const folderPath = path.join(reciterBasePath, folderName);
-            const stats = await fs.stat(folderPath);
-            if (!stats.isDirectory()) continue;
-
-            const info = deriveReciterImageInfo(manifest, folderName);
-            if ((targetId && info.id === targetId) || (reciter_id && folderName.toLowerCase().includes(String(reciter_id).toLowerCase?.() || String(reciter_id)))) {
-                const surahData = await readJsonIfExists(path.join(folderPath, 'surah.json')) || {};
-                const segmentsData = await readJsonIfExists(path.join(folderPath, 'segments.json')) || {};
-                matches.push({
-                    id: info.id,
-                    slug: folderName,
-                    folder_name: folderName,
-                    name: info.name,
-                    image_url: info.image_url,
-                    source_page: info.source_page,
-                    surah_count: Object.keys(surahData).length,
-                    segment_count: Object.keys(segmentsData).length,
-                    audio_files: surahData,
-                    data_path: normalizeRelativeUrl(path.relative(dataRootPath, folderPath))
-                });
-            }
+        if (!reciter) {
+            return handleError(res, 404, 'لم يتم العثور على قارئ التسجيلات آية-بآية', {
+                reciter_id,
+                available_reciters_endpoint: '/api/ayah-bayah/reciters'
+            });
         }
 
-        if (!matches.length) {
-            return handleError(res, 404, 'لم يتم العثور على قارئ التسجيلات آية-بآية', { reciter_id });
-        }
-
+        const summary = publicReciterSummary(reciter);
         res.json({
             success: true,
-            data: matches[0]
+            data: {
+                ...summary,
+                audio_files: reciter._dataset.type === 'surah-by-surah'
+                    ? reciter._dataset.audio_files
+                    : undefined,
+                sample_ayah_audio: reciter._dataset.type === 'ayah-by-ayah'
+                    ? reciter._dataset.ayah_records.slice(0, 5).map(formatAyahRecord)
+                    : undefined
+            }
         });
     } catch (error) {
         console.error('Error loading ayah bayah reciter:', error);
@@ -695,56 +664,43 @@ export const getAyahBayahReciterById = async (req, res) => {
 export const getAyahBayahSurah = async (req, res) => {
     try {
         const { reciter_id, surah_id } = req.params;
-        const manifest = await readJsonIfExists(reciterImagesManifestPath) || [];
-        const reciterEntries = await fs.readdir(reciterBasePath);
-        let targetEntry = null;
-
-        for (const folderName of reciterEntries) {
-            const folderPath = path.join(reciterBasePath, folderName);
-            const stats = await fs.stat(folderPath);
-            if (!stats.isDirectory()) continue;
-
-            const info = deriveReciterImageInfo(manifest, folderName);
-            if (String(info.id) === String(reciter_id) || folderName === String(reciter_id)) {
-                targetEntry = { folderName, info };
-                break;
-            }
+        const surahNumber = parsePositiveInteger(surah_id);
+        if (!surahNumber || surahNumber > 114) {
+            return handleError(res, 400, 'رقم السورة غير صالح', { surah_id });
         }
 
-        if (!targetEntry) {
+        const reciter = await resolveAyahBayahReciter(reciter_id);
+        if (!reciter) {
             return handleError(res, 404, 'لم يتم العثور على القارئ المطلوب', { reciter_id });
         }
 
-        const surahData = await readJsonIfExists(path.join(reciterBasePath, targetEntry.folderName, 'surah.json')) || {};
-        const segmentsData = await readJsonIfExists(path.join(reciterBasePath, targetEntry.folderName, 'segments.json')) || {};
-        const key = String(surah_id);
-        const chapter = surahData[key] || surahData[Number(key)] || null;
-
-        if (!chapter) {
+        const result = getSurahFromDataset(reciter._dataset, surahNumber);
+        if (!result) {
             return handleError(res, 404, 'لم يتم العثور على سورة القارئ', { reciter_id, surah_id });
         }
 
-        const verseSegments = Object.entries(segmentsData)
-            .filter(([segmentKey]) => segmentKey.startsWith(`${key}:`))
-            .map(([segmentKey, value]) => ({
-                key: segmentKey,
-                verse_number: Number(segmentKey.split(':')[1]),
-                ...value
-            }));
-
+        const records = result.records.map(formatAyahRecord);
         res.json({
             success: true,
             data: {
-                reciter: {
-                    id: targetEntry.info.id,
-                    name: targetEntry.info.name,
-                    folder_name: targetEntry.folderName,
-                    image_url: targetEntry.info.image_url
-                },
-                surah_number: Number(surah_id),
-                audio: chapter,
-                segments: verseSegments,
-                segments_count: verseSegments.length
+                reciter: publicReciterSummary(reciter),
+                recitation_type: reciter._dataset.type,
+                surah_number: surahNumber,
+                audio: result.chapterAudio,
+                ayahs: records,
+                segments: records.map((item) => ({
+                    key: `${item.surah}:${item.ayah}`,
+                    verse_number: item.ayah,
+                    audio_url: item.audio_url,
+                    timestamp_from: item.timestamp_from,
+                    timestamp_to: item.timestamp_to,
+                    duration_ms: item.duration_ms,
+                    duration_sec: item.duration_sec,
+                    segments: item.segments
+                })),
+                ayahs_count: records.length,
+                segments_count: records.length,
+                word_segments_count: records.reduce((sum, item) => sum + item.segments.length, 0)
             }
         });
     } catch (error) {
@@ -756,52 +712,39 @@ export const getAyahBayahSurah = async (req, res) => {
 export const getAyahBayahVerse = async (req, res) => {
     try {
         const { reciter_id, surah_id, verse_id } = req.params;
-        const manifest = await readJsonIfExists(reciterImagesManifestPath) || [];
-        const reciterEntries = await fs.readdir(reciterBasePath);
-        let targetEntry = null;
-
-        for (const folderName of reciterEntries) {
-            const folderPath = path.join(reciterBasePath, folderName);
-            const stats = await fs.stat(folderPath);
-            if (!stats.isDirectory()) continue;
-
-            const info = deriveReciterImageInfo(manifest, folderName);
-            if (String(info.id) === String(reciter_id) || folderName === String(reciter_id)) {
-                targetEntry = { folderName, info };
-                break;
-            }
+        const surahNumber = parsePositiveInteger(surah_id);
+        const verseNumber = parsePositiveInteger(verse_id);
+        if (!surahNumber || surahNumber > 114 || !verseNumber) {
+            return handleError(res, 400, 'رقم السورة أو الآية غير صالح', { surah_id, verse_id });
         }
 
-        if (!targetEntry) {
+        const reciter = await resolveAyahBayahReciter(reciter_id);
+        if (!reciter) {
             return handleError(res, 404, 'لم يتم العثور على القارئ المطلوب', { reciter_id });
         }
 
-        const segmentsData = await readJsonIfExists(path.join(reciterBasePath, targetEntry.folderName, 'segments.json')) || {};
-        const segmentKey = `${surah_id}:${verse_id}`;
-        const verseSegment = segmentsData[segmentKey] || null;
-
-        if (!verseSegment) {
-            return handleError(res, 404, 'لم يتم العثور على آية محددة في التسجيل', { reciter_id, surah_id, verse_id });
+        const result = getVerseFromDataset(reciter._dataset, surahNumber, verseNumber);
+        if (!result) {
+            return handleError(res, 404, 'لم يتم العثور على آية محددة في التسجيل', {
+                reciter_id,
+                surah_id,
+                verse_id
+            });
         }
 
-        const surahData = await readJsonIfExists(path.join(reciterBasePath, targetEntry.folderName, 'surah.json')) || {};
-        const chapter = surahData[String(surah_id)] || surahData[Number(surah_id)] || null;
-
+        const verse = formatAyahRecord(result.record);
         res.json({
             success: true,
             data: {
-                reciter: {
-                    id: targetEntry.info.id,
-                    name: targetEntry.info.name,
-                    folder_name: targetEntry.folderName,
-                    image_url: targetEntry.info.image_url
-                },
-                surah_number: Number(surah_id),
-                verse_number: Number(verse_id),
-                chapter_audio: chapter,
+                reciter: publicReciterSummary(reciter),
+                recitation_type: reciter._dataset.type,
+                surah_number: surahNumber,
+                verse_number: verseNumber,
+                chapter_audio: result.chapterAudio,
+                ayah_audio_url: verse.audio_url,
                 segment: {
-                    key: segmentKey,
-                    ...verseSegment
+                    key: `${surahNumber}:${verseNumber}`,
+                    ...verse
                 }
             }
         });
@@ -810,3 +753,4 @@ export const getAyahBayahVerse = async (req, res) => {
         handleError(res, 500, 'خطأ في جلب بيانات الآية', { error: error.message });
     }
 };
+

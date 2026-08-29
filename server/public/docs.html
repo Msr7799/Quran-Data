@@ -138,7 +138,7 @@
                     <span class="stat-label">سجدة</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">18</span>
+                    <span class="stat-number">24</span>
                     <span class="stat-label">API Endpoints</span>
                 </div>
             </div>
@@ -500,9 +500,178 @@
         </div>
       </div>
 
+      <!-- 17 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🖼️ صور القراء مع IDs</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/reciter-images" title="GET /api/reciter-images">
+              <div class="endpoint-text">GET /api/reciter-images</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">يربط ID القارئ مباشرة برقم الصورة، مثال: 68 ← 068-عبدالرحمن السديس.jpg.</p>
+        </div>
+      </div>
+
+      <!-- 18 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🕌 صور أسماء السور</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/surah-names" title="GET /api/surah-names">
+              <div class="endpoint-text">GET /api/surah-names</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">يعيد أسماء السور وروابط SVG من data/suwer-name، مثل /data/suwer-name/001.svg.</p>
+        </div>
+      </div>
+
+      <!-- 19 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">🎙️ قراء التتبع آية بآية</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-bayah/reciters" title="GET /api/ayah-bayah/reciters">
+              <div class="endpoint-text">GET /api/ayah-bayah/reciters</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">قائمة القراء المتاح لهم Surah-by-Surah أو Ayah-by-Ayah مع عدد السور والآيات والتوقيتات.</p>
+        </div>
+      </div>
+
+      <!-- 20 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">👤 تفاصيل قارئ التتبع</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-bayah/reciter/68" title="GET /api/ayah-bayah/reciter/68">
+              <div class="endpoint-text">GET /api/ayah-bayah/reciter/68</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">مثال عبدالرحمن السديس (ID 68): بيانات القارئ، الصورة، نوع التسجيل والسور المتاحة.</p>
+        </div>
+      </div>
+
+      <!-- 21 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">▶️ سورة كاملة مع التتبع</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-bayah/68/1" title="GET /api/ayah-bayah/68/1">
+              <div class="endpoint-text">GET /api/ayah-bayah/68/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">مثال الفاتحة بصوت السديس: رابط تسجيل السورة وتوقيت كل آية/كلمة حسب نوع المصدر.</p>
+        </div>
+      </div>
+
+      <!-- 22 -->
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="api-card h-100 card p-3 mb-3">
+          <h4 class="card-title">⏱️ آية محددة مع توقيتها</h4>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="api-endpoint" data-endpoint="GET /api/ayah-bayah/68/1/1" title="GET /api/ayah-bayah/68/1/1">
+              <div class="endpoint-text">GET /api/ayah-bayah/68/1/1</div>
+              <button type="button" class="btn btn-sm btn-outline-primary copy-btn" aria-label="نسخ endpoint"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <div class="card-actions ms-2"><button type="button" class="btn btn-sm btn-warning test-btn" aria-label="جرّب"><i class="bi bi-play-fill"></i> <span class="d-none d-sm-inline">جرّب</span></button></div>
+          </div>
+          <p class="mb-0">مثال الآية 1 من الفاتحة: يرجع timestamp أو audio_url وword segments لتفعيل التتبع أثناء التشغيل.</p>
+        </div>
+      </div>
+
     </div> <!-- /row -->
   </div> <!-- /container -->
 </section>
+
+<section class="container py-4" id="new-api-detailed-examples">
+  <div class="new-api-examples-header">
+    <h3>🧪 أمثلة القراء والصور والتتبع آية بآية</h3>
+    <p>أمثلة جاهزة للنسخ والتجربة للإضافات الجديدة. يمكن استخدام ID القارئ الأساسي مثل <code>68</code>، كما يمكن استخدام رقم مصدر QUL مثل <code>959</code> و<code>960</code> للتسجيلات Ayah-by-Ayah.</p>
+  </div>
+
+  <div class="new-api-example-grid">
+    <article class="new-api-example-card">
+      <h4>1) قائمة القراء مع الصور</h4>
+      <div class="example-endpoint">GET /api/reciter-images</div>
+      <pre><code>fetch('/api/reciter-images')
+  .then(r =&gt; r.json())
+  .then(console.log);</code></pre>
+      <p>الربط مباشر: <strong>reciter.id → بادئة الصورة NNN</strong>. مثال ID 68 يستخدم ملف <code>068-عبدالرحمن السديس.jpg</code>.</p>
+    </article>
+
+    <article class="new-api-example-card">
+      <h4>2) صور أسماء السور</h4>
+      <div class="example-endpoint">GET /api/surah-names</div>
+      <pre><code>// مثال للصورة الأولى
+/data/suwer-name/001.svg</code></pre>
+      <p>الاستجابة تجمع اسم السورة العربي/الإنجليزي مع <code>image_url</code> لملف SVG.</p>
+    </article>
+
+    <article class="new-api-example-card">
+      <h4>3) القراء الذين لديهم بيانات تتبع</h4>
+      <div class="example-endpoint">GET /api/ayah-bayah/reciters</div>
+      <pre><code>curl https://quran-api-msr.vercel.app/api/ayah-bayah/reciters</code></pre>
+      <p>يعرض النوع <code>surah-by-surah</code> أو <code>ayah-by-ayah</code>، وعدد السور والآيات والـ word segments.</p>
+    </article>
+
+    <article class="new-api-example-card">
+      <h4>4) السديس — الفاتحة مع التتبع</h4>
+      <div class="example-endpoint">GET /api/ayah-bayah/68/1</div>
+      <pre><code>{
+  "recitation_type": "surah-by-surah",
+  "surah_number": 1,
+  "audio": "...",
+  "segments": [
+    {
+      "key": "1:1",
+      "timestamp_from": 361,
+      "timestamp_to": 4585,
+      "segments": [[1,361,1051],[2,1051,1622]]
+    }
+  ]
+}</code></pre>
+      <p>استخدم <code>timestamp_from</code> و<code>timestamp_to</code> لمتابعة الآية داخل ملف السورة، ومصفوفة <code>segments</code> لمتابعة الكلمات.</p>
+    </article>
+
+    <article class="new-api-example-card">
+      <h4>5) المنشاوي — آية بصوت مستقل</h4>
+      <div class="example-endpoint">GET /api/ayah-bayah/959/1/1</div>
+      <pre><code>{
+  "recitation_type": "ayah-by-ayah",
+  "surah_number": 1,
+  "verse_number": 1,
+  "ayah_audio_url": "...001001.mp3",
+  "segment": {
+    "key": "1:1",
+    "segments": [[1,0,690],[2,690,1500]]
+  }
+}</code></pre>
+      <p><code>959</code> هو رقم مصدر QUL الموجود في اسم ملف المنشاوي، ويقبل الـ API هذا الرقم مباشرة.</p>
+    </article>
+
+    <article class="new-api-example-card">
+      <h4>6) سعود الشريم — آية بآية</h4>
+      <div class="example-endpoint">GET /api/ayah-bayah/960/1/1</div>
+      <pre><code>const data = await fetch('/api/ayah-bayah/960/1/1')
+  .then(r =&gt; r.json());
+
+audio.src = data.data.ayah_audio_url;</code></pre>
+      <p><code>960</code> هو رقم مصدر QUL للشريم. يمكن أيضًا استعمال ID القارئ الأساسي عندما يكون موجودًا في كتالوج <code>surah_1.json</code>.</p>
+    </article>
+  </div>
+</section>
+
             <!-- API Documentation -->
             <div id="redoc-container"></div>
         </div>
@@ -560,7 +729,7 @@
                 <li>604 صفحة</li>
                 <li>30 جزء</li>
                 <li>15 سجدة</li>
-                <li>18 راوت API</li>
+                <li>24 راوت API</li>
                 <li>JSON Database</li>
                 <li>SQLite Database</li>
                 <li>CSV Database</li>

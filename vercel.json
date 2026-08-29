@@ -16,6 +16,7 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VERCEL_SUPPORT_LARGE_FUNCTIONS": "1"
   }
 }

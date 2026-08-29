@@ -1477,3 +1477,61 @@ pre,
         font-weight: 700;
     }
 }
+
+/* New reciter / ayah-tracking API examples */
+#new-api-detailed-examples {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.new-api-examples-header {
+    text-align: right;
+    margin-bottom: 1.25rem;
+}
+
+.new-api-example-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.new-api-example-card {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+}
+
+.new-api-example-card h4 {
+    margin-bottom: .75rem;
+}
+
+.new-api-example-card .example-endpoint {
+    direction: ltr;
+    text-align: left;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    padding: .65rem .8rem;
+    border-radius: 10px;
+    margin-bottom: .75rem;
+    background: rgba(0, 0, 0, 0.22);
+    overflow-wrap: anywhere;
+}
+
+.new-api-example-card pre {
+    direction: ltr;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    border-radius: 10px;
+    padding: .85rem;
+    background: rgba(0, 0, 0, 0.32);
+    max-height: 330px;
+    overflow: auto;
+}
+
+.new-api-example-card code {
+    direction: ltr;
+    unicode-bidi: embed;
+}
