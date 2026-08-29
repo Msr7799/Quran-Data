@@ -22,7 +22,7 @@ const redocSourceMap = JSON.parse(fs.readFileSync(path.join(publicDir,'redoc.sta
 const openapi = fs.readFileSync(path.join(root,'docs','api-definition.yaml'),'utf8');
 ok(html.includes('المصحف التفاعلي') && html.includes('api-lab'), 'واجهة القارئ ومختبر API موجودان');
 ok(js.includes('/api/ayah-bayah/') && js.includes('/api/reciter-images') && js.includes('/api/surah/'), 'الواجهة مربوطة بمسارات API الفعلية');
-ok(js.includes('/api/pages/') && js.includes('/api/timing/reciters') && js.includes('/api/ayah-audio/reciters') && js.includes('/api/api-reference'), 'مختبر API يغطي جميع مجموعات أوامر الإصدار 3.1.0');
+ok(js.includes('/api/pages/') && js.includes('/api/ayah-bayah/reciters') && js.includes('/api/ayah-audio/reciters') && js.includes('/api/api-reference'), 'مختبر API يغطي جميع مجموعات أوامر الإصدار 3.1.0');
 ok(html.includes('id="apiVisualOutput"') && js.includes('renderVisualOutput') && js.includes('preview: "pages"') && js.includes('preview: "reciters"') && js.includes('preview: "surah-names"'), 'مختبر API يعرض صفحات المصحف وصور القراء وأسماء السور بصريًا');
 ok(docs.includes('href="/index.html"') && docs.includes('الموقع التجريبي'), 'docs.html يحتوي زر الموقع التجريبي في الناف بار');
 const redocInitIndex = docs.indexOf('Redoc.init(');
