@@ -59,6 +59,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" href="#reciter-gallery">
+                                        🖼️ <span>صور القراء</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <div class="theme-toggle" onclick="toggleTheme()">
                                         <div class="switch">
                                             <div class="switch-slider" id="theme-icon">🌙</div>
@@ -138,6 +143,14 @@
                 </div>
             </div>
         </div>
+    </section>
+
+    <section class="container py-4" id="reciter-gallery">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h3 class="mb-0">🖼️ صور القراء وأسماء السور</h3>
+            <button type="button" class="btn btn-warning" id="reloadReciterGalleryBtn">تحديث المعرض</button>
+        </div>
+        <div class="row g-3" id="reciterGalleryGrid"></div>
     </section>
 
     <!-- Main Content -->
@@ -811,6 +824,62 @@
     return API_BASE_URL.replace(/\/$/, '') + normalizedPath;
   }
 
+  async function loadReciterGallery() {
+    const gallery = document.getElementById('reciterGalleryGrid');
+    if (!gallery) return;
+
+    gallery.innerHTML = '<div class="col-12 text-center py-4"><div class="loading"></div><p class="mt-3">جاري تحميل صور القراء...</p></div>';
+
+    try {
+      const [recitersRes, surahRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/reciter-images`),
+        fetch(`${API_BASE_URL}/surah-names`)
+      ]);
+
+      const recitersJson = await recitersRes.json();
+      const surahJson = await surahRes.json();
+
+      const reciterItems = Array.isArray(recitersJson.data) ? recitersJson.data.slice(0, 12) : [];
+      const surahItems = Array.isArray(surahJson.data) ? surahJson.data.slice(0, 12) : [];
+
+      const items = [...reciterItems.map(item => ({
+        type: 'reciter',
+        title: item.name || 'قارئ',
+        image: item.image_url || 'https://placehold.co/600x400/374151/ffffff?text=Quran',
+        meta: item.file ? `ملف: ${item.file}` : 'قارئ',
+        link: item.image_url ? item.image_url : null
+      })), ...surahItems.map(item => ({
+        type: 'surah',
+        title: item.name?.ar || `سورة ${item.number}`,
+        image: item.image_url || 'https://placehold.co/600x400/7c2d12/ffffff?text=Surah',
+        meta: `السورة ${item.number}`,
+        link: item.image_url ? item.image_url : null
+      }))];
+
+      if (!items.length) {
+        gallery.innerHTML = '<div class="col-12 text-center">لا توجد صور متاحة حاليًا.</div>';
+        return;
+      }
+
+      gallery.innerHTML = items.map(item => `
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="reciter-gallery-card">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/374151/ffffff?text=Quran';" />
+            <div class="card-body">
+              <h5 class="mb-2">${item.title}</h5>
+              <div class="meta-badge">${item.meta}</div>
+              ${item.link ? `<div class="mt-3"><a class="btn btn-sm btn-outline-primary" href="${item.link}" target="_blank" rel="noopener noreferrer">فتح الصورة</a></div>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    } catch (error) {
+      gallery.innerHTML = '<div class="col-12 text-center text-danger">تعذر تحميل الصور في هذه اللحظة.</div>';
+      console.error('Failed to load gallery:', error);
+    }
+  }
+
+  document.getElementById('reloadReciterGalleryBtn')?.addEventListener('click', loadReciterGallery);
   document.addEventListener('click', async (e) => {
     // زر النسخ داخل الـ endpoint
     if (e.target.closest('.copy-btn')) {
@@ -847,6 +916,8 @@
       window.open(buildApiUrl(path), '_blank', 'noopener,noreferrer');
     }
   });
+
+  window.addEventListener('DOMContentLoaded', loadReciterGallery);
     </script>
 
     <!-- Bootstrap JavaScript Bundle with Popper -->

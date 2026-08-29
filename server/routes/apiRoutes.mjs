@@ -5,7 +5,9 @@ import {
 } from '../controllers/surahController.mjs';
 import {
   getAllReciters, getVerseTimings, getSingleVerseTiming, getAvailableSurahs,
-  searchTimings, getAllAudioReciters, getAyahAudioReciters, getAyahAudio
+  searchTimings, getAllAudioReciters, getAyahAudioReciters, getAyahAudio,
+  getReciterImages, getSurahNames, getAyahBayahReciters, getAyahBayahReciterById,
+  getAyahBayahSurah, getAyahBayahVerse
 } from '../controllers/timingController.mjs';
 import { handleError } from '../utils/errorUtils.mjs';
 
@@ -77,6 +79,14 @@ router.get('/timing/search', searchTimings);
 router.get('/ayah-audio/reciters', getAyahAudioReciters);
 // رابط صوت آية واحدة لقارئ محدد
 router.get('/ayah-audio/:reciter/:surah_id/:verse_id', getAyahAudio);
+
+// ============= Reciter Metadata & Images =============
+router.get('/reciter-images', getReciterImages);
+router.get('/surah-names', getSurahNames);
+router.get('/ayah-bayah/reciters', getAyahBayahReciters);
+router.get('/ayah-bayah/reciter/:reciter_id', getAyahBayahReciterById);
+router.get('/ayah-bayah/:reciter_id/:surah_id', getAyahBayahSurah);
+router.get('/ayah-bayah/:reciter_id/:surah_id/:verse_id', getAyahBayahVerse);
 
 // ============= API Reference =============
 router.get('/api-reference', async (req, res) => {
