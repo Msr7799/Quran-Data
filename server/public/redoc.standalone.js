@@ -45115,7 +45115,7 @@ color: black;
             (this.parent && this.parent.expand(), (this.expanded = !0));
           }
           collapse() {
-            "group" !== this.type && (this.expanded = !1);
+            !/^(g|t)/.test(this.type)&&(this.expanded=!1);
           }
           deactivate() {
             this.active = !1;
