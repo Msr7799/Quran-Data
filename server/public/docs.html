@@ -794,8 +794,19 @@ GET /api/ayah-bayah/68/1/1</code></pre>
     <script>
         const API_BASE_URL = `${window.location.origin}/api`;
 
+        const redocContainer = document.getElementById('redoc-container');
+
+        // Render the placeholder before React owns the container. Mutating the
+        // container after Redoc.init can reset the menu while it is opening.
+        redocContainer.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div class="loading"></div>
+                <p style="margin-top: 1rem; color: #667eea;">جاري تحميل وثائق API...</p>
+            </div>
+        `;
+
         // Initialize Redoc
-        Redoc.init('/docs/api-definition.yaml?v=3.1.0-nav-scroll-fix', {
+        Redoc.init('/docs/api-definition.yaml?v=3.1.0-stable-menu', {
             theme: {
                 colors: {
                     primary: {
@@ -838,6 +849,9 @@ GET /api/ayah-bayah/68/1/1</code></pre>
             hideHostname: true,
             hideDownloadButton: false,
             disableSearch: false,
+            // Keep an active section expanded. With the default toggle mode,
+            // scroll activation can make a single click look like open/close.
+            menuToggle: false,
             expandResponses: '200,201,400,404,500',
             jsonSampleExpandLevel: 3,
             hideLoading: false,
@@ -868,14 +882,6 @@ GET /api/ayah-bayah/68/1/1</code></pre>
             });
         });
 
-        // Add loading animation
-        const redocContainer = document.getElementById('redoc-container');
-        redocContainer.innerHTML = `
-            <div style="text-align: center; padding: 3rem;">
-                <div class="loading"></div>
-                <p style="margin-top: 1rem; color: #667eea;">جاري تحميل وثائق API...</p>
-            </div>
-        `;
     </script>
     </div>
 
