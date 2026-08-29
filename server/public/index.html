@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="المصحف التفاعلي المبني على Quran Data API: تشغيل السور، تشغيل آية منفردة، وتتبع الآيات والكلمات.">
-  <meta name="theme-color" content="#0d5a45">
+  <meta name="theme-color" content="#050505">
   <title>المصحف التفاعلي — Quran Data</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/reader.css">
@@ -59,11 +59,11 @@
         <div class="toggles"><label><input id="autoScrollToggle" type="checkbox" checked> تتبع تلقائي</label><label><input id="wordTrackToggle" type="checkbox" checked> تظليل الكلمات</label></div>
         <p id="trackingNote" class="note">سيظهر نوع التتبع بعد اختيار القارئ.</p>
       </div>
-      <div class="mini-surah"><img id="surahNameImage" alt="اسم السورة"><div><b id="surahMiniName">—</b><small id="surahMiniMeta">—</small></div></div>
+      <div class="mini-surah"><div class="surah-art-mini"><img id="surahNameImage" alt="اسم السورة"></div><div><b id="surahMiniName">—</b><small id="surahMiniMeta">—</small></div></div>
     </aside>
 
     <section class="mushaf">
-      <div class="surah-head"><div><span id="surahNumberBadge">سورة ١</span><h2 id="surahTitle">الفاتحة</h2><p id="surahSubtitle">—</p></div><img id="surahHeaderImage" alt="اسم السورة"></div>
+      <div class="surah-head"><div><span id="surahNumberBadge">سورة ١</span><h2 id="surahTitle">الفاتحة</h2><p id="surahSubtitle">—</p></div><div class="surah-art-large"><img id="surahHeaderImage" alt="اسم السورة"></div></div>
       <div id="bismillah" class="uthmani bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
       <div id="readerStatus" class="status">جاري تجهيز المصحف…</div>
       <div id="versesContainer" class="verses"></div>

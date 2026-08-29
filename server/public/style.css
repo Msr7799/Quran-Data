@@ -1621,119 +1621,212 @@ pre{overflow:auto}
   .card-actions{margin-inline-start:0!important;align-self:flex-start}
 }
 
-/* ===== v3.1.0 docs home / navbar / ReDoc sidebar fixes ===== */
-/* Tailwind's `.collapse` utility uses visibility:collapse and conflicts with Bootstrap's navbar collapse. */
-.navbar-collapse.collapse,
-.docs-navbar-collapse {
-  visibility: visible !important;
-}
 
+/* =========================================================
+   v3.1.0 navigation + ReDoc sidebar fixes
+   ========================================================= */
+.navbar { position: relative !important; }
+
+/* Desktop: Bootstrap .collapse must never hide the docs navigation. */
 @media (min-width: 992px) {
-  .docs-navbar-collapse.collapse,
-  .docs-navbar-collapse {
-    display: flex !important;
-    visibility: visible !important;
-    flex-basis: auto !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-  .docs-navbar-nav {
+  .navbar .container-fluid > .w-100 {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+  }
+  .navbar-nav-left {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    order: 1 !important;
+  }
+  #navbarNav.navbar-collapse,
+  #navbarNav.collapse,
+  #navbarNav.collapse:not(.show) {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: 1 1 auto !important;
+    flex-basis: auto !important;
+    overflow: visible !important;
+  }
+  #navbarNav .navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    gap: .25rem !important;
+    flex-wrap: wrap !important;
+    gap: .35rem !important;
     width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    direction: rtl !important;
   }
-  .docs-navbar-nav .nav-item {
+  #navbarNav .nav-item {
+    display: list-item !important;
     width: auto !important;
-    flex: 0 0 auto !important;
+    border: 0 !important;
   }
-  .docs-navbar-nav .nav-link {
-    display: inline-flex !important;
+  #navbarNav .nav-link {
+    display: flex !important;
     align-items: center !important;
-    gap: .3rem;
-    white-space: nowrap;
+    gap: .35rem !important;
+    width: auto !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    padding: .5rem .8rem !important;
+    white-space: nowrap !important;
+    font-size: clamp(.82rem, 1vw, 1rem) !important;
+  }
+  .navbar-brand {
+    flex: 0 0 auto !important;
+    order: 2 !important;
   }
 }
 
-@media (max-width: 991.98px) {
-  .docs-navbar-collapse.collapse:not(.show) {
-    display: none !important;
-  }
-  .docs-navbar-collapse.collapse.show,
-  .docs-navbar-collapse.collapsing {
-    visibility: visible !important;
-  }
-  .docs-navbar-nav {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-  }
-}
-
-/* Give the documentation enough horizontal space and remove the nested parent scrollbar.
-   The ReDoc menu gets its own scrollbar below. */
-.script-container {
-  width: min(100%, 1600px) !important;
-  max-width: 1600px !important;
-  margin-inline: auto !important;
-}
-
+/* ReDoc: the page scrolls normally; only the left menu gets its own scroll. */
 #redoc-container {
-  min-height: 80vh !important;
   max-height: none !important;
   height: auto !important;
   overflow: visible !important;
-  contain: layout paint;
+  contain: none !important;
 }
-
-/* ReDoc sidebar: independent vertical scrolling so an expanded tag/group never gets clipped
-   or jumps back to the group above. */
 #redoc-container [role="navigation"] {
-  max-height: calc(100vh - 110px) !important;
+  position: sticky !important;
+  top: 76px !important;
+  height: calc(100vh - 92px) !important;
+  max-height: calc(100vh - 92px) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  overscroll-behavior-y: contain;
-  scrollbar-gutter: stable;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
 }
-
-#redoc-container [role="navigation"]::-webkit-scrollbar {
-  width: 10px;
-}
-#redoc-container [role="navigation"]::-webkit-scrollbar-track {
-  background: #eef0ff;
-}
-#redoc-container [role="navigation"]::-webkit-scrollbar-thumb {
-  background: #7c8cf8;
-  border-radius: 999px;
-  border: 2px solid #eef0ff;
-}
-
-/* ReDoc sometimes puts the menu list in an immediate nested wrapper. Do not clip it. */
-#redoc-container [role="navigation"] > div,
-#redoc-container [role="navigation"] ul,
-#redoc-container [role="navigation"] li {
+#redoc-container [role="navigation"] > div {
+  max-height: 100% !important;
+  overflow-y: auto !important;
   overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+}
+#redoc-container [role="navigation"]::-webkit-scrollbar,
+#redoc-container [role="navigation"] > div::-webkit-scrollbar {
+  width: 9px;
+}
+#redoc-container [role="navigation"]::-webkit-scrollbar-thumb,
+#redoc-container [role="navigation"] > div::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 999px;
 }
 
-/* Keep the generated documentation header out of the sidebar's scrolling context. */
-#redoc-container::before {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 50 !important;
-}
-
-@media (max-width: 768px) {
-  #redoc-container {
-    min-height: 60vh !important;
-    max-height: none !important;
+@media (max-width: 991.98px) {
+  #navbarNav.navbar-collapse {
+    max-height: calc(100vh - 90px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
   }
   #redoc-container [role="navigation"] {
-    max-height: min(70vh, 620px) !important;
+    position: relative !important;
+    top: 0 !important;
+    height: auto !important;
+    max-height: 52vh !important;
+    overflow-y: auto !important;
   }
 }
 
+
+/* =========================================================
+   v3.1.0 — docs navbar visibility / layout polish
+   ========================================================= */
+.docs-navbar-nav{
+  gap:.45rem !important;
+  row-gap:.55rem !important;
+}
+.docs-navbar-nav .nav-link{
+  min-height:42px;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:.38rem;
+  padding:.55rem .9rem !important;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+/* Dedicated demo button: explicit colors in both themes.
+   This avoids the generic .nav-link and Bootstrap/Tailwind cascade hiding it in light mode. */
+.docs-navbar-nav .docs-demo-link,
+.docs-demo-link{
+  background:linear-gradient(135deg,#7a1f08,#a53613) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  border:1px solid #5f1605 !important;
+  box-shadow:0 5px 16px rgba(118,24,0,.24) !important;
+  font-weight:800 !important;
+  text-shadow:none !important;
+}
+.docs-navbar-nav .docs-demo-link span,
+.docs-demo-link span{
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+}
+.docs-navbar-nav .docs-demo-link:hover,
+.docs-demo-link:hover{
+  background:linear-gradient(135deg,#5f1605,#8d260c) !important;
+  color:#fff !important;
+  transform:translateY(-1px);
+  box-shadow:0 7px 20px rgba(118,24,0,.32) !important;
+}
+
+[data-theme="dark"] .docs-navbar-nav .docs-demo-link,
+[data-theme="dark"] .docs-demo-link{
+  background:linear-gradient(135deg,#c99d35,#e1bd60) !important;
+  color:#111 !important;
+  -webkit-text-fill-color:#111 !important;
+  border-color:#f0ce79 !important;
+  box-shadow:0 5px 18px rgba(225,189,96,.2) !important;
+}
+[data-theme="dark"] .docs-navbar-nav .docs-demo-link:hover,
+[data-theme="dark"] .docs-demo-link:hover{
+  background:linear-gradient(135deg,#b88720,#d7ad43) !important;
+  color:#080808 !important;
+}
+
+/* Cleaner desktop header proportions. */
+@media (min-width:992px){
+  .navbar{
+    padding:.7rem clamp(1rem,3vw,3rem) !important;
+  }
+  .navbar .container-fluid > .w-100{
+    gap:1.25rem;
+  }
+  .navbar-nav-left{
+    min-width:0;
+  }
+  .docs-navbar-collapse{
+    min-width:0;
+  }
+  .docs-navbar-nav{
+    justify-content:flex-start !important;
+  }
+}
+
+/* Keep mobile menu comfortable and the demo CTA full-width. */
+@media (max-width:991.98px){
+  .docs-navbar-nav .nav-link{
+    justify-content:flex-start !important;
+    min-height:48px;
+  }
+  .docs-navbar-nav .docs-demo-link{
+    width:100% !important;
+    justify-content:center !important;
+    margin-bottom:.35rem !important;
+  }
+}
