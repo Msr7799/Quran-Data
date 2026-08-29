@@ -59,7 +59,7 @@ router.get('/sajda', getSajdaVerses);
 router.get('/audio/:surah_id?', getAudio); // جميع الملفات الصوتية لسورة
 router.get('/audio/:surah_id/:reciter', getAudioByReciter); // ملفات صوتية لقارئ معيّن وسورة
 
-// جميع القراء الصوتيين (من جدول audio) - 133 قارئ
+// جميع القراء الصوتيين (من جدول audio) - 158 قارئ
 router.get('/reciters', getAllAudioReciters);
 
 // ============= Timing Routes =============

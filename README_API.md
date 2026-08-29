@@ -286,7 +286,7 @@ curlhttps://quran-api-msr.vercel.appp/api/audio/1/sudais
 
 ### 📊 إحصائيات سريعة:
 - **16 Endpoints** كاملة
-- **133 قارئ صوتي** (جدول audio)
+- **158 قارئ صوتي** (جدول audio)
 - **4 قراء توقيت** (جدول ayat_timing)
 - **20,675 توقيت آية** دقيق
 
@@ -298,7 +298,7 @@ curlhttps://quran-api-msr.vercel.appp/api/audio/1/sudais
 
 ### ⚡ أهم الراوتات:
 ```
-GET /reciters                    → 133 قارئ صوتي
+GET /reciters                    → 158 قارئ صوتي
 GET /timing/reciters             → 4 قراء توقيت  
 GET /audio/:surah_id/:reciter    → صوتيات بالقارئ
 GET /timing/search               → البحث في التوقيتات

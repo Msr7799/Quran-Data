@@ -571,8 +571,8 @@ docker rmi quran_data
 
 تمت إضافة واجهة قراءة كاملة داخل `server/public/index.html` وتعمل من نفس خادم Express:
 
-- `/` أو `/reader`: المصحف التفاعلي.
-- `/docs`: وثائق API.
+- `/` أو `/docs`: وثائق API (الصفحة الرئيسية).
+- `/reader`: الموقع التجريبي / المصحف التفاعلي.
 - تستخدم `server/public/uthmanic_hafs.ttf` لعرض النص العثماني المشكول.
 - تدعم تشغيل السور لجميع القراء المتوفرين في `surah_*.json`.
 - تدعم تتبع الآية والكلمة لبيانات `Timming-Reciters-ayahBayah`.

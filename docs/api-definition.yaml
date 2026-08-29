@@ -1,20 +1,20 @@
 openapi: 3.0.0
 info:
   title: واجهة برمجة تطبيقات القرآن
-  description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد.
+  description: واجهة برمجة تطبيقات للوصول إلى بيانات القرآن بما في ذلك السور والآيات والتسجيلات الصوتية والمزيد. تشمل النسخة
+    3.1.0 صور القراء وأسماء السور وواجهات تتبع التلاوة Surah-by-Surah وAyah-by-Ayah مع أمثلة جاهزة داخل ReDoc.
   version: 3.1.0
 servers:
-  - url: https://quran-api-msr.vercel.app/api
-    description: الخادم المنشور على Vercel
-  - url: http://localhost:5000/api
-    description: الخادم المحلي
-
+- url: https://msr-quran-data.vercel.app/api
+  description: الخادم الإنتاجي على Vercel
+- url: http://localhost:5000/api
+  description: الخادم المحلي
 paths:
   /surahs:
     get:
       summary: استرجاع جميع السور
       responses:
-        "200":
+        '200':
           description: قائمة بجميع السور
           content:
             application/json:
@@ -62,19 +62,20 @@ paths:
                         letters_count:
                           type: integer
                           example: 139
-
+      tags:
+      - واجهة القرآن الأساسية
   /surah:
     get:
       summary: استرجاع سورة محددة باستخدام ID
       parameters:
-        - name: surah_id
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 1
+      - name: surah_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
       responses:
-        "200":
+        '200':
           description: السورة المطلوبة
           content:
             application/json:
@@ -178,19 +179,20 @@ paths:
                             link:
                               type: string
                               example: https://server11.mp3quran.net/hawashi/001.mp3
-
+      tags:
+      - واجهة القرآن الأساسية
   /verses:
     get:
       summary: استرجاع جميع الآيات لسورة محددة
       parameters:
-        - name: surah_id
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 1
+      - name: surah_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
       responses:
-        "200":
+        '200':
           description: قائمة بالآيات في السورة المحددة
           content:
             application/json:
@@ -226,12 +228,13 @@ paths:
                         sajda:
                           type: boolean
                           example: false
-
+      tags:
+      - واجهة القرآن الأساسية
   /sajda:
     get:
       summary: استرجاع جميع الآيات التي تحتوي على سجدة
       responses:
-        "200":
+        '200':
           description: قائمة بالآيات التي تحتوي على سجدة
           content:
             application/json:
@@ -254,10 +257,12 @@ paths:
                           properties:
                             ar:
                               type: string
-                              example: وَلِلَّهِۤ يَسۡجُدُۤ مَن فِي ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِ طَوۡعٗا وَكَرۡهٗا وَظِلَٰلُهُم بِٱلۡغُدُوِّ وَٱلۡأٓصَالِ۩
+                              example: وَلِلَّهِۤ يَسۡجُدُۤ مَن فِي ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِ طَوۡعٗا وَكَرۡهٗا وَظِلَٰلُهُم
+                                بِٱلۡغُدُوِّ وَٱلۡأٓصَالِ۩
                             en:
                               type: string
-                              example: And to Allah prostrates whoever is within the heavens and the earth, willingly or by compulsion, and their shadows [as well] in the mornings and the afternoons
+                              example: And to Allah prostrates whoever is within the heavens and the earth, willingly or by
+                                compulsion, and their shadows [as well] in the mornings and the afternoons
                         juz:
                           type: integer
                           example: 13
@@ -282,19 +287,20 @@ paths:
                         surahNumber:
                           type: integer
                           example: 13
-
+      tags:
+      - واجهة القرآن الأساسية
   /audio:
     get:
       summary: استرجاع التسجيل الصوتي لسورة محددة
       parameters:
-        - name: surah_id
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 1
+      - name: surah_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
       responses:
-        "200":
+        '200':
           description: بيانات التسجيل الصوتي للسورة المحددة
           content:
             application/json:
@@ -336,19 +342,20 @@ paths:
                         link:
                           type: string
                           example: https://server11.mp3quran.net/hawashi/001.mp3
-
+      tags:
+      - واجهة القرآن الأساسية
   /juz:
     get:
       summary: استرجاع الآيات حسب ID الجزء
       parameters:
-        - name: juz_id
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 1
+      - name: juz_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          example: 1
       responses:
-        "200":
+        '200':
           description: قائمة بالآيات في الجزء المحدد
           content:
             application/json:
@@ -390,31 +397,32 @@ paths:
                         surahNumber:
                           type: integer
                           example: 100
-
+      tags:
+      - واجهة القرآن الأساسية
   /pages:
     get:
       summary: استرجاع بيانات الصفحات
       parameters:
-        - name: surah_id
-          in: query
-          required: false
-          schema:
-            type: integer
-            example: 2
-        - name: verse_id
-          in: query
-          required: false
-          schema:
-            type: integer
-            example: 15
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            example: 604
+      - name: surah_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 2
+      - name: verse_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 15
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 604
       responses:
-        "200":
+        '200':
           description: بيانات الصفحة المطلوبة
           content:
             application/json:
@@ -437,7 +445,7 @@ paths:
                           properties:
                             url:
                               type: string
-                              example: "/data/quran_image/1.png"
+                              example: /data/quran_image/1.png
                         start:
                           type: object
                           properties:
@@ -452,13 +460,13 @@ paths:
                               properties:
                                 ar:
                                   type: string
-                                  example: "الفاتحة"
+                                  example: الفاتحة
                                 en:
                                   type: string
-                                  example: "The Opening"
+                                  example: The Opening
                                 transliteration:
                                   type: string
-                                  example: "Al-Fatihah"
+                                  example: Al-Fatihah
                         end:
                           type: object
                           properties:
@@ -473,20 +481,21 @@ paths:
                               properties:
                                 ar:
                                   type: string
-                                  example: "الفاتحة"
+                                  example: الفاتحة
                                 en:
                                   type: string
-                                  example: "The Opening"
+                                  example: The Opening
                                 transliteration:
                                   type: string
-                                  example: "Al-Fatihah"
-
+                                  example: Al-Fatihah
+      tags:
+      - واجهة القرآن الأساسية
   /reciters:
     get:
-      summary: استرجاع جميع القراء الصوتيين (133 قارئ)
-      description: يسترجع قائمة شاملة بجميع القراء الصوتيين المتاحين من جدول audio
+      summary: استرجاع جميع القراء الصوتيين (158 قارئ)
+      description: يسترجع قائمة القراء الصوتيين المتاحين مع بياناتهم الأساسية.
       responses:
-        "200":
+        '200':
           description: قائمة بجميع القراء الصوتيين
           content:
             application/json:
@@ -509,14 +518,15 @@ paths:
                           example: Ahmed Al-Hawashi
                   count:
                     type: integer
-                    example: 133
-
+                    example: 158
+      tags:
+      - واجهة القرآن الأساسية
   /timing/reciters:
     get:
       summary: استرجاع قراء التوقيت المتاحين (96 قارئ حفص)
       description: يسترجع قائمة القراء الذين لديهم توقيتات حفص كاملة لكل السور 114.
       responses:
-        "200":
+        '200':
           description: قائمة بقراء التوقيت المتاحين
           content:
             application/json:
@@ -555,27 +565,28 @@ paths:
                   count:
                     type: integer
                     example: 96
-
+      tags:
+      - واجهة القرآن الأساسية
   /timing/{reciter}/{surah_id}:
     get:
       summary: استرجاع توقيت آيات سورة معينة لقارئ معين
       parameters:
-        - name: reciter
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "1"
-          description: رقم القارئ من mp3quran أو اسمه
-        - name: surah_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-          description: رقم السورة
+      - name: reciter
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+        description: رقم القارئ من mp3quran أو اسمه
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: رقم السورة
       responses:
-        "200":
+        '200':
           description: توقيت آيات السورة للقارئ المحدد
           content:
             application/json:
@@ -596,7 +607,7 @@ paths:
                         example: 1
                       reciter_key:
                         type: string
-                        example: "1"
+                        example: '1'
                       surah_number:
                         type: integer
                         example: 1
@@ -634,38 +645,39 @@ paths:
                               example: 13189
                             polygon:
                               type: string
-                              example: "181.08,18.31 57.54,18.31 57.54,48.94 181.08,48.94"
+                              example: 181.08,18.31 57.54,18.31 57.54,48.94 181.08,48.94
                             page:
                               type: string
                               example: https://www.mp3quran.net/api/quran_pages_svg/001.svg
-
+      tags:
+      - واجهة القرآن الأساسية
   /timing/{reciter}/{surah_id}/{verse_id}:
     get:
       summary: استرجاع توقيت آية واحدة محددة
       parameters:
-        - name: reciter
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "1"
-          description: رقم القارئ من mp3quran أو اسمه
-        - name: surah_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-          description: رقم السورة
-        - name: verse_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-          description: رقم الآية
+      - name: reciter
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+        description: رقم القارئ من mp3quran أو اسمه
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: رقم السورة
+      - name: verse_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: رقم الآية
       responses:
-        "200":
+        '200':
           description: توقيت الآية المحددة
           content:
             application/json:
@@ -686,7 +698,7 @@ paths:
                         example: 1
                       reciter_key:
                         type: string
-                        example: "1"
+                        example: '1'
                       surah_number:
                         type: integer
                         example: 1
@@ -705,20 +717,21 @@ paths:
                       duration_ms:
                         type: integer
                         example: 13189
-
+      tags:
+      - واجهة القرآن الأساسية
   /timing/{reciter}/surahs:
     get:
       summary: استرجاع السور المتاحة لقارئ معين
       parameters:
-        - name: reciter
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "1"
-          description: رقم القارئ من mp3quran أو اسمه
+      - name: reciter
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+        description: رقم القارئ من mp3quran أو اسمه
       responses:
-        "200":
+        '200':
           description: قائمة بالسور المتاحة للقارئ
           content:
             application/json:
@@ -739,7 +752,7 @@ paths:
                         example: 1
                       reciter_key:
                         type: string
-                        example: "1"
+                        example: '1'
                       surahs_count:
                         type: integer
                         example: 114
@@ -760,37 +773,38 @@ paths:
                             total_duration_seconds:
                               type: number
                               example: 61.1
-
+      tags:
+      - واجهة القرآن الأساسية
   /timing/search:
     get:
       summary: البحث في توقيتات الآيات
       parameters:
-        - name: reciter
-          in: query
-          schema:
-            type: string
-            example: "1"
-          description: رقم القارئ أو جزء من الاسم
-        - name: surah
-          in: query
-          schema:
-            type: integer
-            example: 1
-          description: رقم السورة
-        - name: verse
-          in: query
-          schema:
-            type: integer
-            example: 1
-          description: رقم الآية
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            example: 50
-          description: حد النتائج، بحد أقصى 500
+      - name: reciter
+        in: query
+        schema:
+          type: string
+          example: '1'
+        description: رقم القارئ أو جزء من الاسم
+      - name: surah
+        in: query
+        schema:
+          type: integer
+          example: 1
+        description: رقم السورة
+      - name: verse
+        in: query
+        schema:
+          type: integer
+          example: 1
+        description: رقم الآية
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          example: 50
+        description: حد النتائج، بحد أقصى 500
       responses:
-        "200":
+        '200':
           description: نتائج البحث في التوقيتات
           content:
             application/json:
@@ -803,13 +817,14 @@ paths:
                   count:
                     type: integer
                     example: 1
-
+      tags:
+      - واجهة القرآن الأساسية
   /ayah-audio/reciters:
     get:
       summary: استرجاع قراء الصوت آية-بآية
       description: يسترجع قراء ملف ayahBayah.json مع روابط الجودات المتاحة.
       responses:
-        "200":
+        '200':
           description: قائمة قراء الصوت آية-بآية
           content:
             application/json:
@@ -841,41 +856,42 @@ paths:
                   count:
                     type: integer
                     example: 38
-
+      tags:
+      - واجهة القرآن الأساسية
   /ayah-audio/{reciter}/{surah_id}/{verse_id}:
     get:
       summary: بناء رابط صوت آية واحدة
       description: يبني رابط ملف MP3 باسم من 6 خانات مثل 001001.mp3.
       parameters:
-        - name: reciter
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "1"
-          description: رقم القارئ أو اسمه
-        - name: surah_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-          description: رقم السورة
-        - name: verse_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-          description: رقم الآية
-        - name: bitrate
-          in: query
-          schema:
-            type: integer
-            example: 32
-          description: جودة اختيارية 32 أو 64 أو 128
+      - name: reciter
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+        description: رقم القارئ أو اسمه
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: رقم السورة
+      - name: verse_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: رقم الآية
+      - name: bitrate
+        in: query
+        schema:
+          type: integer
+          example: 32
+        description: جودة اختيارية 32 أو 64 أو 128
       responses:
-        "200":
+        '200':
           description: رابط أو روابط صوت الآية
           content:
             application/json:
@@ -902,91 +918,132 @@ paths:
                             url:
                               type: string
                               example: https://verse.mp3quran.net/arabic/ibrahim_alakhdar/32/001001.mp3
-
-
+      tags:
+      - واجهة القرآن الأساسية
   /reciter-images:
     get:
       summary: قائمة القراء مع الصور وIDs
       description: يقرأ ID القارئ من data/json/surah/surah_1.json ويربطه مباشرة ببادئة الصورة NNN داخل data/reciter_images.
       responses:
-        "200":
+        '200':
           description: قائمة القراء مع بيانات الرواية وروابط الصور
           content:
             application/json:
               example:
                 success: true
                 data:
-                  - id: 68
-                    reciter:
-                      ar: عبدالرحمن السديس
-                      en: Abdul Rahman Al-Sudais
-                    rewaya:
-                      ar: حفص عن عاصم
-                      en: Hafs on the authority of Asim
-                    image_url: /data/reciter_images/068-%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86%20%D8%A7%D9%84%D8%B3%D8%AF%D9%8A%D8%B3.jpg
+                - id: 68
+                  reciter:
+                    ar: عبدالرحمن السديس
+                    en: Abdul Rahman Al-Sudais
+                  rewaya:
+                    ar: حفص عن عاصم
+                    en: Hafs on the authority of Asim
+                  image_url: /data/reciter_images/068-%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86%20%D8%A7%D9%84%D8%B3%D8%AF%D9%8A%D8%B3.jpg
                 count: 158
-
+      tags:
+      - القراء والصور والتتبع آية بآية
   /surah-names:
     get:
       summary: صور أسماء السور
       description: يعيد بيانات السور مع رابط SVG المقابل من data/suwer-name/001.svg حتى 114.svg.
       responses:
-        "200":
+        '200':
           description: أسماء السور وروابط الصور
           content:
             application/json:
               example:
                 success: true
                 data:
-                  - number: 1
-                    name:
-                      ar: الفاتحة
-                      en: The Opening
-                      transliteration: Al-Fatihah
-                    image_url: /data/suwer-name/001.svg
-                    image_file: 001.svg
+                - number: 1
+                  name:
+                    ar: الفاتحة
+                    en: The Opening
+                    transliteration: Al-Fatihah
+                  image_url: /data/suwer-name/001.svg
+                  image_file: 001.svg
                 count: 114
-
+      tags:
+      - القراء والصور والتتبع آية بآية
   /ayah-bayah/reciters:
     get:
       summary: قراء التتبع آية بآية
-      description: يدعم تسجيلات QUL من نوع Surah-by-Surah وAyah-by-Ayah، ويعرض ID القارئ الأساسي وsource_recitation_id عند توفره.
+      description: يدعم تسجيلات QUL من نوع Surah-by-Surah وAyah-by-Ayah، ويعرض ID القارئ الأساسي وsource_recitation_id عند
+        توفره.
       responses:
-        "200":
+        '200':
           description: القراء الذين لديهم بيانات تتبع
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  - id: 68
-                    source_recitation_id: null
-                    name: عبدالرحمن السديس
-                    recitation_type: surah-by-surah
-                    surah_count: 114
-                    data_path: /data/Timming-Reciters-ayahBayah/surah-recitation-abdul-rahman-al-sudais
-                  - id: 112
-                    source_recitation_id: 959
-                    name: محمد صديق المنشاوي
-                    recitation_type: ayah-by-ayah
-                    surah_count: 114
-                supported_types:
-                  - surah-by-surah
-                  - ayah-by-ayah
-
+              examples:
+                tracking_reciters:
+                  summary: القراء التسعة المتاحون في Timming-Reciters-ayahBayah
+                  value:
+                    success: true
+                    data:
+                    - id: 29
+                      source_recitation_id: null
+                      name: بندر بليله
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    - id: 46
+                      source_recitation_id: 960
+                      name: سعود الشريم
+                      recitation_type: ayah-by-ayah
+                      tracking_available: true
+                    - id: 68
+                      source_recitation_id: null
+                      name: عبدالرحمن السديس
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    - id: 82
+                      source_recitation_id: null
+                      name: عبدالله عواد الجهني
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    - id: 90
+                      source_recitation_id: null
+                      name: علي الحذيفي
+                      recitation_type: surah-by-surah
+                      tracking_available: false
+                    - id: 101
+                      source_recitation_id: null
+                      name: ماهر المعيقلي
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    - id: 112
+                      source_recitation_id: 959
+                      name: محمد صديق المنشاوي
+                      recitation_type: ayah-by-ayah
+                      tracking_available: true
+                    - id: 131
+                      source_recitation_id: null
+                      name: مشاري العفاسي
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    - id: 152
+                      source_recitation_id: null
+                      name: ياسر الدوسري
+                      recitation_type: surah-by-surah
+                      tracking_available: true
+                    supported_types:
+                    - surah-by-surah
+                    - ayah-by-ayah
+      tags:
+      - القراء والصور والتتبع آية بآية
   /ayah-bayah/reciter/{reciter_id}:
     get:
       summary: تفاصيل قارئ التتبع
       description: يقبل ID القارئ الأساسي مثل 68، أو source_recitation_id مثل 959 و960، أو اسم مجلد التسجيل.
       parameters:
-        - name: reciter_id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "68"
+      - name: reciter_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '68'
       responses:
-        "200":
+        '200':
           description: تفاصيل القارئ والتسجيل
           content:
             application/json:
@@ -998,97 +1055,208 @@ paths:
                   image_url: /data/reciter_images/068-%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86%20%D8%A7%D9%84%D8%B3%D8%AF%D9%8A%D8%B3.jpg
                   recitation_type: surah-by-surah
                   surah_count: 114
-
+      tags:
+      - القراء والصور والتتبع آية بآية
   /ayah-bayah/{reciter_id}/{surah_id}:
     get:
       summary: سورة كاملة مع بيانات التتبع
-      description: في Surah-by-Surah يعيد ملف السورة وتوقيت كل آية داخل الملف، وفي Ayah-by-Ayah يعيد ملفات الآيات المنفصلة وsegments لكل آية.
+      description: في Surah-by-Surah يعيد ملف السورة وتوقيت كل آية داخل الملف، وفي Ayah-by-Ayah يعيد ملفات الآيات المنفصلة
+        وsegments لكل آية.
       parameters:
-        - name: reciter_id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "68"
-        - name: surah_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 114
-            example: 1
+      - name: reciter_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '68'
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 114
+          example: 1
       responses:
-        "200":
+        '200':
           description: تسجيل السورة وتوقيتات الآيات
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  recitation_type: surah-by-surah
-                  surah_number: 1
-                  audio:
-                    surah_number: 1
-                    audio_url: https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3
-                    duration: 34
-                  segments:
-                    - key: "1:1"
-                      verse_number: 1
-                      timestamp_from: 0
-                      timestamp_to: 2889
-                      duration_ms: 2889
+              examples:
+                sudais_surah:
+                  summary: السديس — سورة كاملة مع timestamps
+                  value:
+                    success: true
+                    data:
+                      recitation_type: surah-by-surah
+                      surah_number: 1
+                      audio:
+                        surah_number: 1
+                        audio_url: https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3
+                        duration: 34
                       segments:
-                        - [1, 0, 830]
-                        - [2, 880, 1310]
-                        - [3, 1360, 2270]
-                        - [4, 2320, 2889]
-
+                      - key: '1:1'
+                        verse_number: 1
+                        timestamp_from: 0
+                        timestamp_to: 2889
+                        duration_ms: 2889
+                        segments:
+                        - - 1
+                          - 0
+                          - 830
+                        - - 2
+                          - 880
+                          - 1310
+                        - - 3
+                          - 1360
+                          - 2270
+                        - - 4
+                          - 2320
+                          - 2889
+                minshawi_surah:
+                  summary: المنشاوي 959 — سورة مكوّنة من ملفات آيات مستقلة
+                  value:
+                    success: true
+                    data:
+                      recitation_type: ayah-by-ayah
+                      surah_number: 1
+                      audio: null
+                      segments:
+                      - key: '1:1'
+                        verse_number: 1
+                        audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3
+                        segments:
+                        - - 1
+                          - 0
+                          - 840
+                        - - 2
+                          - 1040
+                          - 1440
+                        - - 3
+                          - 2200
+                          - 2560
+                        - - 4
+                          - 2880
+                          - 4920
+                      - key: '1:2'
+                        verse_number: 2
+                        audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001002.mp3
+      tags:
+      - القراء والصور والتتبع آية بآية
   /ayah-bayah/{reciter_id}/{surah_id}/{verse_id}:
     get:
       summary: آية محددة مع التوقيت أو رابط الصوت
-      description: يعيد timestamp داخل تسجيل السورة للتسجيلات gapless، أو audio_url المنفصل للتسجيلات Ayah-by-Ayah، مع word segments.
+      description: يعيد توقيت الآية داخل تسجيل السورة للتسجيلات Surah-by-Surah، أو audio_url المنفصل للتسجيلات Ayah-by-Ayah،
+        مع word segments. يمكن استخدام ID القارئ الأساسي مثل 68 أو source_recitation_id مثل 959 و960.
       parameters:
-        - name: reciter_id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "959"
-        - name: surah_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-        - name: verse_id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
+      - name: reciter_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '959'
+      - name: surah_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+      - name: verse_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
       responses:
-        "200":
+        '200':
           description: بيانات الآية الصوتية والتوقيت
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  recitation_type: ayah-by-ayah
-                  surah_number: 1
-                  verse_number: 1
-                  ayah_audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3
-                  segment:
-                    key: "1:1"
-                    surah: 1
-                    ayah: 1
-                    segments:
-                      - [1, 0, 840]
-                      - [2, 1040, 1440]
-                      - [3, 2200, 2560]
-                      - [4, 2880, 4920]
-
+              examples:
+                sudais:
+                  summary: السديس — الفاتحة 1:1 داخل تسجيل السورة
+                  value:
+                    success: true
+                    data:
+                      recitation_type: surah-by-surah
+                      surah_number: 1
+                      verse_number: 1
+                      chapter_audio:
+                        surah_number: 1
+                        audio_url: https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3
+                        duration: 34
+                      segment:
+                        key: '1:1'
+                        timestamp_from: 0
+                        timestamp_to: 2889
+                        duration_ms: 2889
+                        segments:
+                        - - 1
+                          - 0
+                          - 830
+                        - - 2
+                          - 880
+                          - 1310
+                        - - 3
+                          - 1360
+                          - 2270
+                        - - 4
+                          - 2320
+                          - 2889
+                minshawi_959:
+                  summary: المنشاوي 959 — آية بصوت مستقل
+                  value:
+                    success: true
+                    data:
+                      recitation_type: ayah-by-ayah
+                      surah_number: 1
+                      verse_number: 1
+                      ayah_audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3
+                      segment:
+                        key: '1:1'
+                        surah: 1
+                        ayah: 1
+                        segments:
+                        - - 1
+                          - 0
+                          - 840
+                        - - 2
+                          - 1040
+                          - 1440
+                        - - 3
+                          - 2200
+                          - 2560
+                        - - 4
+                          - 2880
+                          - 4920
+                shuraim_960:
+                  summary: سعود الشريم 960 — آية بصوت مستقل
+                  value:
+                    success: true
+                    data:
+                      recitation_type: ayah-by-ayah
+                      surah_number: 1
+                      verse_number: 1
+                      ayah_audio_url: https://audio-cdn.tarteel.ai/quran/saudAlShuraim/001001.mp3
+                      segment:
+                        key: '1:1'
+                        surah: 1
+                        ayah: 1
+                        segments:
+                        - - 1
+                          - 0
+                          - 560
+                        - - 2
+                          - 720
+                          - 1040
+                        - - 3
+                          - 1600
+                          - 1920
+                        - - 4
+                          - 2080
+                          - 2800
+      tags:
+      - القراء والصور والتتبع آية بآية
 components:
   schemas:
     Error:
@@ -1102,3 +1270,13 @@ components:
           example: حدث خطأ أثناء استرجاع البيانات.
         details:
           type: object
+tags:
+- name: واجهة القرآن الأساسية
+  description: السور والآيات والصوت والصفحات والأجزاء والتوقيتات الأساسية.
+- name: القراء والصور والتتبع آية بآية
+  description: صور القراء، صور أسماء السور، وبيانات التلاوة والتتبع آية بآية مع أمثلة عملية.
+x-tagGroups:
+- name: وثائق واجهة برمجة التطبيقات
+  tags:
+  - واجهة القرآن الأساسية
+  - القراء والصور والتتبع آية بآية

@@ -56,7 +56,7 @@
                         
                         <div class="collapse navbar-collapse d-lg-block" id="navbarNav">
                             <ul class="navbar-nav d-flex flex-row align-items-center">
-                                <li class="nav-item"><a class="nav-link" href="/reader">🎧 <span>المصحف التفاعلي</span></a></li>
+                                <li class="nav-item"><a class="nav-link btn btn-success btn-sm text-white px-3" href="/reader" title="فتح الموقع التجريبي لتجربة الداتا">🧪 <span>الموقع التجريبي</span></a></li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="https://github.com/Msr7799/Quran-Data" target="_blank">
                                         📖 <span>الكود المصدري</span>
@@ -68,8 +68,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#api-examples">
-                                        🔗 <span>أمثلة API</span>
+                                    <a class="nav-link" href="#redoc-container">
+                                        📘 <span>وثائق API</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -299,7 +299,7 @@ GET /api/ayah-bayah/68/1/1</code></pre>
               </button>
             </div>
           </div>
-          <p class="mb-0">قائمة شاملة بجميع القراء الصوتيين (133 قارئ)</p>
+          <p class="mb-0">قائمة شاملة بجميع القراء الصوتيين (158 قارئ)</p>
         </div>
       </div>
 
@@ -341,7 +341,7 @@ GET /api/ayah-bayah/68/1/1</code></pre>
               </button>
             </div>
           </div>
-          <p class="mb-0">روابط التسجيلات الصوتية للسور (133 قارئ)</p>
+          <p class="mb-0">روابط التسجيلات الصوتية للسور (158 قارئ)</p>
         </div>
       </div>
 
@@ -628,114 +628,9 @@ GET /api/ayah-bayah/68/1/1</code></pre>
   </div> <!-- /container -->
 </section>
 
-<section class="container py-4" id="new-api-detailed-examples">
-  <div class="new-api-examples-header">
-    <h3>🧪 أمثلة القراء والصور والتتبع آية بآية</h3>
-    <p>أمثلة جاهزة للنسخ والتجربة للإضافات الجديدة. يمكن استخدام ID القارئ الأساسي مثل <code>68</code>، كما يمكن استخدام رقم مصدر QUL مثل <code>959</code> و<code>960</code> للتسجيلات Ayah-by-Ayah.</p>
-  </div>
-
-  <div class="table-responsive mb-4">
-    <table class="table table-dark table-striped table-hover align-middle">
-      <thead>
-        <tr>
-          <th>القارئ</th>
-          <th>ID</th>
-          <th>QUL</th>
-          <th>النوع</th>
-          <th>التتبع</th>
-          <th>مثال</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>بندر بليله</td><td><code>29</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/29/1/1</code></td></tr>
-        <tr><td>سعود الشريم</td><td><code>46</code></td><td><code>960</code></td><td>Ayah-by-Ayah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/960/1/1</code></td></tr>
-        <tr><td>عبدالرحمن السديس</td><td><code>68</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/68/1/1</code></td></tr>
-        <tr><td>عبدالله عواد الجهني</td><td><code>82</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/82/1/1</code></td></tr>
-        <tr><td>علي الحذيفي</td><td><code>90</code></td><td>—</td><td>Surah-by-Surah</td><td>⚠️ segments.json فارغ</td><td><code>/api/ayah-bayah/90/1</code></td></tr>
-        <tr><td>ماهر المعيقلي — المرتل</td><td><code>101</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/101/1/1</code></td></tr>
-        <tr><td>محمد صديق المنشاوي — المرتل</td><td><code>112</code></td><td><code>959</code></td><td>Ayah-by-Ayah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/959/1/1</code></td></tr>
-        <tr><td>مشاري العفاسي</td><td><code>131</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/131/1/1</code></td></tr>
-        <tr><td>ياسر الدوسري</td><td><code>152</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/152/1/1</code></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="new-api-example-grid">
-    <article class="new-api-example-card">
-      <h4>1) قائمة القراء مع الصور</h4>
-      <div class="example-endpoint">GET /api/reciter-images</div>
-      <pre><code>fetch('/api/reciter-images')
-  .then(r =&gt; r.json())
-  .then(console.log);</code></pre>
-      <p>الربط مباشر: <strong>reciter.id → بادئة الصورة NNN</strong>. مثال ID 68 يستخدم ملف <code>068-عبدالرحمن السديس.jpg</code>.</p>
-    </article>
-
-    <article class="new-api-example-card">
-      <h4>2) صور أسماء السور</h4>
-      <div class="example-endpoint">GET /api/surah-names</div>
-      <pre><code>// مثال للصورة الأولى
-/data/suwer-name/001.svg</code></pre>
-      <p>الاستجابة تجمع اسم السورة العربي/الإنجليزي مع <code>image_url</code> لملف SVG.</p>
-    </article>
-
-    <article class="new-api-example-card">
-      <h4>3) القراء الذين لديهم بيانات تتبع</h4>
-      <div class="example-endpoint">GET /api/ayah-bayah/reciters</div>
-      <pre><code>curl https://quran-api-msr.vercel.app/api/ayah-bayah/reciters</code></pre>
-      <p>يعرض النوع <code>surah-by-surah</code> أو <code>ayah-by-ayah</code>، وعدد السور والآيات والـ word segments.</p>
-    </article>
-
-    <article class="new-api-example-card">
-      <h4>4) السديس — الفاتحة مع التتبع</h4>
-      <div class="example-endpoint">GET /api/ayah-bayah/68/1</div>
-      <pre><code>{
-  "recitation_type": "surah-by-surah",
-  "surah_number": 1,
-  "audio": {
-    "surah_number": 1,
-    "audio_url": "https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3",
-    "duration": 34
-  },
-  "segments": [
-    {
-      "key": "1:1",
-      "timestamp_from": 0,
-      "timestamp_to": 2889,
-      "duration_ms": 2889,
-      "segments": [[1,0,830],[2,880,1310],[3,1360,2270],[4,2320,2889]]
-    }
-  ]
-}</code></pre>
-      <p>استخدم <code>timestamp_from</code> و<code>timestamp_to</code> لمتابعة الآية داخل ملف السورة، ومصفوفة <code>segments</code> لمتابعة الكلمات.</p>
-    </article>
-
-    <article class="new-api-example-card">
-      <h4>5) المنشاوي — آية بصوت مستقل</h4>
-      <div class="example-endpoint">GET /api/ayah-bayah/959/1/1</div>
-      <pre><code>{
-  "recitation_type": "ayah-by-ayah",
-  "surah_number": 1,
-  "verse_number": 1,
-  "ayah_audio_url": "https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3",
-  "segment": {
-    "key": "1:1",
-    "segments": [[1,0,840],[2,1040,1440],[3,2200,2560],[4,2880,4920]]
-  }
-}</code></pre>
-      <p><code>959</code> هو رقم مصدر QUL الموجود في اسم ملف المنشاوي، ويقبل الـ API هذا الرقم مباشرة.</p>
-    </article>
-
-    <article class="new-api-example-card">
-      <h4>6) سعود الشريم — آية بآية</h4>
-      <div class="example-endpoint">GET /api/ayah-bayah/960/1/1</div>
-      <pre><code>const data = await fetch('/api/ayah-bayah/960/1/1')
-  .then(r =&gt; r.json());
-
-audio.src = data.data.ayah_audio_url;
-// 1:1 =&gt; https://audio-cdn.tarteel.ai/quran/saudAlShuraim/001001.mp3
-// segments =&gt; [[1,0,560],[2,720,1040],[3,1600,1920],[4,2080,2800]]</code></pre>
-      <p><code>960</code> هو رقم مصدر QUL للشريم. يمكن أيضًا استعمال ID القارئ الأساسي عندما يكون موجودًا في كتالوج <code>surah_1.json</code>.</p>
-    </article>
+<section class="container py-3" id="openapi-examples-notice">
+  <div class="alert alert-info mb-3" role="note">
+    <strong>📘 أمثلة القراء والصور والتتبع آية بآية</strong> موجودة الآن داخل وثائق OpenAPI/ReDoc بالأسفل، ضمن مجموعة <strong>«القراء والصور والتتبع آية بآية»</strong>. افتح أي endpoint لرؤية Response samples والأمثلة الحقيقية للسديس والمنشاوي والشريم.
   </div>
 </section>
 
@@ -789,7 +684,7 @@ audio.src = data.data.ayah_audio_url;
                 <li>آيات السجدة</li>
                 <li>صفحات المصحف</li>
                 <li>أجزاء القرآن</li>
-                <li>133 قارئ صوتي</li>
+                <li>158 قارئ صوتي</li>
                 <li>96 قارئ توقيت</li>
                 <li>600327 توقيت</li>
                 <li>38 قارئ آية-بآية</li>
@@ -857,7 +752,7 @@ audio.src = data.data.ayah_audio_url;
         const API_BASE_URL = `${window.location.origin}/api`;
 
         // Initialize Redoc
-        Redoc.init('/docs/api-definition.yaml?v=20260523-timing96', {
+        Redoc.init('/docs/api-definition.yaml?v=3.1.0', {
             theme: {
                 colors: {
                     primary: {
