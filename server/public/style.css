@@ -1710,53 +1710,11 @@ pre{overflow:auto}
   }
 }
 
-/* ReDoc: the page scrolls normally; only the left menu gets its own scroll. */
-#redoc-container {
-  max-height: none !important;
-  height: auto !important;
-  overflow: visible !important;
-  contain: none !important;
-}
-#redoc-container [role="navigation"] {
-  position: sticky !important;
-  top: 76px !important;
-  height: calc(100vh - 92px) !important;
-  max-height: calc(100vh - 92px) !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  scrollbar-gutter: stable !important;
-  -webkit-overflow-scrolling: touch;
-}
-#redoc-container [role="navigation"] > div {
-  max-height: 100% !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-}
-
-#redoc-container [role="navigation"]::-webkit-scrollbar,
-#redoc-container [role="navigation"] > div::-webkit-scrollbar {
-  width: 9px;
-}
-#redoc-container [role="navigation"]::-webkit-scrollbar-thumb,
-#redoc-container [role="navigation"] > div::-webkit-scrollbar-thumb {
-  background: #667eea;
-  border-radius: 999px;
-}
-
 @media (max-width: 991.98px) {
   #navbarNav.navbar-collapse {
     max-height: calc(100vh - 90px) !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
-  }
-  #redoc-container [role="navigation"] {
-    position: relative !important;
-    top: 0 !important;
-    height: auto !important;
-    max-height: 52vh !important;
-    overflow-y: auto !important;
   }
 }
 

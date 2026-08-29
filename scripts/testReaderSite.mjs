@@ -28,6 +28,8 @@ const redocLoadingIndex = docs.indexOf('redocContainer.innerHTML');
 ok(redocLoadingIndex >= 0 && redocLoadingIndex < redocInitIndex, 'رسالة تحميل ReDoc تسبق التهيئة ولا تستبدل القائمة بعدها');
 ok(/menuToggle:\s*true/.test(docs), 'قائمة ReDoc تسمح بفتح القسم النشط وإغلاقه');
 ok(!docsCss.includes('[role="menu"] > li > ul'), 'لا يوجد CSS يجبر جميع خيارات ReDoc على الظهور');
+ok(/#redoc-container\s*\{[^}]*max-height:\s*85vh;[^}]*overflow-y:\s*auto;/s.test(docsCss), 'حاوية ReDoc محدودة الارتفاع وتستخدم تمريرًا داخليًا مثل النسخة القديمة');
+ok(!/#redoc-container\s*\{[^}]*max-height:\s*none\s*!important/s.test(docsCss), 'لا يوجد override يمدد ReDoc بطول جميع العمليات');
 ok(redocBundle.includes('"group" !== this.type && (this.expanded = !1);'), 'ReDoc يطوي القسم السابق عند اختيار قسم جديد');
 ok(redocBundle.includes('down: "0deg"'), 'دوران سهم ReDoc يستخدم قيمة CSS صالحة');
 ok(Array.isArray(redocSourceMap.sources) && redocSourceMap.sources.length > 0 && typeof redocSourceMap.mappings === 'string', 'ملف source map صالح بعد تعديل ReDoc');
