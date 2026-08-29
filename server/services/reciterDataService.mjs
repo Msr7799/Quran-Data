@@ -193,6 +193,19 @@ function folderToNameHint(folderName) {
         .trim();
 }
 
+
+const KNOWN_FOLDER_RECITER_IDS = new Map([
+    ['surah-recitation-bandar-baleela', 29],
+    ['ayah-recitation-saud-al-shuraim-murattal-hafs-960.json', 46],
+    ['surah-recitation-abdul-rahman-al-sudais', 68],
+    ['surah-recitation-abdullah-awad-al-juhani', 82],
+    ['surah-recitation-ali-abdur-rahman-al-huthaify', 90],
+    ['surah-recitation-maher-al-muaiqly', 101],
+    ['ayah-recitation-muhammad-siddiq-al-minshawi-murattal-hafs-959.json', 112],
+    ['surah-recitation-mishari-al-afasy', 131],
+    ['surah-recitation-yasser-al-dosari', 152]
+]);
+
 const KNOWN_FOLDER_ARABIC_NAMES = new Map([
     ['surah-recitation-abdul-rahman-al-sudais', 'عبدالرحمن السديس'],
     ['surah-recitation-abdullah-awad-al-juhani', 'عبدالله عواد الجهني'],
@@ -226,6 +239,12 @@ function isHafs(item) {
 }
 
 export function matchCatalogReciter(catalog, folderName) {
+    const exactId = KNOWN_FOLDER_RECITER_IDS.get(folderName);
+    if (exactId) {
+        const exactById = catalog.find((item) => item.id === exactId);
+        if (exactById) return exactById;
+    }
+
     const exactArabic = KNOWN_FOLDER_ARABIC_NAMES.get(folderName);
     if (exactArabic) {
         const target = normalizeArabic(exactArabic);
@@ -509,6 +528,8 @@ function formatDatasetReciter(catalogItem, folderName, dataset, folderPath) {
         image_url: catalogItem?.image?.url || null,
         source_page: catalogItem?.source_page || null,
         recitation_type: dataset.type,
+        tracking_available: dataset.timed_ayah_count > 0,
+        surah_audio_available: Object.keys(dataset.audio_files || {}).length > 0,
         surah_count: dataset.surah_count,
         ayah_count: dataset.ayah_count,
         timed_ayah_count: dataset.timed_ayah_count,

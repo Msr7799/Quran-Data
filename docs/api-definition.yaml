@@ -1028,16 +1028,21 @@ paths:
                 data:
                   recitation_type: surah-by-surah
                   surah_number: 1
-                  audio: https://example.com/001.mp3
+                  audio:
+                    surah_number: 1
+                    audio_url: https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3
+                    duration: 34
                   segments:
                     - key: "1:1"
                       verse_number: 1
-                      timestamp_from: 361
-                      timestamp_to: 4585
-                      duration_ms: 4224
+                      timestamp_from: 0
+                      timestamp_to: 2889
+                      duration_ms: 2889
                       segments:
-                        - [1, 361, 1051]
-                        - [2, 1051, 1622]
+                        - [1, 0, 830]
+                        - [2, 880, 1310]
+                        - [3, 1360, 2270]
+                        - [4, 2320, 2889]
 
   /ayah-bayah/{reciter_id}/{surah_id}/{verse_id}:
     get:
@@ -1073,14 +1078,16 @@ paths:
                   recitation_type: ayah-by-ayah
                   surah_number: 1
                   verse_number: 1
-                  ayah_audio_url: https://example.com/001001.mp3
+                  ayah_audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3
                   segment:
                     key: "1:1"
                     surah: 1
                     ayah: 1
                     segments:
-                      - [1, 0, 690]
-                      - [2, 690, 1500]
+                      - [1, 0, 840]
+                      - [2, 1040, 1440]
+                      - [3, 2200, 2560]
+                      - [4, 2880, 4920]
 
 components:
   schemas:

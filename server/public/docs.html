@@ -600,6 +600,32 @@
     <p>أمثلة جاهزة للنسخ والتجربة للإضافات الجديدة. يمكن استخدام ID القارئ الأساسي مثل <code>68</code>، كما يمكن استخدام رقم مصدر QUL مثل <code>959</code> و<code>960</code> للتسجيلات Ayah-by-Ayah.</p>
   </div>
 
+  <div class="table-responsive mb-4">
+    <table class="table table-dark table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>القارئ</th>
+          <th>ID</th>
+          <th>QUL</th>
+          <th>النوع</th>
+          <th>التتبع</th>
+          <th>مثال</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>بندر بليله</td><td><code>29</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/29/1/1</code></td></tr>
+        <tr><td>سعود الشريم</td><td><code>46</code></td><td><code>960</code></td><td>Ayah-by-Ayah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/960/1/1</code></td></tr>
+        <tr><td>عبدالرحمن السديس</td><td><code>68</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/68/1/1</code></td></tr>
+        <tr><td>عبدالله عواد الجهني</td><td><code>82</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/82/1/1</code></td></tr>
+        <tr><td>علي الحذيفي</td><td><code>90</code></td><td>—</td><td>Surah-by-Surah</td><td>⚠️ segments.json فارغ</td><td><code>/api/ayah-bayah/90/1</code></td></tr>
+        <tr><td>ماهر المعيقلي — المرتل</td><td><code>101</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/101/1/1</code></td></tr>
+        <tr><td>محمد صديق المنشاوي — المرتل</td><td><code>112</code></td><td><code>959</code></td><td>Ayah-by-Ayah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/959/1/1</code></td></tr>
+        <tr><td>مشاري العفاسي</td><td><code>131</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/131/1/1</code></td></tr>
+        <tr><td>ياسر الدوسري</td><td><code>152</code></td><td>—</td><td>Surah-by-Surah</td><td>✅ 6236 آية</td><td><code>/api/ayah-bayah/152/1/1</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="new-api-example-grid">
     <article class="new-api-example-card">
       <h4>1) قائمة القراء مع الصور</h4>
@@ -631,13 +657,18 @@
       <pre><code>{
   "recitation_type": "surah-by-surah",
   "surah_number": 1,
-  "audio": "...",
+  "audio": {
+    "surah_number": 1,
+    "audio_url": "https://audio-cdn.tarteel.ai/quran/surah/abdulrahmanAlSudais/murattal/mp3/001.mp3",
+    "duration": 34
+  },
   "segments": [
     {
       "key": "1:1",
-      "timestamp_from": 361,
-      "timestamp_to": 4585,
-      "segments": [[1,361,1051],[2,1051,1622]]
+      "timestamp_from": 0,
+      "timestamp_to": 2889,
+      "duration_ms": 2889,
+      "segments": [[1,0,830],[2,880,1310],[3,1360,2270],[4,2320,2889]]
     }
   ]
 }</code></pre>
@@ -651,10 +682,10 @@
   "recitation_type": "ayah-by-ayah",
   "surah_number": 1,
   "verse_number": 1,
-  "ayah_audio_url": "...001001.mp3",
+  "ayah_audio_url": "https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001001.mp3",
   "segment": {
     "key": "1:1",
-    "segments": [[1,0,690],[2,690,1500]]
+    "segments": [[1,0,840],[2,1040,1440],[3,2200,2560],[4,2880,4920]]
   }
 }</code></pre>
       <p><code>959</code> هو رقم مصدر QUL الموجود في اسم ملف المنشاوي، ويقبل الـ API هذا الرقم مباشرة.</p>
@@ -666,7 +697,9 @@
       <pre><code>const data = await fetch('/api/ayah-bayah/960/1/1')
   .then(r =&gt; r.json());
 
-audio.src = data.data.ayah_audio_url;</code></pre>
+audio.src = data.data.ayah_audio_url;
+// 1:1 =&gt; https://audio-cdn.tarteel.ai/quran/saudAlShuraim/001001.mp3
+// segments =&gt; [[1,0,560],[2,720,1040],[3,1600,1920],[4,2080,2800]]</code></pre>
       <p><code>960</code> هو رقم مصدر QUL للشريم. يمكن أيضًا استعمال ID القارئ الأساسي عندما يكون موجودًا في كتالوج <code>surah_1.json</code>.</p>
     </article>
   </div>
