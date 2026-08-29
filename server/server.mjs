@@ -30,13 +30,20 @@ app.get('/docs/api-definition.yaml', (req, res) => {
     res.type('yaml');
     res.sendFile(apiDefinitionPath);
 });
-app.use('/', express.static(publicFolderPath));
-app.get('/reader', (req, res) => {
-    res.sendFile(readerHtmlFilePath);
+
+// الصفحة الرئيسية للمشروع هي وثائق الـ API.
+app.get('/', (req, res) => {
+    res.sendFile(publicHtmlFilePath);
 });
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
 });
+app.get('/reader', (req, res) => {
+    res.sendFile(readerHtmlFilePath);
+});
+
+// تقديم الأصول الثابتة بدون جعل index.html الصفحة الافتراضية للمجلد.
+app.use('/', express.static(publicFolderPath, { index: false }));
 // إعداد باقي المسارات
 app.use(rateLimiter);
 app.use('/data', express.static(dataFolderPath));

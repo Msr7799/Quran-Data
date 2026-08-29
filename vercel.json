@@ -8,7 +8,27 @@
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/",
+      "destination": "/docs.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs.html"
+    },
+    {
+      "source": "/reader",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/docs/api-definition.yaml",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/data/:path*",
       "destination": "/api/index.js"
     }
   ]
