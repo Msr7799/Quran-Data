@@ -22,11 +22,11 @@ const config = {
     apiRateLimit: Number(process.env.API_RATE_LIMIT || 200),
 
     // Public URLs used by API metadata/reference responses.
-    // The public production origin is intentionally fixed to the official project domain.
+    // Official public production domain.
     productionOrigin,
     productionApiBaseUrl: `${productionOrigin}/api`,
 
-    // Local development URL only; it is never advertised as a public production domain.
+    // Local development URL only.
     localOrigin,
     localApiBaseUrl: `${localOrigin}/api`
 };

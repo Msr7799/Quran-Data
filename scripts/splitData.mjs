@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -32,6 +32,13 @@ function validateQuranData(data) {
 }
 
 export async function run() {
+  // Remove only generated split folders so stale files can never survive a rebuild.
+  await Promise.all([
+    rm(surahFolderPath, { recursive: true, force: true }),
+    rm(versesFolderPath, { recursive: true, force: true }),
+    rm(audioFolderPath, { recursive: true, force: true })
+  ]);
+
   await Promise.all([
     mkdir(dataFolderPath, { recursive: true }),
     mkdir(surahFolderPath, { recursive: true }),

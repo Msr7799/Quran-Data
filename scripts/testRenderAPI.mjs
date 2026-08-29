@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-const BASE_URL = 'https://quran-api-msr.vercel.app/api';
-const DOCUMENTATION_URL = 'https://quran-api-msr.vercel.app';
+const BASE_URL = 'https://msr-quran-data.vercel.app/api';
+const DOCUMENTATION_URL = 'https://msr-quran-data.vercel.app';
 
 async function testRenderAPI() {
     console.log('🧪 اختبار API المنشور على Vercel...\n');

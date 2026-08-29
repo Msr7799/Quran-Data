@@ -597,7 +597,7 @@
               "api_info": {
                 "title": "Quran Data API",
                 "version": "3.1.0",
-                "base_url": "https://quran-api-msr.vercel.app/api"
+               "base_url": "https://msr-quran-data.vercel.app/api"
               },
               "statistics": {
                 "total_surahs": 114,

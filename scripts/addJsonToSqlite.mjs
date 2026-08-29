@@ -99,17 +99,18 @@ async function findJsonFiles(dirPath, basePath = '') {
 }
 
 function parseArguments() {
-  const options = { specificFile: null, specificFolder: null, showHelp: false };
+  const options = { specificFile: null, specificFolder: null, includeGenerated: false, showHelp: false };
   for (const arg of process.argv.slice(2)) {
     if (arg.startsWith('--file=')) options.specificFile = arg.slice('--file='.length);
     else if (arg.startsWith('--folder=')) options.specificFolder = arg.slice('--folder='.length);
+    else if (arg === '--include-generated') options.includeGenerated = true;
     else if (arg === '--help' || arg === '-h') options.showHelp = true;
   }
   return options;
 }
 
 function showHelp() {
-  console.log(`Usage:\n  node scripts/addJsonToSqlite.mjs\n  node scripts/addJsonToSqlite.mjs --file=api_reference.json\n  node scripts/addJsonToSqlite.mjs --folder=audio`);
+  console.log(`Usage:\n  node scripts/addJsonToSqlite.mjs\n  node scripts/addJsonToSqlite.mjs --file=api_reference.json\n  node scripts/addJsonToSqlite.mjs --folder=audio\n  node scripts/addJsonToSqlite.mjs --include-generated\n\nBy default data/json/database is excluded to avoid duplicating the complete normalized export inside SQLite.`);
 }
 
 export async function run(options = parseArguments()) {
@@ -129,6 +130,10 @@ export async function run(options = parseArguments()) {
     files = await findJsonFiles(path.join(jsonBasePath, options.specificFolder), `json/${options.specificFolder}`);
   } else {
     files = await findJsonFiles(jsonBasePath, 'json');
+  }
+
+  if (!options.includeGenerated) {
+    files = files.filter((file) => !file.relativePath.startsWith('json/database/') && file.relativePath !== 'json/database.json');
   }
 
   files.sort((a, b) => a.relativePath.localeCompare(b.relativePath));

@@ -1,4 +1,7 @@
 import express from 'express';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import {
   getSurah, getAllSurahs, getAllVerses, getVerse, getAudio, getAudioByReciter,
   getVersesByJuz, getSajdaVerses, getPage
@@ -9,9 +12,13 @@ import {
   getAyahBayahSurah, getAyahBayahVerse
 } from '../controllers/timingController.mjs';
 import { handleError } from '../utils/errorUtils.mjs';
-import config, { getDatabase } from '../config.mjs';
+import config from '../config.mjs';
 
 const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const apiReferencePath = path.resolve(__dirname, '../../data/json/api_reference.json');
 
 
 function firstHeaderValue(value) {
@@ -55,23 +62,17 @@ function getUrlContext(req) {
   };
 }
 
-/**
- * Normalize only project-internal absolute URLs that may exist in older
- * generated API-reference records, without keeping historical project
- * domains in source code.
- *
- * External audio/CDN/API providers are left untouched.
- */
 function normalizeApiReference(value, urlContext) {
   if (typeof value === 'string') {
-    const deploymentHostPattern =
-      /https?:\/\/[^/\\s"'`]+\.(?:vercel\.app|onrender\.com)(?=\/(?:api|docs|index\.html)(?:\/|$))/gi;
-    const localHostPattern =
-      /http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?=\/(?:api|docs|index\.html)(?:\/|$))/gi;
+    // Production JSON stays canonical. During local development only,
+    // convert this project's official absolute URLs to the current local origin.
+    if (!urlContext.isLocal) return value;
 
     return value
-      .replace(deploymentHostPattern, urlContext.origin)
-      .replace(localHostPattern, urlContext.origin);
+      .split(`${config.productionOrigin}/api`).join(urlContext.apiBaseUrl)
+      .split(`${config.productionOrigin}/docs`).join(urlContext.documentationUrl)
+      .split(`${config.productionOrigin}/index.html`).join(urlContext.readerUrl)
+      .split(config.productionOrigin).join(urlContext.origin);
   }
 
   if (Array.isArray(value)) {
@@ -120,15 +121,15 @@ router.get('/', (req, res) => {
     base_url: urls.apiBaseUrl,
     documentation_url: urls.documentationUrl,
     reader_url: urls.readerUrl,
-    official_site: {
+    production: {
       origin: config.productionOrigin,
       api: config.productionApiBaseUrl,
       docs: `${config.productionOrigin}/docs`
     },
-    local_development: {
-      origin: urls.isLocal ? urls.origin : config.localOrigin,
-      api: urls.isLocal ? urls.apiBaseUrl : config.localApiBaseUrl,
-      docs: `${urls.isLocal ? urls.origin : config.localOrigin}/docs`
+    local: {
+      origin: config.localOrigin,
+      api: config.localApiBaseUrl,
+      docs: `${config.localOrigin}/docs`
     },
     endpoints: endpointPaths.map(path => ({
       method: 'GET',
@@ -173,37 +174,18 @@ router.get('/ayah-bayah/:reciter_id/:surah_id/:verse_id', getAyahBayahVerse);
 // ============= API Reference =============
 router.get('/api-reference', async (req, res) => {
   try {
-    const db = await getDatabase();
-    const apiRef = await db.get('SELECT * FROM api_reference ORDER BY created_at DESC LIMIT 1');
-
-    if (!apiRef) {
-      return res.status(404).json({
-        success: false,
-        message: 'API reference not found',
-        error: 'No API reference data available'
-      });
-    }
+    const raw = await fs.readFile(apiReferencePath, 'utf8');
+    const parsed = JSON.parse(raw);
 
     const urls = getUrlContext(req);
-    const jsonContent = normalizeApiReference(JSON.parse(apiRef.json_content), urls);
+    const jsonContent = normalizeApiReference(parsed, urls);
 
     jsonContent.api_info = {
       ...jsonContent.api_info,
+      version: jsonContent.api_info?.version || '3.1.0',
       base_url: urls.apiBaseUrl,
       documentation_url: urls.documentationUrl,
       reader_url: urls.readerUrl,
-      environments: {
-        official_site: {
-          origin: config.productionOrigin,
-          api_base_url: config.productionApiBaseUrl,
-          documentation_url: `${config.productionOrigin}/docs`
-        },
-        local_development: {
-          origin: urls.isLocal ? urls.origin : config.localOrigin,
-          api_base_url: urls.isLocal ? urls.apiBaseUrl : config.localApiBaseUrl,
-          documentation_url: `${urls.isLocal ? urls.origin : config.localOrigin}/docs`
-        }
-      },
       current_environment: urls.isLocal ? 'local' : 'production',
       deployment: {
         ...jsonContent.api_info?.deployment,
@@ -211,22 +193,32 @@ router.get('/api-reference', async (req, res) => {
       }
     };
 
-    res.json({
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=300');
+
+    return res.json({
       success: true,
-      data: {
-        ...jsonContent,
-        database_info: {
-          id: apiRef.id,
-          title: apiRef.title,
-          version: apiRef.version,
-          last_updated: apiRef.last_updated,
-          created_at: apiRef.created_at
-        }
-      }
+      data: jsonContent
     });
   } catch (error) {
-    console.error('Error fetching API reference:', error);
-    res.status(500).json({
+    console.error('Error reading API reference JSON:', error);
+
+    if (error?.code === 'ENOENT') {
+      return res.status(404).json({
+        success: false,
+        message: 'API reference JSON file not found',
+        expected_path: 'data/json/api_reference.json'
+      });
+    }
+
+    if (error instanceof SyntaxError) {
+      return res.status(500).json({
+        success: false,
+        message: 'API reference JSON is invalid',
+        error: error.message
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: 'Failed to fetch API reference',
       error: error.message

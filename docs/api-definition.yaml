@@ -820,8 +820,8 @@ paths:
                 count: 114
   /api-reference:
     get:
-      summary: استرجاع بيانات المرجع API من قاعدة البيانات
-      description: يرجع النسخة الحالية من مرجع الـ OpenAPI/JSON المسجل في قاعدة البيانات، مع معلومات الاستضافة والروابط الأساسية.
+      summary: استرجاع بيانات مرجع API من ملف JSON
+      description: يقرأ مرجع API الحالي مباشرة من data/json/api_reference.json، مع معلومات الاستضافة والروابط الأساسية، بدون الاعتماد على SQLite.
       responses:
         '200':
           description: بيانات مرجع API كاملة

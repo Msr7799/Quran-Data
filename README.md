@@ -554,11 +554,11 @@ docker rmi quran_data
 
 ![quran-data](https://img.shields.io/github/downloads/rn0x/Quran-Data/total?color=blue&label=Total%20Downloads)
 
-[![json](./unused/but-json.png)](https://github.com/rn0x/Quran-Json/releases/download/database/database.json)
+[![json](./unused/but-json.png)](https://msr-quran-data.vercel.app/data/json/database.json)
 
-[![sqlite](./unused/but-sqlite.png)](https://github.com/rn0x/Quran-Json/releases/download/database/database.sqlite)
+[![sqlite](./unused/but-sqlite.png)](https://msr-quran-data.vercel.app/data/sqlite/database.sqlite)
 
-[![csv](./unused/but-csv.png)](https://github.com/rn0x/Quran-Json/releases/download/database/database.csv)
+[![csv](./unused/but-csv.png)](https://msr-quran-data.vercel.app/data/csv/database.csv)
 
 </div>
 
