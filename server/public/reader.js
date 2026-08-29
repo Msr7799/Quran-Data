@@ -44,11 +44,14 @@
     run: $("#runEndpointBtn"),
     copyEp: $("#copyEndpointBtn"),
     out: $("#apiOutput"),
+    visual: $("#apiVisualOutput"),
     toast: $("#toast"),
   };
   const st = {
     surahs: [],
     reciters: [],
+    timingReciters: [],
+    ayahAudioReciters: [],
     tracked: [],
     trackedMap: new Map(),
     selected: null,
@@ -534,15 +537,92 @@
   function defs() {
     const r = rid() || 68,
       s = st.surahNo || 1,
-      a = Number(st.currentAyah || 1);
+      a = Number(st.currentAyah || 1),
+      juz = Number(
+        st.surahData?.verses?.find((v) => Number(v.number) === a)?.juz ||
+          st.surahData?.verses?.[0]?.juz ||
+          1,
+      ),
+      selectedName =
+        st.selected?.reciter?.ar || st.selected?.name || "عبدالرحمن السديس",
+      timingReciter = matchingReciterId(st.timingReciters, "reciter_id") || 1,
+      ayahAudioReciter = matchingReciterId(st.ayahAudioReciters, "id") || 1;
     return [
+      { key: "surahs", title: "استرجاع جميع السور", path: "/api/surahs" },
       { key: "surah", title: "السورة كاملة", path: `/api/surah/${s}` },
-      { key: "reciters", title: "القراء والصور", path: "/api/reciter-images" },
-      { key: "names", title: "صور أسماء السور", path: "/api/surah-names" },
+      { key: "verses", title: "جميع آيات السورة", path: `/api/verses/${s}` },
+      { key: "verse", title: "آية واحدة محددة", path: `/api/verse/${s}/${a}` },
+      { key: "sajda", title: "آيات السجدة", path: "/api/sajda" },
+      { key: "audio", title: "تلاوات السورة", path: `/api/audio/${s}` },
+      {
+        key: "audio-reciter",
+        title: "تلاوة السورة للقارئ المختار",
+        path: `/api/audio/${s}/${encodeURIComponent(selectedName)}`,
+      },
+      { key: "juz", title: "آيات الجزء الحالي", path: `/api/juz/${juz}` },
+      {
+        key: "pages",
+        title: "صورة صفحة المصحف",
+        path: `/api/pages/${s}/${a}`,
+        preview: "pages",
+      },
+      { key: "audio-reciters", title: "جميع قراء الصوت", path: "/api/reciters" },
+      {
+        key: "timing-reciters",
+        title: "قراء التوقيت",
+        path: "/api/timing/reciters",
+      },
+      {
+        key: "timing-surah",
+        title: "توقيت السورة",
+        path: `/api/timing/${timingReciter}/${s}`,
+      },
+      {
+        key: "timing-ayah",
+        title: "توقيت آية واحدة",
+        path: `/api/timing/${timingReciter}/${s}/${a}`,
+      },
+      {
+        key: "timing-surahs",
+        title: "سور قارئ التوقيت المتاحة",
+        path: `/api/timing/${timingReciter}/surahs`,
+      },
+      {
+        key: "timing-search",
+        title: "البحث في التوقيتات",
+        path: `/api/timing/search?reciter=${timingReciter}&surah=${s}&verse=${a}&limit=50`,
+      },
+      {
+        key: "ayah-audio-reciters",
+        title: "قراء الصوت آية بآية",
+        path: "/api/ayah-audio/reciters",
+      },
+      {
+        key: "ayah-audio",
+        title: "رابط صوت الآية",
+        path: `/api/ayah-audio/${ayahAudioReciter}/${s}/${a}`,
+      },
+      {
+        key: "reciter-images",
+        title: "القراء وصورهم",
+        path: "/api/reciter-images",
+        preview: "reciters",
+      },
+      {
+        key: "surah-names",
+        title: "صور أسماء السور",
+        path: "/api/surah-names",
+        preview: "surah-names",
+      },
       {
         key: "tracked",
         title: "قراء التتبع",
         path: "/api/ayah-bayah/reciters",
+      },
+      {
+        key: "tracked-reciter",
+        title: "تفاصيل قارئ التتبع",
+        path: `/api/ayah-bayah/reciter/${r}`,
       },
       {
         key: "ts",
@@ -554,8 +634,32 @@
         title: "بيانات الآية الحالية",
         path: `/api/ayah-bayah/${r}/${s}/${a}`,
       },
-      { key: "audio", title: "تلاوات السورة", path: `/api/audio/${s}` },
+      {
+        key: "api-reference",
+        title: "مرجع واجهة التطبيقات",
+        path: "/api/api-reference",
+      },
     ];
+  }
+  function normalizedName(value) {
+    return String(value || "")
+      .normalize("NFKD")
+      .replace(/[\u064B-\u065F\u0670]/g, "")
+      .replace(/[^\p{L}\p{N}]+/gu, "")
+      .toLowerCase();
+  }
+  function matchingReciterId(catalog, idKey) {
+    const wanted = normalizedName(
+      st.selected?.reciter?.ar || st.selected?.name || "",
+    );
+    if (!wanted) return null;
+    const match = catalog.find((item) => {
+      const name = normalizedName(
+        item.reciter_name || item.reciter_display_name || item.name,
+      );
+      return name && (name.includes(wanted) || wanted.includes(name));
+    });
+    return match?.[idKey] ?? null;
   }
   function currentDef() {
     return defs().find((x) => x.key === st.apiKey) || defs()[0];
@@ -574,14 +678,86 @@
   function renderOutput() {
     const d = currentDef(),
       abs = `${location.origin}${d.path}`;
-    if (st.codeTab === "js")
+    if (st.codeTab === "js") {
+      hideVisualOutput();
       el.out.textContent = `const response = await fetch('${d.path}');\nif (!response.ok) throw new Error(\`HTTP \${response.status}\`);\nconst json = await response.json();\nconsole.log(json);`;
-    else if (st.codeTab === "curl")
+    } else if (st.codeTab === "curl") {
+      hideVisualOutput();
       el.out.textContent = `curl -H "Accept: application/json" \\\n  "${abs}"`;
-    else
+    } else {
       el.out.textContent = st.apiJson
         ? JSON.stringify(st.apiJson, null, 2)
         : "اضغط «تشغيل» لمشاهدة JSON الفعلي.";
+      renderVisualOutput(d, st.apiJson);
+    }
+  }
+  function hideVisualOutput() {
+    el.visual.hidden = true;
+    el.visual.replaceChildren();
+  }
+  function safeImageUrl(value) {
+    try {
+      const url = new URL(value, location.origin);
+      return ["http:", "https:"].includes(url.protocol) ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+  function visualItems(d, payload) {
+    if (!payload || payload.success === false) return [];
+    const source = Array.isArray(payload.result)
+      ? payload.result
+      : Array.isArray(payload.data)
+        ? payload.data
+        : payload.data
+          ? [payload.data]
+          : [];
+    if (d.preview === "pages")
+      return source.map((item) => ({
+        url: item.image?.url,
+        label: `صفحة ${item.page}`,
+        kind: "page",
+      }));
+    if (d.preview === "reciters")
+      return source.map((item) => ({
+        url: item.image_url || item.image?.url,
+        label: item.reciter?.ar || item.name || `قارئ ${item.id}`,
+        kind: "reciter",
+      }));
+    if (d.preview === "surah-names")
+      return source.map((item) => ({
+        url: item.image_url,
+        label: item.name?.ar || `سورة ${item.number}`,
+        kind: "surah-name",
+      }));
+    return [];
+  }
+  function renderVisualOutput(d, payload) {
+    const seen = new Set();
+    const items = visualItems(d, payload)
+      .map((item) => ({ ...item, url: safeImageUrl(item.url) }))
+      .filter((item) => item.url && !seen.has(item.url) && seen.add(item.url));
+    if (!items.length) return hideVisualOutput();
+    const kind = items[0].kind;
+    el.visual.innerHTML = `
+      <div class="api-visual-head">
+        <strong>المعاينة المرئية</strong>
+        <span>${ar.format(items.length)} صورة</span>
+      </div>
+      <div class="api-visual-grid ${esc(kind)}">
+        ${items
+          .map(
+            (item) => `
+              <figure>
+                <a href="${esc(item.url)}" target="_blank" rel="noopener">
+                  <img src="${esc(item.url)}" alt="${esc(item.label)}" loading="lazy" />
+                </a>
+                <figcaption>${esc(item.label)}</figcaption>
+              </figure>`,
+          )
+          .join("")}
+      </div>`;
+    el.visual.hidden = false;
   }
   async function runEndpoint() {
     const d = currentDef();
@@ -590,6 +766,7 @@
       x.classList.toggle("active", x.dataset.codeTab === "json"),
     );
     el.out.textContent = "Loading…";
+    hideVisualOutput();
     el.run.disabled = true;
     try {
       st.apiJson = await api(d.path);
@@ -626,14 +803,18 @@
     );
     status("جاري تحميل فهارس السور والقراء…");
     try {
-      const [s, r, t] = await Promise.all([
+      const [s, r, t, timing, ayahAudio] = await Promise.all([
         api("/api/surahs"),
         api("/api/reciter-images"),
         api("/api/ayah-bayah/reciters"),
+        api("/api/timing/reciters"),
+        api("/api/ayah-audio/reciters"),
       ]);
       st.surahs = Array.isArray(s.result) ? s.result : [];
       st.reciters = Array.isArray(r.data) ? r.data : [];
       st.tracked = Array.isArray(t.data) ? t.data : [];
+      st.timingReciters = Array.isArray(timing.data) ? timing.data : [];
+      st.ayahAudioReciters = Array.isArray(ayahAudio.data) ? ayahAudio.data : [];
       st.trackedMap = new Map(
         st.tracked.filter((x) => x.id != null).map((x) => [Number(x.id), x]),
       );
