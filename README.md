@@ -565,3 +565,22 @@ docker rmi quran_data
 <p align="center">
 للهم أجعل هذا العمل صدقه جاريه لي ولوالدي ولأهل بيتي ولكل مسلم ساهم او دعم او نشر هذه المشروع 🤲🏻
 </p>
+
+
+## المصحف التفاعلي
+
+تمت إضافة واجهة قراءة كاملة داخل `server/public/index.html` وتعمل من نفس خادم Express:
+
+- `/` أو `/reader`: المصحف التفاعلي.
+- `/docs`: وثائق API.
+- تستخدم `server/public/uthmanic_hafs.ttf` لعرض النص العثماني المشكول.
+- تدعم تشغيل السور لجميع القراء المتوفرين في `surah_*.json`.
+- تدعم تتبع الآية والكلمة لبيانات `Timming-Reciters-ayahBayah`.
+- تدعم ملفات Surah-by-Surah وAyah-by-Ayah.
+- تتضمن API Playground حي يعرض JSON وأمثلة JavaScript وcURL.
+
+اختبار بنية الواجهة:
+
+```bash
+npm run test:reader
+```

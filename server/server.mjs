@@ -14,6 +14,7 @@ const dataFolderPath = path.join(__dirname, '..', 'data');
 const apiDefinitionPath = path.join(__dirname,'..', 'docs','api-definition.yaml');
 const publicFolderPath = path.join(__dirname, 'public');
 const publicHtmlFilePath = path.join(__dirname, 'public', 'docs.html');
+const readerHtmlFilePath = path.join(__dirname, 'public', 'index.html');
 
 const app = express();
 
@@ -30,6 +31,9 @@ app.get('/docs/api-definition.yaml', (req, res) => {
     res.sendFile(apiDefinitionPath);
 });
 app.use('/', express.static(publicFolderPath));
+app.get('/reader', (req, res) => {
+    res.sendFile(readerHtmlFilePath);
+});
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
 });
