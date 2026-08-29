@@ -42799,7 +42799,7 @@ ${Gu("&")};
         function Xu(e) {
           return n.createElement(Qu, { to: e.to });
         }
-        const Ku = { left: "90deg", right: "-90deg", up: "-180deg", down: "0" },
+        const Ku = { left: "90deg", right: "-90deg", up: "-180deg", down: "0deg" },
           Zu = xa((e) =>
             n.createElement(
               "svg",
@@ -45115,7 +45115,7 @@ color: black;
             (this.parent && this.parent.expand(), (this.expanded = !0));
           }
           collapse() {
-            !/^(g|t)/.test(this.type)&&(this.expanded=!1);
+            "group" !== this.type && (this.expanded = !1);
           }
           deactivate() {
             this.active = !1;

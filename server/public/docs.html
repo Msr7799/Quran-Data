@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://msr-quran-data.vercel.app">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="واجهة برمجة تطبيقات القرآن الكريم">
-    <link rel="stylesheet" href="./style.css?v=3.1.0-stable-redoc-tags">
+    <link rel="stylesheet" href="./style.css?v=3.1.0-natural-redoc-menu-2">
     <meta name="twitter:description"
         content="واجهة برمجة تطبيقات للقرآن الكريم.">
     <meta name="twitter:image" content="https://msr-quran-data.vercel.app/Quran-Data.svg">
@@ -790,28 +790,11 @@ GET /api/ayah-bayah/68/1/1</code></pre>
 
     <div class="script-container">
 
-    <script src="./redoc.standalone.js?v=3.1.0-stable-redoc-tags"></script>
+    <script src="./redoc.standalone.js?v=3.1.0-natural-redoc-menu-2"></script>
     <script>
         const API_BASE_URL = `${window.location.origin}/api`;
 
         const redocContainer = document.getElementById('redoc-container');
-
-        // ReDoc uses a temporary #tag/... URL while activating a sidebar
-        // group. In an embedded documentation page its scroll spy can then
-        // select the API overview again and collapse the group. Let ReDoc
-        // finish the click first, then keep the public URL at /docs.
-        redocContainer.addEventListener('click', (event) => {
-            if (!event.target.closest('[role="menu"]')) return;
-            window.setTimeout(() => {
-                if (/^#(?:tag|operation)\//.test(window.location.hash)) {
-                    window.history.replaceState(
-                        window.history.state,
-                        document.title,
-                        `${window.location.pathname}${window.location.search}`
-                    );
-                }
-            }, 0);
-        }, true);
 
         // Render the placeholder before React owns the container. Mutating the
         // container after Redoc.init can reset the menu while it is opening.
@@ -866,9 +849,9 @@ GET /api/ayah-bayah/68/1/1</code></pre>
             hideHostname: true,
             hideDownloadButton: false,
             disableSearch: false,
-            // Keep an active section expanded. With the default toggle mode,
-            // scroll activation can make a single click look like open/close.
-            menuToggle: false,
+            // ReDoc's native accordion behaviour: only the active tag remains
+            // expanded and clicking it again collapses it.
+            menuToggle: true,
             expandResponses: '200,201,400,404,500',
             jsonSampleExpandLevel: 3,
             hideLoading: false,

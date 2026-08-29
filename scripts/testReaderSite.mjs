@@ -26,12 +26,12 @@ ok(docs.includes('href="/index.html"') && docs.includes('الموقع التجر
 const redocInitIndex = docs.indexOf('Redoc.init(');
 const redocLoadingIndex = docs.indexOf('redocContainer.innerHTML');
 ok(redocLoadingIndex >= 0 && redocLoadingIndex < redocInitIndex, 'رسالة تحميل ReDoc تسبق التهيئة ولا تستبدل القائمة بعدها');
-ok(/menuToggle:\s*false/.test(docs), 'قائمة ReDoc تُبقي المجموعة النشطة مفتوحة');
-ok(docsCss.includes('[role="menu"] > li > ul') && docsCss.includes('display: block !important'), 'خيارات مجموعات ReDoc تبقى ظاهرة بعد التمرير');
-ok(docs.includes("/^#(?:tag|operation)\\//") && docs.includes('history.replaceState'), 'رابط ReDoc يعود إلى /docs بعد اختيار المجموعة');
-ok(redocBundle.includes('!/^(g|t)/.test(this.type)&&(this.expanded=!1);'), 'ReDoc لا يطوي group أو tag عند تغيّر العنصر النشط');
+ok(/menuToggle:\s*true/.test(docs), 'قائمة ReDoc تسمح بفتح القسم النشط وإغلاقه');
+ok(!docsCss.includes('[role="menu"] > li > ul'), 'لا يوجد CSS يجبر جميع خيارات ReDoc على الظهور');
+ok(redocBundle.includes('"group" !== this.type && (this.expanded = !1);'), 'ReDoc يطوي القسم السابق عند اختيار قسم جديد');
+ok(redocBundle.includes('down: "0deg"'), 'دوران سهم ReDoc يستخدم قيمة CSS صالحة');
 ok(Array.isArray(redocSourceMap.sources) && redocSourceMap.sources.length > 0 && typeof redocSourceMap.mappings === 'string', 'ملف source map صالح بعد تعديل ReDoc');
-ok(docs.includes('style.css?v=3.1.0-stable-redoc-tags') && docs.includes('redoc.standalone.js?v=3.1.0-stable-redoc-tags'), 'أصول ReDoc تستخدم إصدار cache جديدًا');
+ok(docs.includes('style.css?v=3.1.0-natural-redoc-menu-2') && docs.includes('redoc.standalone.js?v=3.1.0-natural-redoc-menu-2'), 'أصول ReDoc تستخدم إصدار cache جديدًا');
 ok(openapi.includes('version: 3.1.0') && openapi.includes('/ayah-bayah/{reciter_id}/{surah_id}/{verse_id}') && openapi.includes('shuraim_960'), 'أمثلة القراء والتتبع موجودة داخل OpenAPI/ReDoc v3.1.0');
 
 const svgCount = fs.readdirSync(path.join(dataDir,'suwer-name')).filter(x=>/^\d{3}\.svg$/i.test(x)).length;
