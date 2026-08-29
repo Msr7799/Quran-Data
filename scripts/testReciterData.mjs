@@ -67,9 +67,7 @@ for (const [folder, expectedId] of expectedMappings) {
   const expectedPrefix = `${String(expectedId).padStart(3, '0')}-`;
   if (!item.image?.file?.startsWith(expectedPrefix)) fail(`${folder}: الصورة لا تبدأ بـ ${expectedPrefix}`);
   if (item.surah_count !== 114) fail(`${folder}: عدد السور ${item.surah_count} بدل 114`);
-  if (folder.includes('ali-abdur-rahman-al-huthaify')) {
-    if (item.tracking_available !== false || item.timed_ayah_count !== 0) fail('الحذيفي يجب أن يظهر بلا تتبع لأن segments.json فارغ');
-  } else if (item.timed_ayah_count !== 6236) {
+  if (item.timed_ayah_count !== 6236) {
     fail(`${folder}: عدد الآيات الموقّتة ${item.timed_ayah_count} بدل 6236`);
   }
   ok(`${item.name} | id=${item.id} | QUL=${item.source_recitation_id ?? '-'} | ${item.recitation_type} | surahs=${item.surah_count} | timed=${item.timed_ayah_count}`);
