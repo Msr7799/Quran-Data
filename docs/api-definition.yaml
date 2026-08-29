@@ -62,8 +62,6 @@ paths:
                         letters_count:
                           type: integer
                           example: 139
-      tags:
-      - واجهة القرآن الأساسية
   /surah:
     get:
       summary: استرجاع سورة محددة باستخدام ID
@@ -179,8 +177,6 @@ paths:
                             link:
                               type: string
                               example: https://server11.mp3quran.net/hawashi/001.mp3
-      tags:
-      - واجهة القرآن الأساسية
   /verses:
     get:
       summary: استرجاع جميع الآيات لسورة محددة
@@ -228,8 +224,6 @@ paths:
                         sajda:
                           type: boolean
                           example: false
-      tags:
-      - واجهة القرآن الأساسية
   /sajda:
     get:
       summary: استرجاع جميع الآيات التي تحتوي على سجدة
@@ -287,8 +281,6 @@ paths:
                         surahNumber:
                           type: integer
                           example: 13
-      tags:
-      - واجهة القرآن الأساسية
   /audio:
     get:
       summary: استرجاع التسجيل الصوتي لسورة محددة
@@ -342,8 +334,6 @@ paths:
                         link:
                           type: string
                           example: https://server11.mp3quran.net/hawashi/001.mp3
-      tags:
-      - واجهة القرآن الأساسية
   /juz:
     get:
       summary: استرجاع الآيات حسب ID الجزء
@@ -397,8 +387,6 @@ paths:
                         surahNumber:
                           type: integer
                           example: 100
-      tags:
-      - واجهة القرآن الأساسية
   /pages:
     get:
       summary: استرجاع بيانات الصفحات
@@ -488,8 +476,6 @@ paths:
                                 transliteration:
                                   type: string
                                   example: Al-Fatihah
-      tags:
-      - واجهة القرآن الأساسية
   /reciters:
     get:
       summary: استرجاع جميع القراء الصوتيين (158 قارئ)
@@ -519,8 +505,6 @@ paths:
                   count:
                     type: integer
                     example: 158
-      tags:
-      - واجهة القرآن الأساسية
   /timing/reciters:
     get:
       summary: استرجاع قراء التوقيت المتاحين (96 قارئ حفص)
@@ -565,8 +549,6 @@ paths:
                   count:
                     type: integer
                     example: 96
-      tags:
-      - واجهة القرآن الأساسية
   /timing/{reciter}/{surah_id}:
     get:
       summary: استرجاع توقيت آيات سورة معينة لقارئ معين
@@ -649,8 +631,6 @@ paths:
                             page:
                               type: string
                               example: https://www.mp3quran.net/api/quran_pages_svg/001.svg
-      tags:
-      - واجهة القرآن الأساسية
   /timing/{reciter}/{surah_id}/{verse_id}:
     get:
       summary: استرجاع توقيت آية واحدة محددة
@@ -717,8 +697,6 @@ paths:
                       duration_ms:
                         type: integer
                         example: 13189
-      tags:
-      - واجهة القرآن الأساسية
   /timing/{reciter}/surahs:
     get:
       summary: استرجاع السور المتاحة لقارئ معين
@@ -773,8 +751,6 @@ paths:
                             total_duration_seconds:
                               type: number
                               example: 61.1
-      tags:
-      - واجهة القرآن الأساسية
   /timing/search:
     get:
       summary: البحث في توقيتات الآيات
@@ -817,8 +793,6 @@ paths:
                   count:
                     type: integer
                     example: 1
-      tags:
-      - واجهة القرآن الأساسية
   /ayah-audio/reciters:
     get:
       summary: استرجاع قراء الصوت آية-بآية
@@ -856,8 +830,6 @@ paths:
                   count:
                     type: integer
                     example: 38
-      tags:
-      - واجهة القرآن الأساسية
   /ayah-audio/{reciter}/{surah_id}/{verse_id}:
     get:
       summary: بناء رابط صوت آية واحدة
@@ -918,8 +890,6 @@ paths:
                             url:
                               type: string
                               example: https://verse.mp3quran.net/arabic/ibrahim_alakhdar/32/001001.mp3
-      tags:
-      - واجهة القرآن الأساسية
   /reciter-images:
     get:
       summary: قائمة القراء مع الصور وIDs
@@ -941,8 +911,6 @@ paths:
                     en: Hafs on the authority of Asim
                   image_url: /data/reciter_images/068-%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86%20%D8%A7%D9%84%D8%B3%D8%AF%D9%8A%D8%B3.jpg
                 count: 158
-      tags:
-      - القراء والصور والتتبع آية بآية
   /surah-names:
     get:
       summary: صور أسماء السور
@@ -963,8 +931,6 @@ paths:
                   image_url: /data/suwer-name/001.svg
                   image_file: 001.svg
                 count: 114
-      tags:
-      - القراء والصور والتتبع آية بآية
   /ayah-bayah/reciters:
     get:
       summary: قراء التتبع آية بآية
@@ -1029,8 +995,6 @@ paths:
                     supported_types:
                     - surah-by-surah
                     - ayah-by-ayah
-      tags:
-      - القراء والصور والتتبع آية بآية
   /ayah-bayah/reciter/{reciter_id}:
     get:
       summary: تفاصيل قارئ التتبع
@@ -1055,8 +1019,6 @@ paths:
                   image_url: /data/reciter_images/068-%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86%20%D8%A7%D9%84%D8%B3%D8%AF%D9%8A%D8%B3.jpg
                   recitation_type: surah-by-surah
                   surah_count: 114
-      tags:
-      - القراء والصور والتتبع آية بآية
   /ayah-bayah/{reciter_id}/{surah_id}:
     get:
       summary: سورة كاملة مع بيانات التتبع
@@ -1141,8 +1103,6 @@ paths:
                       - key: '1:2'
                         verse_number: 2
                         audio_url: https://audio-cdn.tarteel.ai/quran/minshawyMurattal/001002.mp3
-      tags:
-      - القراء والصور والتتبع آية بآية
   /ayah-bayah/{reciter_id}/{surah_id}/{verse_id}:
     get:
       summary: آية محددة مع التوقيت أو رابط الصوت
@@ -1255,8 +1215,6 @@ paths:
                         - - 4
                           - 2080
                           - 2800
-      tags:
-      - القراء والصور والتتبع آية بآية
 components:
   schemas:
     Error:
@@ -1270,13 +1228,3 @@ components:
           example: حدث خطأ أثناء استرجاع البيانات.
         details:
           type: object
-tags:
-- name: واجهة القرآن الأساسية
-  description: السور والآيات والصوت والصفحات والأجزاء والتوقيتات الأساسية.
-- name: القراء والصور والتتبع آية بآية
-  description: صور القراء، صور أسماء السور، وبيانات التلاوة والتتبع آية بآية مع أمثلة عملية.
-x-tagGroups:
-- name: وثائق واجهة برمجة التطبيقات
-  tags:
-  - واجهة القرآن الأساسية
-  - القراء والصور والتتبع آية بآية
