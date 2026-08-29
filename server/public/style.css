@@ -1734,6 +1734,13 @@ pre{overflow:auto}
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
 }
+
+/* ReDoc's scroll spy can collapse a tag immediately after its click scroll
+   completes on this embedded page. Keep the first-level tag operations open;
+   this also makes every endpoint reachable without depending on hash state. */
+#redoc-container [role="menu"] > li > ul {
+  display: block !important;
+}
 #redoc-container [role="navigation"]::-webkit-scrollbar,
 #redoc-container [role="navigation"] > div::-webkit-scrollbar {
   width: 9px;

@@ -16,6 +16,7 @@ for (const file of ['index.html','reader.css','reader.js','uthmanic_hafs.ttf','d
 const html = fs.readFileSync(path.join(publicDir,'index.html'),'utf8');
 const js = fs.readFileSync(path.join(publicDir,'reader.js'),'utf8');
 const docs = fs.readFileSync(path.join(publicDir,'docs.html'),'utf8');
+const docsCss = fs.readFileSync(path.join(publicDir,'style.css'),'utf8');
 const openapi = fs.readFileSync(path.join(root,'docs','api-definition.yaml'),'utf8');
 ok(html.includes('المصحف التفاعلي') && html.includes('api-lab'), 'واجهة القارئ ومختبر API موجودان');
 ok(js.includes('/api/ayah-bayah/') && js.includes('/api/reciter-images') && js.includes('/api/surah/'), 'الواجهة مربوطة بمسارات API الفعلية');
@@ -24,6 +25,8 @@ const redocInitIndex = docs.indexOf('Redoc.init(');
 const redocLoadingIndex = docs.indexOf('redocContainer.innerHTML');
 ok(redocLoadingIndex >= 0 && redocLoadingIndex < redocInitIndex, 'رسالة تحميل ReDoc تسبق التهيئة ولا تستبدل القائمة بعدها');
 ok(/menuToggle:\s*false/.test(docs), 'قائمة ReDoc تُبقي المجموعة النشطة مفتوحة');
+ok(docsCss.includes('[role="menu"] > li > ul') && docsCss.includes('display: block !important'), 'خيارات مجموعات ReDoc تبقى ظاهرة بعد التمرير');
+ok(docs.includes("/^#(?:tag|operation)\\//") && docs.includes('history.replaceState'), 'رابط ReDoc يعود إلى /docs بعد اختيار المجموعة');
 ok(openapi.includes('version: 3.1.0') && openapi.includes('/ayah-bayah/{reciter_id}/{surah_id}/{verse_id}') && openapi.includes('shuraim_960'), 'أمثلة القراء والتتبع موجودة داخل OpenAPI/ReDoc v3.1.0');
 
 const svgCount = fs.readdirSync(path.join(dataDir,'suwer-name')).filter(x=>/^\d{3}\.svg$/i.test(x)).length;

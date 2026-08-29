@@ -796,6 +796,23 @@ GET /api/ayah-bayah/68/1/1</code></pre>
 
         const redocContainer = document.getElementById('redoc-container');
 
+        // ReDoc uses a temporary #tag/... URL while activating a sidebar
+        // group. In an embedded documentation page its scroll spy can then
+        // select the API overview again and collapse the group. Let ReDoc
+        // finish the click first, then keep the public URL at /docs.
+        redocContainer.addEventListener('click', (event) => {
+            if (!event.target.closest('[role="menu"]')) return;
+            window.setTimeout(() => {
+                if (/^#(?:tag|operation)\//.test(window.location.hash)) {
+                    window.history.replaceState(
+                        window.history.state,
+                        document.title,
+                        `${window.location.pathname}${window.location.search}`
+                    );
+                }
+            }, 0);
+        }, true);
+
         // Render the placeholder before React owns the container. Mutating the
         // container after Redoc.init can reset the menu while it is opening.
         redocContainer.innerHTML = `
