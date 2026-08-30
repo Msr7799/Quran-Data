@@ -12,8 +12,6 @@ servers:
 paths:
   /:
     get:
-      tags:
-      - واجهة القرآن الأساسية
       summary: معلومات واجهة Quran Data API
       description: يعرض إصدار الواجهة والرابط الأساسي وروابط الوثائق وقائمة المسارات المتاحة.
       responses:

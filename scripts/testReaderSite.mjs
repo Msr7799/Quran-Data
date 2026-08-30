@@ -24,6 +24,8 @@ ok(html.includes('المصحف التفاعلي') && html.includes('api-lab'), '
 ok(js.includes('/api/ayah-bayah/') && js.includes('/api/reciter-images') && js.includes('/api/surah/'), 'الواجهة مربوطة بمسارات API الفعلية');
 ok(js.includes('/api/pages/') && js.includes('/api/ayah-bayah/reciters') && js.includes('/api/ayah-audio/reciters') && js.includes('/api/api-reference'), 'مختبر API يغطي جميع مجموعات أوامر الإصدار 3.1.0');
 ok(html.includes('id="apiVisualOutput"') && js.includes('renderVisualOutput') && js.includes('preview: "pages"') && js.includes('preview: "reciters"') && js.includes('preview: "surah-names"'), 'مختبر API يعرض صفحات المصحف وصور القراء وأسماء السور بصريًا');
+ok(html.includes('id="routeForm"') && html.includes('id="routeInput"') && js.includes('normalizeRoute') && js.includes('submitCustomRoute'), 'مختبر API يقبل route مخصصًا ويعرض نتيجته');
+ok(html.includes('viewport-fit=cover') && docs.includes('viewport-fit=cover') && /@media \(max-width: 420px\)/.test(docsCss), 'صفحتا المصحف والوثائق تدعمان شاشات الهواتف والحواف الآمنة');
 ok(docs.includes('href="/index.html"') && docs.includes('الموقع التجريبي'), 'docs.html يحتوي زر الموقع التجريبي في الناف بار');
 const redocInitIndex = docs.indexOf('Redoc.init(');
 const redocLoadingIndex = docs.indexOf('redocContainer.innerHTML');
@@ -56,10 +58,13 @@ for (const [id,type] of expected) {
   ok(Boolean(r) && r.recitation_type===type, `القارئ ${id}: ${type}`);
 }
 const sudais = tracked.find(x=>x.id===68);
+const huthaify = tracked.find(x=>x.id===90);
 const minshawi = tracked.find(x=>x.id===112);
 const s1 = getSurahFromDataset(sudais._dataset,1);
+const h1 = getSurahFromDataset(huthaify._dataset,1);
 const m1 = getSurahFromDataset(minshawi._dataset,1);
 ok(Boolean(s1?.chapterAudio?.audio_url) && s1.records.length===7, 'السديس: صوت سورة الفاتحة + 7 سجلات تتبع');
+ok(Boolean(h1?.chapterAudio?.audio_url) && h1.records.length===7 && h1.records.every(x=>x.segments.length>0), 'الحذيفي: صوت سورة الفاتحة + تتبع الآيات والكلمات');
 ok(!m1?.chapterAudio && m1.records.length===7 && m1.records.every(x=>x.audio_url), 'المنشاوي: 7 ملفات آية-بآية للفاتحة');
 
 if (failed) process.exitCode=1;

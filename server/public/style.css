@@ -2259,10 +2259,12 @@ svg {
   }
   #redoc-container {
     width: 100%;
-    max-height: none !important;
-    min-height: 0 !important;
+    max-height: 78dvh !important;
+    min-height: 60dvh !important;
     margin: 1rem 0 !important;
-    overflow: visible !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
     border-width: 1px;
     border-radius: 12px;
   }
