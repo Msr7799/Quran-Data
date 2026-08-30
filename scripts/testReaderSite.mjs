@@ -26,6 +26,7 @@ ok(js.includes('/api/pages/') && js.includes('/api/ayah-bayah/reciters') && js.i
 ok(html.includes('id="apiVisualOutput"') && js.includes('renderVisualOutput') && js.includes('preview: "pages"') && js.includes('preview: "reciters"') && js.includes('preview: "surah-names"'), 'مختبر API يعرض صفحات المصحف وصور القراء وأسماء السور بصريًا');
 ok(html.includes('id="routeForm"') && html.includes('id="routeInput"') && js.includes('normalizeRoute') && js.includes('submitCustomRoute'), 'مختبر API يقبل route مخصصًا ويعرض نتيجته');
 ok(html.includes('viewport-fit=cover') && docs.includes('viewport-fit=cover') && /@media \(max-width: 420px\)/.test(docsCss), 'صفحتا المصحف والوثائق تدعمان شاشات الهواتف والحواف الآمنة');
+ok(js.includes('syncNativePlaybackTracking') && js.includes('addEventListener("play", syncNativePlaybackTracking)') && js.includes('addEventListener("seeked"'), 'التتبع يعمل عند التشغيل والتحريك من مشغل الصوت الأصلي');
 ok(docs.includes('href="/index.html"') && docs.includes('الموقع التجريبي'), 'docs.html يحتوي زر الموقع التجريبي في الناف بار');
 const redocInitIndex = docs.indexOf('Redoc.init(');
 const redocLoadingIndex = docs.indexOf('redocContainer.innerHTML');

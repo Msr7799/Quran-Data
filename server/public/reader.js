@@ -572,6 +572,15 @@
       if (r) wordTrack(r, ms);
     }
   }
+  function syncNativePlaybackTracking() {
+    if (st.mode !== "idle" || !st.trackSummary?.tracking_available) return;
+    if (st.trackSummary.recitation_type === "surah-by-surah" && trackAyahs().length) {
+      st.mode = "surah";
+      st.sequence = false;
+      st.stopAt = null;
+      timeUpdate();
+    }
+  }
   function ended() {
     clearWords();
     if (st.sequence && st.trackSummary?.recitation_type === "ayah-by-ayah") {
@@ -951,6 +960,11 @@
   el.prev.addEventListener("click", () => adjacent(-1));
   el.next.addEventListener("click", () => adjacent(1));
   el.audio.addEventListener("timeupdate", timeUpdate);
+  el.audio.addEventListener("play", syncNativePlaybackTracking);
+  el.audio.addEventListener("seeked", () => {
+    syncNativePlaybackTracking();
+    timeUpdate();
+  });
   el.audio.addEventListener("ended", ended);
   el.words.addEventListener("change", () => {
     if (!el.words.checked) clearWords();
