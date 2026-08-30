@@ -2127,3 +2127,194 @@ pre{overflow:auto}
   .gallery-grid{grid-template-columns:1fr}
   .gallery-grid .gallery-image-shell{height:210px}
 }
+
+/* =========================================================
+   Mobile-first layout guardrails for Docs and embedded ReDoc
+   ========================================================= */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body,
+header,
+main,
+section,
+.main-content,
+.main-content > .container,
+.quick-start > .container,
+.reader-demo-banner,
+#download,
+.keywords-section,
+footer {
+  max-width: 100%;
+}
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+.api-card,
+.api-card > *,
+.api-endpoint,
+.endpoint-text,
+.reader-demo-banner .card,
+#redoc-container,
+#redoc-container > div {
+  min-width: 0 !important;
+}
+.reader-demo-banner pre,
+.api-card pre,
+#redoc-container pre,
+#redoc-container code {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word;
+}
+
+@media (max-width: 991.98px) {
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .navbar > .container-fluid > .w-100 {
+    flex-wrap: wrap;
+  }
+  .navbar-nav-left {
+    order: 2;
+  }
+  .navbar-brand {
+    order: 1 !important;
+  }
+  #navbarNav.navbar-collapse {
+    position: fixed !important;
+    inset: 64px 10px auto 10px !important;
+    width: auto !important;
+    max-height: calc(100dvh - 76px) !important;
+    padding: 10px !important;
+    border: 1px solid rgba(127, 127, 127, .28) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .24) !important;
+    background: var(--bg-color, #fff) !important;
+  }
+  [data-theme="dark"] #navbarNav.navbar-collapse {
+    background: #111 !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-section {
+    padding: 2rem .75rem !important;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 9vw, 2.55rem) !important;
+    line-height: 1.25;
+  }
+  .hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .6rem !important;
+    padding-inline: .25rem;
+  }
+  .main-content,
+  .main-content > .container,
+  .quick-start > .container,
+  .reader-demo-banner,
+  #download,
+  .keywords-section {
+    width: 100% !important;
+    padding-inline: .65rem !important;
+    margin-inline: auto !important;
+  }
+  .reader-demo-banner .card {
+    padding: 1rem !important;
+  }
+  .reader-demo-banner .btn {
+    width: 100%;
+    min-height: 46px;
+  }
+  .api-examples {
+    margin-inline: 0 !important;
+  }
+  .api-examples > [class*="col-"] {
+    padding-inline: 0 !important;
+  }
+  .api-card {
+    border-radius: 14px !important;
+  }
+  .api-card .d-flex.align-items-center.justify-content-between {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .5rem;
+  }
+  .api-card .card-actions {
+    margin-inline-start: 0 !important;
+  }
+  .api-card button,
+  .gallery-refresh-btn,
+  .gallery-more-btn,
+  .download-btn {
+    min-height: 44px;
+  }
+  #redoc-container {
+    width: 100%;
+    max-height: none !important;
+    min-height: 0 !important;
+    margin: 1rem 0 !important;
+    overflow: visible !important;
+    border-width: 1px;
+    border-radius: 12px;
+  }
+  #redoc-container::before {
+    position: static !important;
+    border-radius: 11px 11px 0 0;
+  }
+  #redoc-container [role="navigation"] {
+    max-width: 100vw !important;
+  }
+  #redoc-container pre {
+    max-width: calc(100vw - 2.5rem) !important;
+    overflow-x: auto !important;
+    font-size: 11px !important;
+  }
+  footer,
+  .footer-content {
+    padding-inline: .8rem !important;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 420px) {
+  .navbar {
+    min-height: 58px;
+    padding: .45rem .6rem !important;
+  }
+  #navbarNav.navbar-collapse {
+    inset-block-start: 58px !important;
+  }
+  .hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .stat-number {
+    font-size: clamp(1.05rem, 6vw, 1.5rem) !important;
+  }
+  .stat-label {
+    font-size: .76rem !important;
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .gallery-grid .gallery-image-shell {
+    height: min(240px, 62vw);
+  }
+  .download-grid > * {
+    width: 100% !important;
+  }
+  #Keywords {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .45rem;
+    padding: 0;
+  }
+}

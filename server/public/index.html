@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta
       name="description"
       content="المصحف التفاعلي المبني على Quran Data API: تشغيل السور، تشغيل آية منفردة، وتتبع الآيات والكلمات."
@@ -166,6 +166,23 @@
         <div class="api-grid">
           <div id="endpointList" class="endpoint-list"></div>
           <div class="console">
+            <form id="routeForm" class="route-form" autocomplete="off">
+              <label for="routeInput">اكتب مسار API لتجربته مباشرة</label>
+              <div class="route-input-row" dir="ltr">
+                <span class="route-method" aria-hidden="true">GET</span>
+                <input
+                  id="routeInput"
+                  name="route"
+                  type="text"
+                  inputmode="url"
+                  spellcheck="false"
+                  placeholder="/api/surah/1"
+                  aria-describedby="routeHelp"
+                />
+                <button class="primary" type="submit">عرض النتيجة</button>
+              </div>
+              <small id="routeHelp">يمكنك كتابة مسار مثل /api/verse/2/255 أو لصق رابط من هذا الموقع.</small>
+            </form>
             <div class="console-bar">
               <code id="activeEndpoint">GET /api/surah/1</code>
               <div>

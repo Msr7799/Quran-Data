@@ -682,6 +682,53 @@ html[data-theme="dark"] .surah-head > img {
   overflow: hidden;
   min-width: 0;
 }
+.route-form {
+  display: grid;
+  gap: 7px;
+  padding: 13px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.route-form label {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+}
+.route-form small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.route-input-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: stretch;
+}
+.route-method {
+  display: grid;
+  place-items: center;
+  min-width: 50px;
+  padding-inline: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--brand-soft);
+  color: var(--brand2);
+  font: 800 11px/1 Consolas, monospace;
+}
+.route-input-row input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--soft);
+  color: var(--text);
+  padding: 9px 11px;
+  text-align: left;
+  font: 12px/1.4 Consolas, monospace;
+}
+.route-input-row input::placeholder {
+  color: var(--muted);
+}
 .console-bar {
   padding: 10px;
   background: var(--soft);
@@ -983,6 +1030,13 @@ footer div {
   .console-bar > div {
     align-self: flex-end;
   }
+  .route-input-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .route-input-row .primary {
+    grid-column: 1/-1;
+    min-height: 44px;
+  }
   .flow {
     grid-template-columns: 1fr;
   }
@@ -1190,6 +1244,46 @@ main {
   }
   .verse-actions button {
     padding: 5px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar nav {
+    margin-inline: -2px;
+  }
+  .topbar nav a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .toolbar select,
+  .toolbar button,
+  .player-actions button,
+  .section-head input,
+  .console button,
+  .route-input-row input {
+    min-height: 44px;
+  }
+  .console pre {
+    min-height: 260px;
+    max-height: 60vh;
+    padding: 12px;
+    font-size: 10px;
+  }
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+  }
+  .tab {
+    flex: 1 0 auto;
+    min-height: 42px;
+  }
+  .api-visual-grid,
+  .api-visual-grid.page {
+    grid-template-columns: 1fr;
+  }
+  footer div {
+    flex-wrap: wrap;
   }
 }
 

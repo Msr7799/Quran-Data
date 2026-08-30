@@ -40,6 +40,8 @@
     grid: $("#recitersGrid"),
     more: $("#showMoreRecitersBtn"),
     epList: $("#endpointList"),
+    routeForm: $("#routeForm"),
+    routeInput: $("#routeInput"),
     ep: $("#activeEndpoint"),
     run: $("#runEndpointBtn"),
     copyEp: $("#copyEndpointBtn"),
@@ -67,6 +69,7 @@
     seqIndex: -1,
     galleryLimit: 20,
     apiKey: "surah",
+    customPath: "",
     codeTab: "json",
     apiJson: null,
     lastAyah: null,
@@ -724,6 +727,9 @@
     return match?.[idKey] ?? null;
   }
   function currentDef() {
+    if (st.apiKey === "custom" && st.customPath) {
+      return { key: "custom", title: "مسار مخصص", path: st.customPath };
+    }
     return defs().find((x) => x.key === st.apiKey) || defs()[0];
   }
   function renderEndpoints() {
@@ -837,6 +843,37 @@
     } finally {
       renderOutput();
       el.run.disabled = false;
+    }
+  }
+  function normalizeRoute(value) {
+    let route = String(value || "").trim().replace(/^GET\s+/i, "");
+    if (!route) throw new Error("اكتب مسار API أولًا");
+    let url;
+    try {
+      url = new URL(route, location.origin);
+    } catch {
+      throw new Error("المسار المكتوب غير صالح");
+    }
+    if (url.origin !== location.origin) {
+      throw new Error("يمكن تجربة مسارات هذا الموقع فقط");
+    }
+    if (!url.pathname.startsWith("/")) throw new Error("يجب أن يبدأ المسار بعلامة /");
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+  function submitCustomRoute(event) {
+    event?.preventDefault();
+    try {
+      st.customPath = normalizeRoute(el.routeInput.value);
+      st.apiKey = "custom";
+      st.apiJson = null;
+      el.routeInput.value = st.customPath;
+      renderEndpoints();
+      runEndpoint();
+    } catch (error) {
+      st.apiJson = { success: false, error: error.message };
+      st.codeTab = "json";
+      renderOutput();
+      el.routeInput.focus();
     }
   }
   async function copyText(t, m = "تم النسخ") {
@@ -954,6 +991,7 @@
     st.apiJson = null;
     renderEndpoints();
   });
+  el.routeForm.addEventListener("submit", submitCustomRoute);
   el.run.addEventListener("click", runEndpoint);
   el.copyEp.addEventListener("click", () =>
     copyText(`${location.origin}${currentDef().path}`, "تم نسخ رابط API"),
