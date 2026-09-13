@@ -8,10 +8,6 @@
   },
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/docs.html"
-    },
-    {
       "source": "/docs",
       "destination": "/docs.html"
     },
@@ -34,13 +30,13 @@
   ],
   "redirects": [
     {
-      "source": "/docs",
-      "destination": "/",
+      "source": "/",
+      "destination": "/docs",
       "permanent": true
     },
     {
       "source": "/docs.html",
-      "destination": "/",
+      "destination": "/docs",
       "permanent": true
     },
     {
@@ -51,7 +47,7 @@
   ],
   "headers": [
     {
-      "source": "/",
+      "source": "/docs",
       "headers": [
         {
           "key": "Cache-Control",

@@ -32,9 +32,9 @@ app.get('/docs/api-definition.yaml', (req, res) => {
     res.sendFile(apiDefinitionPath);
 });
 
-// اعرض صفحة التوثيق على الرابط الأساسي لتحسين الأرشفة وتجنب إعادة توجيه مؤقتة.
+// استخدم تحويلًا دائمًا كي تكون /docs هي النسخة الأساسية المفهرسة.
 app.get('/', (req, res) => {
-    res.sendFile(publicHtmlFilePath);
+    res.redirect(308, '/docs');
 });
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
