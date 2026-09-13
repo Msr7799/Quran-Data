@@ -32,9 +32,9 @@ app.get('/docs/api-definition.yaml', (req, res) => {
     res.sendFile(apiDefinitionPath);
 });
 
-// الصفحة الرئيسية تتحول صراحة إلى /docs حتى لا يسبقها index.html في أي بيئة.
+// اعرض صفحة التوثيق على الرابط الأساسي لتحسين الأرشفة وتجنب إعادة توجيه مؤقتة.
 app.get('/', (req, res) => {
-    res.redirect(307, '/docs');
+    res.sendFile(publicHtmlFilePath);
 });
 app.get('/docs', (req, res) => {
     res.sendFile(publicHtmlFilePath);
